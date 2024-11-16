@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div>
-      <h1>MERN App</h1>
+      <h1>SOCSconnect</h1>
       <p>{message}</p>
     </div>
   );
