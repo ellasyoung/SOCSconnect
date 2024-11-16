@@ -1,7 +1,7 @@
 // components/Navbar/index.js
 import React from "react";
-import { Nav, NavLogo, NavLinks, NavLink, Button, ButtonContainer, NavItems } from "./NavbarElements"; // Import styled components
-import SOCSLogo from "../../assets/images/navbar-logo.svg"; // Your logo image path
+import { Nav, NavLogo, NavLinks, NavLink, Button, ButtonContainer, NavItems } from "./NavbarElements"; 
+import SOCSLogo from "../../assets/images/navbar-logo.svg"; 
 
 const Navbar = () => {
     return (
