@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Nav, NavLogo, NavLinks, NavLink, Button, ButtonContainer, NavItems, Hamburger, Dropdown} from "./PubNavbarElements"; 
 import SOCSLogo from "../../assets/images/navbar-logo.svg"; 
-
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false); 
@@ -32,22 +32,22 @@ const Navbar = () => {
       <Hamburger onClick={toggleMenu}>☰</Hamburger>
       
       <Dropdown style={{ display: isMenuOpen && windowWidth < 1000 ? "flex" : "none" }}>
-          <NavLink className="top" href="#">Home</NavLink>
-          <NavLink href="#">Booking</NavLink>
-          <NavLink href="#">My Appointments</NavLink>
-          <Button className="register">Register</Button>
-          <Button className="sign-in">Sign in</Button>
+          <NavLink as={Link} to="/" className="top" href="#">Home</NavLink>
+          <NavLink as={Link} to="/booking" href="#">Booking</NavLink>
+          <NavLink as={Link} to="/my-appointments" href="#">My Appointments</NavLink>
+          <Button as={Link} to="/register" className="register">Register</Button>
+          <Button as={Link} to="/sign-in" className="sign-in">Sign in</Button>
       </Dropdown>
 
       <NavItems>
         <NavLinks>
-        <NavLink href="#">Home</NavLink>
-          <NavLink href="#">Booking</NavLink>
-          <NavLink href="#">My Appointments</NavLink>
+        <NavLink as={Link} to="/" href="#">Home</NavLink>
+          <NavLink as={Link} to="/booking" href="#">Booking</NavLink>
+          <NavLink as={Link} to="/my-appointments" href="#">My Appointments</NavLink>
         </NavLinks>
         <ButtonContainer>
-        <Button className="register">Register</Button>
-          <Button className="sign-in">Sign in</Button>
+        <Button as={Link} to="/register" className="register">Register</Button>
+          <Button as={Link} to="/sign-in" className="sign-in">Sign in</Button>
         </ButtonContainer>
       </NavItems>
     </Nav>
