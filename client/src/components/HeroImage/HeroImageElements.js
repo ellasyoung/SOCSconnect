@@ -10,6 +10,11 @@ export const Bckgrnd = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: row;
+    @media screen and (max-width: 900px) {
+        flex-direction: column;
+        height: 65vh;
+    }
 `;
 
 export const BirdComputer = styled.img`
@@ -17,12 +22,18 @@ export const BirdComputer = styled.img`
     height: auto;
     padding-right: 5%;
     margin-top: -30px;
+    @media screen and (max-width: 900px) {
+        width: 50%;
+    }
 `;
 
 export const HeroDescription = styled.div`
     width: 53%;
     padding-left: 7%;
     margin-top: -70px;
+    @media screen and (max-width: 900px) {
+        display: none;
+    }
 `;
 
 export const Title = styled.h1`
@@ -38,6 +49,19 @@ export const Title = styled.h1`
     font-size: 64px;
     margin-top: 0px;
   }
+
+  @media screen and (max-width: 1420px) {
+    &.line1{
+        font-size: 35px;
+    }
+    &.line2{
+        font-size: 54px;
+    }
+  }
+
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
 `;
 
 export const Title2 = styled.h2`
@@ -47,6 +71,15 @@ export const Title2 = styled.h2`
   font-size: 20px;
   font-weight: bold;
   margin-top: -40px;
+
+  @media screen and (max-width: 1420px) {
+    margin-top: -30px;
+  }
+
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
+
 `;
 
 export const Blurb = styled.p`
@@ -56,6 +89,9 @@ export const Blurb = styled.p`
   text-shadow: 2px 2px 2px rgba(98, 7, 7, 0.2);
   font-size: 16px;
   line-height: 1.5;
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
 `;
 
 export const Button = styled.a`
