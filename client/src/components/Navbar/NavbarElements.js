@@ -1,7 +1,5 @@
-// components/Navbar/NavbarElements.js
 import styled from "styled-components";
 
-// Navbar container (flexbox layout)
 export const Nav = styled.nav`
     height: 80px; 
     display: flex;
@@ -10,9 +8,9 @@ export const Nav = styled.nav`
     z-index: 12;
     position: sticky;
     top: 0;
-    font-size: 18px;
+    font-size: 14px;
     background-color: white;
-    justify-content: space-between; // Add this to space out the logo and the rest
+    justify-content: space-between; 
 
     @media screen and (max-width: 768px) {
         background: white;
@@ -35,6 +33,7 @@ export const NavItems = styled.div`
 export const NavLinks = styled.div`
     display: flex;
     gap: 50px;
+    font-size: 14px;
 
     @media screen and (max-width: 768px) {
         display: none; 
@@ -47,6 +46,7 @@ export const NavLink = styled.a`
     font-weight: bold;
     cursor: pointer;
     font-family: Arial;
+    font-size: 14px;
 
     &:hover {
         text-decoration: underline;
@@ -55,8 +55,9 @@ export const NavLink = styled.a`
 `;
 
 export const ButtonContainer = styled.div`
+    margin-right: 40px;
     display: flex; 
-    gap: 20px;
+    gap: 40px;
 `;
 
 export const Button = styled.button`
@@ -68,17 +69,21 @@ export const Button = styled.button`
     display: block;
     font-family: Arial;
     font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
 
-    &:hover {
-        opacity: 0.8;
+    &.register:hover {
+        background-color: #620707;
     }
 
-    // Register button - black background
+    &.sign-in:hover {
+        background-color: #620707;
+    }
+
     &.register {
         background-color: black;
     }
 
-    // Sign In button - red background
     &.sign-in {
         background-color: #cd2222;
     }

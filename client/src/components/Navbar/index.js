@@ -1,4 +1,3 @@
-// components/Navbar/index.js
 import React from "react";
 import { Nav, NavLogo, NavLinks, NavLink, Button, ButtonContainer, NavItems } from "./NavbarElements"; 
 import SOCSLogo from "../../assets/images/navbar-logo.svg"; 
