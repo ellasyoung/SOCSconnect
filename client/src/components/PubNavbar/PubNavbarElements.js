@@ -72,7 +72,7 @@ export const NavLinks = styled.div`
 
 export const NavLink = styled.a`
   color: black;
-  font-size: 15px;
+  font-size: 14px;
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
@@ -86,7 +86,7 @@ export const NavLink = styled.a`
 
 export const ButtonContainer = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 40px;
 
   @media screen and (max-width: 900px) {
     gap: 20px;
@@ -99,22 +99,28 @@ export const Button = styled.button`
   padding: 15px 30px;
   border: none;
   color: white;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 8px;
   display: block;
   font-family: Arial;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 
-  &:hover {
-    opacity: 0.8;
+  &.register:hover {
+      background-color: #620707;
+  }
+
+  &.sign-in:hover {
+      background-color: #620707;
   }
 
   &.register {
-    background-color: black;
+      background-color: black;
   }
 
   &.sign-in {
-    background-color: #cd2222;
+      background-color: #cd2222;
   }
 
   @media screen and (max-width: 900px) {
@@ -130,7 +136,7 @@ export const Hamburger = styled.div`
   cursor: pointer;
   flex-direction: column;
   color: #cd2222;
-  font-size: 50px;
+  font-size: 40px;
   gap: 5px;
   @media screen and (max-width: 900px) {
     display: flex;
