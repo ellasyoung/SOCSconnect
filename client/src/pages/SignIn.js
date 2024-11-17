@@ -1,11 +1,12 @@
 import React from 'react';
 import PubNavbar from "../components/PubNavbar";
+import SignInModal from '../components/SignInModal';
 
 const SignIn = () => {
   return(
     <>
       <PubNavbar/>
-      <h1>Sign In</h1>
+      <SignInModal/>
     </>
   );
 };
