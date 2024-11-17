@@ -14,13 +14,11 @@ const Navbar = () => {
   useEffect(() => {
     const handleResize = () => {
         setWindowWidth(window.innerWidth);
-        // Close the menu if the window width is greater than or equal to 1000px
         if (window.innerWidth >= 1000) {
         setIsMenuOpen(false);
         }
     };
     
-    // Attach the resize event listener
     window.addEventListener("resize", handleResize);
     return () => {
         window.removeEventListener("resize", handleResize);
@@ -34,14 +32,13 @@ const Navbar = () => {
       <Hamburger onClick={toggleMenu}>☰</Hamburger>
       
       <Dropdown style={{ display: isMenuOpen && windowWidth < 1000 ? "flex" : "none" }}>
-          <NavLink href="#">Home</NavLink>
+          <NavLink className="top" href="#">Home</NavLink>
           <NavLink href="#">Booking</NavLink>
           <NavLink href="#">My Appointments</NavLink>
           <Button className="register">Register</Button>
           <Button className="sign-in">Sign in</Button>
       </Dropdown>
 
-    {/* NavItems only visible when screen large */}
       <NavItems>
         <NavLinks>
         <NavLink href="#">Home</NavLink>

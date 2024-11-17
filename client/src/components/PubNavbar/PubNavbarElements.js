@@ -30,20 +30,18 @@ export const NavLogo = styled.img`
 
 export const Dropdown = styled.div`
   display: none;
-  align-items: center;
-  margin-left: auto;
-  gap: 50px;
+  flex-direction: column;
+  position: absolute;
+  top: 80px;
+  right: 0;
+  background-color: white;
+  width: 100%;
+  padding: 0; /* Remove extra padding */
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
 
   @media screen and (max-width: 900px) {
-    flex-direction: column;
-    position: absolute;
-    top: 80px;
-    right: 10px;
-    background-color: white;
-    width: 100%;
-    padding: 20px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    align-items: left;
+    display: flex;
+    align-items: flex-start; /* Align items to the start (left) */
   }
 `;
 
@@ -66,7 +64,7 @@ export const NavLinks = styled.div`
   @media screen and (max-width: 900px) {
     flex-direction: column;
     gap: 20px;
-    margin-top: 10px;
+    margin-top: 30px;
   }
 `;
 
@@ -82,7 +80,23 @@ export const NavLink = styled.a`
     text-decoration: underline;
     color: #cd2222;
   }
+
+  @media screen and (max-width: 900px){
+    width: 100%;
+    text-align: left; 
+    padding-top: 15px; 
+    padding-bottom: 15px;
+    padding-left: 12%;
+    display: block; 
+
+    &.top {
+      padding-top: 30px;
+    }
+
+  }
+
 `;
+
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -124,10 +138,18 @@ export const Button = styled.button`
   }
 
   @media screen and (max-width: 900px) {
-    width: 75%;
+    width: 76%;
     padding: 15px;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    margin-left: 12%;
+
+    &.register {
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+    
+    &.sign-in{
+      margin-bottom: 30px;
+    }
   }
 `;
 
