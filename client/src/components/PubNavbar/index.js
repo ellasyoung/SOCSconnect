@@ -41,13 +41,13 @@ const Navbar = () => {
 
       <NavItems>
         <NavLinks>
-        <NavLink href="#">Home</NavLink>
-          <NavLink href="#">Booking</NavLink>
-          <NavLink href="#">My Appointments</NavLink>
+        <NavLink as={Link} to="/" href="#">Home</NavLink>
+          <NavLink as={Link} to="/booking" href="#">Booking</NavLink>
+          <NavLink as={Link} to="/my-appointments" href="#">My Appointments</NavLink>
         </NavLinks>
         <ButtonContainer>
-        <Button className="register">Register</Button>
-          <Button className="sign-in">Sign in</Button>
+        <Button as={Link} to="/register" className="register">Register</Button>
+          <Button as={Link} to="/sign-in" className="sign-in">Sign in</Button>
         </ButtonContainer>
       </NavItems>
     </Nav>
