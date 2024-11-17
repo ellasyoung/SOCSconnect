@@ -86,7 +86,7 @@ export const NavLink = styled.a`
     text-align: left; 
     padding-top: 15px; 
     padding-bottom: 15px;
-    padding-left: 12%;
+    padding-left: 9%;
     display: block; 
 
     &.top {
@@ -119,6 +119,7 @@ export const Button = styled.button`
   display: block;
   font-family: Arial;
   font-weight: bold;
+  text-decoration: none;
   transition: background-color 0.3s ease;
 
   &.register:hover {
@@ -140,7 +141,7 @@ export const Button = styled.button`
   @media screen and (max-width: 900px) {
     width: 76%;
     padding: 15px;
-    margin-left: 12%;
+    margin-left: 9%;
 
     &.register {
       margin-top: 15px;
