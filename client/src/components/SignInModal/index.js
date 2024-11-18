@@ -11,14 +11,14 @@ import {
     Button, 
     Text,
 } from './SignInModalElements';
-import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icons
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 
 const SignInModal = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
     });
-    const [showPassword, setShowPassword] = useState(false); // Toggle password visibility
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -59,14 +59,14 @@ const SignInModal = () => {
                             <Label htmlFor="password">Password</Label>
                             <div style={{ position: 'relative', width: 'fit-content' }}>
                                 <Input
-                                    type={showPassword ? "text" : "password"} // Toggle between text and password
+                                    type={showPassword ? "text" : "password"} 
                                     id="password"
                                     name="password"
                                     placeholder="Enter your password"
                                     value={formData.password}
                                     onChange={handleChange}
                                     required
-                                    style={{ paddingRight: '40px' }} // Add space for the icon
+                                    style={{ paddingRight: '40px' }} 
                                 />
                                 <span 
                                     onClick={togglePasswordVisibility} 

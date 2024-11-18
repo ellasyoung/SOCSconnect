@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   const toggleProfileMenu = () => {
-    setIsProfileMenuOpen(!isProfileMenuOpen); // toggle the profile dropdown
+    setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
 
