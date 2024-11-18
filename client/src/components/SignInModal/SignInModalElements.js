@@ -72,18 +72,25 @@ export const Input = styled.input`
   border-radius: 5px;
   outline: none;
 
+  &#username{
+    width: 325px;
+  }
+
   &:focus {
     border-color: #cd2222;
     box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
   }
   @media screen and (max-width: 550px) {
     width: 200px;
+    &#username{
+      width: 225px;
+    }
   }
 `;
 
-export const Button = styled.a`
+export const Button = styled.button`
   padding: 15px 30px;
-  width: 200px;
+  width: 300px;
   border: none;
   color: white;
   background-color: #cd2222;
@@ -106,6 +113,6 @@ export const Button = styled.a`
   }
 
   @media screen and (max-width: 550px) {
-    width: 100px;
+    width: 200px;
   }
 `;
