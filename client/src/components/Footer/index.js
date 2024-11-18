@@ -1,29 +1,31 @@
 import React from "react";
-import { FooterCont, FooterLogo, LinksContainer, ExternalLink} from "./FooterElements";
+import { FooterCont, FooterLogo, LinksContainer, ExternalLink, FooterLinksCont} from "./FooterElements";
 import SOCSLogo from "../../assets/images/footer-logo.svg"; 
 
 const Footer = () => {
     return (
         <FooterCont>
             <FooterLogo src={SOCSLogo} alt="SOCS Logo"/>
-                <div className="Column">
-                    <h3>SOCS Connect</h3>
-                    <LinksContainer>
-                        <ExternalLink href="">Home</ExternalLink>
-                        <ExternalLink href="">Booking</ExternalLink>
-                        <ExternalLink href="">Register</ExternalLink>
-                        <ExternalLink href="">Sign In</ExternalLink>
-                    </LinksContainer>   
-                </div>
-                <div className="Column">
-                    <h3>School of Computer Science</h3> 
-                    <LinksContainer>
-                        <ExternalLink href="">McGill SOCS</ExternalLink>
-                        <ExternalLink href="https://www.cs.mcgill.ca/undergrad/future/general/">
-                            Programs & Admissions</ExternalLink>
-                        <ExternalLink href="https://www.cs.mcgill.ca/about/">About</ExternalLink>
-                    </LinksContainer> 
-                </div>       
+                <FooterLinksCont>
+                    <div className="Column">
+                        <h3 style={{fontSize: "16px"}}>SOCS Connect</h3>
+                        <LinksContainer>
+                            <ExternalLink href="/">Home</ExternalLink>
+                            <ExternalLink href="/booking">Booking</ExternalLink>
+                            <ExternalLink href="/register">Register</ExternalLink>
+                            <ExternalLink href="/sign-in">Sign In</ExternalLink>
+                        </LinksContainer>   
+                    </div>
+                    <div className="Column">
+                        <h3 style={{fontSize: "16px"}}>School of Computer Science</h3> 
+                        <LinksContainer>
+                            <ExternalLink href="https://www.cs.mcgill.ca/" target="_blank">McGill SOCS</ExternalLink>
+                            <ExternalLink href="https://www.cs.mcgill.ca/undergrad/future/general/" target="_blank">
+                                Programs & Admissions</ExternalLink>
+                            <ExternalLink href="https://www.cs.mcgill.ca/about/" target="_blank">About</ExternalLink>
+                        </LinksContainer> 
+                    </div>   
+                </FooterLinksCont>    
         </FooterCont>
 
     );

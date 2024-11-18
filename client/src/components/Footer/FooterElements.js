@@ -6,9 +6,10 @@ export const FooterCont = styled.div`
     height: 200px;
     color: white;
     
-    padding: 50px;
+    padding: 40px;
+    padding-bottom: 60px;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     font-family: Arial, sans-serif;
 
     @media screen and (max-width: 900px){
@@ -20,10 +21,27 @@ export const FooterCont = styled.div`
     }
     `
 
+export const FooterLinksCont = styled.div`
+    width: 35%;
+    display: flex;
+    align-itms: flex-start;
+    justify-content: space-between;
+    margin-right: 10%;
+    @media screen and (max-width: 900px){
+        width: 50%;
+        justify-content: space-between; 
+        padding: 20px;
+        flex-direction: column; 
+        align-items: center; 
+        height: auto;
+        margin-right: 0%;
+    }
+`
+
 export const FooterLogo = styled.img `
     width: 125x; 
     height: 125px;
-    margin-right: 100px;
+    margin-left: 10%;
 
     @media screen and (max-width: 900px){
         display: none;
@@ -58,6 +76,7 @@ export const ExternalLink = styled.a`
     margin-bottom: 10px;
     color: white;
     text-decoration: underline;
+    font-size: 12px;
 
     &:hover {
         color: #cd2222;

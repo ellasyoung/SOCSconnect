@@ -11,6 +11,7 @@ export const Nav = styled.nav`
   font-size: 18px;
   background-color: white;
   justify-content: space-between;
+  box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.4);
 
   @media screen and (max-width: 900px) {
     justify-content: space-between;
