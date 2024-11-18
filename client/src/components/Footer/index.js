@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FooterCont, FooterLogo, LinksContainer, HomeLink, ExternalLink, Column } from "./FooterElements";
+import React from "react";
+import { FooterCont, FooterLogo, LinksContainer, ExternalLink} from "./FooterElements";
 import SOCSLogo from "../../assets/images/footer-logo.svg"; 
 
 const Footer = () => {
