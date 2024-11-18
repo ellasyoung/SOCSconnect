@@ -76,29 +76,36 @@ export const Input = styled.input`
     border-color: #cd2222;
     box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
   }
+  @media screen and (max-width: 550px) {
+    width: 200px;
+  }
 `;
 
 export const Button = styled.a`
-    padding: 15px 30px;
-    width: 200px;
-    border: none;
-    color: white;
-    background-color: #cd2222;
-    font-size: 18px;
-    cursor: pointer;
-    border-radius: 8px;
-    font-family: Arial;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    margin-top: 30px;
-    box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  padding: 15px 30px;
+  width: 200px;
+  border: none;
+  color: white;
+  background-color: #cd2222;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: Arial;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin-top: 30px;
+  box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    &:hover {
-        background-color:  #620707;
-        box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
-    }
+  &:hover {
+    background-color:  #620707;
+    box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
+  }
+
+  @media screen and (max-width: 550px) {
+    width: 100px;
+  }
 `;

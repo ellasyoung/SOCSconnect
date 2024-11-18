@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
     Bckgrnd, 
     OuterModal, 
@@ -12,24 +12,11 @@ import {
 } from './SignInModalElements';
 
 const SignInModal = () => {
-
-    const [formData, setFormData] = useState({
-        username: '',
-        password: ''
-      });
-    
-    const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-        ...formData,
-        [name]: value
-    });
-    };
     
     const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle sign-in logic here
-    console.log('Form submitted:', formData);
+        e.preventDefault();
+        // Handle sign-in logic here
+        console.log('Form submitted:');
     };
 
 
@@ -45,8 +32,6 @@ const SignInModal = () => {
                         type="text"
                         id="username"
                         name="username"
-                        value={formData.username}
-                        onChange={handleChange}
                         placeholder="Enter your username"
                         required
                     />
@@ -57,8 +42,6 @@ const SignInModal = () => {
                         type="password"
                         id="password"
                         name="password"
-                        value={formData.password}
-                        onChange={handleChange}
                         placeholder="Enter your password"
                         required
                     />
