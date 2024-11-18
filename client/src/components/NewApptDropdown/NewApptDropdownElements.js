@@ -13,12 +13,18 @@ export const DropdownButton = styled.button`
     color: white;
     cursor: pointer;
     border-radius: 8px;
-    display: block;
+    display: flex;
     font-family: Arial;
     font-weight: bold;
     font-size: 14px;
     align-items: center;
+    justify-content: center;
     transition: background-color 0.3s ease;
+    box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.4);
+
+    @media screen and (max-width: 1100px) {
+      width: 86%;
+    }
 
     &:hover {
         background-color: #620707;

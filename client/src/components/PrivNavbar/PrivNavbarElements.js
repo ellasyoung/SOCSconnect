@@ -29,14 +29,16 @@ export const NavLogo = styled.img`
 `;
 
 export const ProfLogo = styled.img`
-  width: 40px;
+  width: 45px;
   height: auto;
   display: flex;
-  margin-left: 20px;
+  margin-left: 40px;
+  margin-right: 30px;
   cursor: pointer;
+  transition: transform 0.3s ease;
 
   &:hover {
-    transform: scale(1.2);
+    transform: scale(0.9);
   }
 `;
 
@@ -111,7 +113,7 @@ export const NavLink = styled.a`
 `;
 export const ProfileDropdown = styled.div`
   position: absolute;
-  top: 70%; /* Position it right below the ProfLogo */
+  top: 70%; 
   right: 0;
   background-color: white;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);

@@ -121,6 +121,7 @@ export const Button = styled.button`
   font-weight: bold;
   text-decoration: none;
   transition: background-color 0.3s ease;
+  box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.4);
 
   &.register:hover {
       background-color: #620707;
@@ -136,6 +137,7 @@ export const Button = styled.button`
 
   &.sign-in {
       background-color: #cd2222;
+      margin-right: 30px;
   }
 
   @media screen and (max-width: 900px) {
