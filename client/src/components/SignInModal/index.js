@@ -9,6 +9,7 @@ import {
     Label,
     Input,
     Button, 
+    Text,
 } from './SignInModalElements';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Import icons
 
@@ -43,12 +44,12 @@ const SignInModal = () => {
                     <Title>Sign In</Title>
                     <Form onSubmit={handleSubmit}>
                         <FormGroup>
-                            <Label htmlFor="username">Username</Label>
+                            <Label htmlFor="username">McGill Email</Label>
                             <Input
                                 type="text"
                                 id="username"
                                 name="username"
-                                placeholder="Enter your username"
+                                placeholder="Enter your McGill email address"
                                 value={formData.username}
                                 onChange={handleChange}
                                 required
@@ -84,6 +85,7 @@ const SignInModal = () => {
                         </FormGroup>
                         <Button type="submit">Sign In</Button>
                     </Form>
+                    <Text>No account? Register <a style={{color: '#cd2222'}} href="/register">here</a></Text>
                 </InnerModal>
             </OuterModal>
         </Bckgrnd>

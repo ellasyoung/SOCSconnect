@@ -116,3 +116,9 @@ export const Button = styled.button`
     width: 200px;
   }
 `;
+
+export const Text = styled.p`
+  padding-top: 10px;
+  font-size: 12px;
+  font-style: italic;
+`;
