@@ -17,7 +17,7 @@ const Footer = () => {
                         </LinksContainer>   
                     </div>
                     <div className="Column">
-                        <h3 style={{fontSize: "16px"}}>School of Computer Science</h3> 
+                        <h3 style={{fontSize: "16px", textAlign: "center"}}>School of Computer Science</h3> 
                         <LinksContainer>
                             <ExternalLink href="https://www.cs.mcgill.ca/" target="_blank">McGill SOCS</ExternalLink>
                             <ExternalLink href="https://www.cs.mcgill.ca/undergrad/future/general/" target="_blank">

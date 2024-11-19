@@ -3,21 +3,28 @@ import HeroBackground from "../../assets/images/hero-background.svg";
 
 export const Bckgrnd = styled.div`
   width: 100%;
-  height: 95vh;
+  min-height: 800px;
+  height: 90vh;
   position: relative;
   background: url(${HeroBackground});
   background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 1030px) {
+    height: 105vh;
+  }
+  @media screen and (max-width: 400px) {
+    height: 120vh;
+  }
 `;
 
-export const Col = styled.div`
-`
+export const Col = styled.div``;
 
 export const OuterModal = styled.div`
   width: 70%;
-  margin-top: -50px;
+  margin-top: -20px;
+  min-height: 550px;
   height: 70vh;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 16px;
@@ -27,6 +34,12 @@ export const OuterModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 1030px) {
+    height: 80vh;
+  }
+  @media screen and (max-width: 400px) {
+    height: 100vh;
+  }
 `;
 
 export const InnerModal = styled.div`
@@ -52,6 +65,11 @@ export const Form = styled.form`
   width: 70%;
   display: flex;
   justify-content: space-between;
+  @media screen and (max-width: 1030px) {
+    flex-direction: column;
+    align-items: center;
+    margin-top: -30px;
+  }
 `;
 
 export const FormGroup = styled.div`
@@ -79,6 +97,16 @@ export const Input = styled.input`
     border-color: #cd2222;
     box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
   }
+
+  @media screen and (max-width: 1525px) {
+    width: 200px;
+  }
+
+  @media screen and (max-width: 400px) {
+    width: 150px;
+    font-size: 12px;
+  }
+
 `;
 
 export const Button = styled.button`
@@ -101,6 +129,14 @@ export const Button = styled.button`
     background-color:  #620707;
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
   }
+
+  @media screen and (max-width: 1525px) {
+    width: 230px;
+  }
+  @media screen and (max-width: 400px) {
+    width: 180px;
+    font-size: 12px;
+  }
 `;
 
 export const Text = styled.p`
@@ -108,4 +144,18 @@ export const Text = styled.p`
   font-size: 12px;
   font-style: italic;
   text-align: center;
+`;
+
+export const PwdCont = styled.div`
+  position: relative;
+  display: flex;
+  alignItems: center; 
+  width: 330px;
+  @media screen and (max-width: 1525px) {
+    width: 230px;
+  }
+  @media screen and (max-width: 400px) {
+    width: 180px;
+    font-size: 12px;
+  }
 `;

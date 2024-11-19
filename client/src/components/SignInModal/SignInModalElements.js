@@ -3,6 +3,7 @@ import HeroBackground from "../../assets/images/hero-background.svg";
 
 export const Bckgrnd = styled.div`
   width: 100%;
+  min-height: 800px;
   height: 95vh;
   position: relative;
   background: url(${HeroBackground});
@@ -15,7 +16,8 @@ export const Bckgrnd = styled.div`
 export const OuterModal = styled.div`
   width: 70%;
   margin-top: -50px;
-  height: 60vh;
+  min-height: 550px;
+  height: 70vh;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
@@ -84,6 +86,14 @@ export const Input = styled.input`
     width: 200px;
     &#username{
       width: 225px;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 150px;
+    font-size: 12px;
+    &#username{
+      width: 175px;
     }
   }
 `;

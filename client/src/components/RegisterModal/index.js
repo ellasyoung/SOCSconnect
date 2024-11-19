@@ -11,6 +11,7 @@ import {
     Button, 
     Text,
     Col,
+    PwdCont,
 } from './RegisterModalElements';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 
@@ -53,7 +54,7 @@ const RegisterModal = () => {
                                     type="text"
                                     id="firstName"
                                     name="firstName"
-                                    placeholder="Enter your first name"
+                                    placeholder="firstname"
                                     value={formData.firstName}
                                     onChange={handleChange}
                                     required
@@ -65,7 +66,7 @@ const RegisterModal = () => {
                                     type="text"
                                     id="lastName"
                                     name="lastName"
-                                    placeholder="Enter your last name"
+                                    placeholder="lastname"
                                     value={formData.lastName}
                                     onChange={handleChange}
                                     required
@@ -79,7 +80,7 @@ const RegisterModal = () => {
                                     type="text"
                                     id="username"
                                     name="username"
-                                    placeholder="Enter your McGill email address"
+                                    placeholder="first.last@mcgill.ca"
                                     value={formData.username}
                                     onChange={handleChange}
                                     required
@@ -87,12 +88,12 @@ const RegisterModal = () => {
                             </FormGroup>
                             <FormGroup style={{width: '100%' }}>
                                 <Label htmlFor="password">Password</Label>
-                                <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '330px' }}>
+                                <PwdCont>
                                     <Input
                                         type={showPassword ? "text" : "password"} 
                                         id="password"
                                         name="password"
-                                        placeholder="Enter your password"
+                                        placeholder="password"
                                         value={formData.password}
                                         onChange={handleChange}
                                         style={{ paddingRight: '40px' }}
@@ -111,7 +112,7 @@ const RegisterModal = () => {
                                     >
                                         {showPassword ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
                                     </span>
-                                </div>
+                                </PwdCont>
                             </FormGroup>
                             <Button type="submit">Register</Button>
                             <Text>Already have an account? Sign in <a style={{color: '#cd2222'}} href="/sign-in">here</a></Text>
