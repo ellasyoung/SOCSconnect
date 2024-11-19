@@ -20,6 +20,9 @@ const HeroImage = () => {
         </Button>
       </HeroDescription>
       <BirdComputer src={HeroImg} alt="SOCS Computer Logo"/>
+      <Button className='mobile-button' as={Link} to="/sign-in"> 
+          Get Started <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
+        </Button>
     </Bckgrnd>
   );
 };

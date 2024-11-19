@@ -4,18 +4,26 @@ import HeroBackground from "../../assets/images/hero-background.svg";
 export const Bckgrnd = styled.div`
   width: 100%;
   min-height: 800px;
-  height: 95vh;
+  height: 90vh;
   position: relative;
   background: url(${HeroBackground});
   background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 1030px) {
+    height: 105vh;
+  }
+  @media screen and (max-width: 400px) {
+    height: 120vh;
+  }
 `;
+
+export const Col = styled.div``;
 
 export const OuterModal = styled.div`
   width: 70%;
-  margin-top: -50px;
+  margin-top: -20px;
   min-height: 550px;
   height: 70vh;
   background: rgba(255, 255, 255, 0.3);
@@ -26,6 +34,12 @@ export const OuterModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 1030px) {
+    height: 80vh;
+  }
+  @media screen and (max-width: 400px) {
+    height: 100vh;
+  }
 `;
 
 export const InnerModal = styled.div`
@@ -35,22 +49,27 @@ export const InnerModal = styled.div`
   border-radius: 15px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: center;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const Title = styled.h1`
   font-family: 'SunbornSansOne', sans-serif;
   color: #cd2222;
   font-size: 40px;
+  margin-bottom: 50px;
 `;
 
 export const Form = styled.form`
+  width: 70%;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  justify-content: space-between;
+  @media screen and (max-width: 1030px) {
+    flex-direction: column;
+    align-items: center;
+    margin-top: -30px;
+  }
 `;
 
 export const FormGroup = styled.div`
@@ -74,33 +93,25 @@ export const Input = styled.input`
   border-radius: 5px;
   outline: none;
 
-  &#username{
-    width: 325px;
-  }
-
   &:focus {
     border-color: #cd2222;
     box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
   }
-  @media screen and (max-width: 550px) {
+
+  @media screen and (max-width: 1525px) {
     width: 200px;
-    &#username{
-      width: 225px;
-    }
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 400px) {
     width: 150px;
     font-size: 12px;
-    &#username{
-      width: 175px;
-    }
   }
+
 `;
 
 export const Button = styled.button`
   padding: 15px 30px;
-  width: 300px;
+  width: 330px;
   border: none;
   color: white;
   background-color: #cd2222;
@@ -113,17 +124,18 @@ export const Button = styled.button`
   transition: background-color 0.3s ease;
   margin-top: 30px;
   box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   &:hover {
     background-color:  #620707;
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
   }
 
-  @media screen and (max-width: 550px) {
-    width: 200px;
+  @media screen and (max-width: 1525px) {
+    width: 230px;
+  }
+  @media screen and (max-width: 400px) {
+    width: 180px;
+    font-size: 12px;
   }
 `;
 
@@ -131,4 +143,19 @@ export const Text = styled.p`
   padding-top: 10px;
   font-size: 12px;
   font-style: italic;
+  text-align: center;
+`;
+
+export const PwdCont = styled.div`
+  position: relative;
+  display: flex;
+  alignItems: center; 
+  width: 330px;
+  @media screen and (max-width: 1525px) {
+    width: 230px;
+  }
+  @media screen and (max-width: 400px) {
+    width: 180px;
+    font-size: 12px;
+  }
 `;

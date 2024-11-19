@@ -119,4 +119,15 @@ export const Button = styled.a`
         background-color: #620707;
         box-shadow: 4px 4px 5px rgba(255, 255, 255, 0.7);
     }
+
+    &.mobile-button {
+      display: none;
+    }
+
+    @media screen and (max-width: 900px) {
+      &.mobile-button {
+        margin-top: 40px;
+        display: flex;
+      }
+    }
 `;
