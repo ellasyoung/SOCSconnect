@@ -132,6 +132,8 @@ export const Input = styled.input`
   border-radius: 5px;
   outline: none;
   background-color: white; 
+  font: Arial;
+  font-weight: bold;
 
   &:focus {
     border-color: #cd2222;
@@ -158,6 +160,8 @@ export const TitleInput = styled.input`
   color: black;
   border-radius: 10px;
   outline: none;
+  font: Arial;
+  font-weight: bold;
 
   &:focus {
     border-color: #cd2222;
