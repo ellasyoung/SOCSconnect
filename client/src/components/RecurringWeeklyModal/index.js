@@ -37,8 +37,45 @@ const RecurringWeeklyModal = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // Validation for day of the week
+        const validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        const dayOfWeek = formData.dayOfWeek.toLowerCase();
+
+        if (!validDays.includes(dayOfWeek)) {
+            alert('Please enter a valid day of the week (e.g., Monday, Tuesday, etc.)');
+            return;
+        }
+
+        
+
+        const startDate = new Date(formData.startDate);
+        const endDate = new Date(formData.endDate);
+
+        if (startDate > endDate) {
+            alert('The end date cannot be earlier than the start date. Please correct it.');
+            return;
+        }
+
+        if (startDate.toDateString() === endDate.toDateString()) {
+            alert('The start date and end date cannot be the same day for a weekly recurring meeting. Please choose different dates.');
+            return;
+        }
+
         console.log('Form submitted:', formData);
+        
+        // Clear the form by resetting the state
+        setFormData({
+            startDate: '',
+            endDate: '',
+            dayOfWeek: '',
+            attendees: '',
+            startTime: '',
+            endTime: '',
+            title: ''
+        });
     };
+
     return (
         <Bckgrnd>
             <ModalContainer>
@@ -90,7 +127,7 @@ const RecurringWeeklyModal = () => {
                                 <Label>Attendees Allowed:</Label>
                                 <Input 
                                     type="number" 
-                                    min="0"
+                                    min="1"
                                     id="attendees"
                                     name="attendees"
                                     value={formData.attendees}
@@ -143,9 +180,6 @@ const RecurringWeeklyModal = () => {
                         </TitleContainer>
                         
                         <Button type="submit">Create Weekly Meeting</Button>
-                      
-
-                       
                     </Form>
                 </InnerModal>
             </ModalContainer>
