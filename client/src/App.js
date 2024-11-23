@@ -9,6 +9,7 @@ import { createGlobalStyle } from "styled-components";
 import SunbornSansOne from './assets/fonts/Sunborn-SansOne.otf';
 import Dashboard from './pages/Dashboard';
 import RequestTime from "./pages/RequestTime";
+import RecurringWeekly from "./pages/RecurringWeekly";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -41,6 +42,7 @@ function App() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/request-time" element={<RequestTime />} />
+          <Route path="/recurring-weekly" element={<RecurringWeekly />} />
         </Routes>
       </Router>
     </>
