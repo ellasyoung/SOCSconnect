@@ -1,12 +1,13 @@
 import React from 'react';
 import PubNavbar from "../components/PubNavbar";
+import BookingModal from "../components/BookingModal";
 import Footer from "../components/Footer";
 
 const Booking = () => {
   return(
     <>
       <PubNavbar/>
-      <h1>Booking</h1>
+      <BookingModal />
       <Footer />
       
     </>
