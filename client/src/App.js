@@ -8,6 +8,7 @@ import SignIn from './pages/SignIn';
 import { createGlobalStyle } from "styled-components";
 import SunbornSansOne from './assets/fonts/Sunborn-SansOne.otf';
 import Dashboard from './pages/Dashboard';
+import RequestTime from "./pages/RequestTime";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/request-time" element={<RequestTime />} />
         </Routes>
       </Router>
     </>
