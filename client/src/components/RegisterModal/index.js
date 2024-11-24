@@ -34,6 +34,11 @@ const RegisterModal = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const emailRegex = /@(mail\.mcgill\.ca|mcgill\.ca)$/;
+        if (!emailRegex.test(formData.username)) {
+            alert("Please enter a valid McGill email ending with @mail.mcgill.ca or @mcgill.ca.");
+            return;
+        }
         console.log('Form submitted:', formData);
     };
 
