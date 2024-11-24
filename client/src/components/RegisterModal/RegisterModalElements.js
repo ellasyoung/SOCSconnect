@@ -25,7 +25,7 @@ export const OuterModal = styled.div`
   width: 70%;
   margin-top: -20px;
   min-height: 550px;
-  height: 70vh;
+  height: 75vh;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
@@ -38,13 +38,13 @@ export const OuterModal = styled.div`
     height: 80vh;
   }
   @media screen and (max-width: 400px) {
-    height: 100vh;
+    height: 105vh;
   }
 `;
 
 export const InnerModal = styled.div`
   width: 95%;
-  height: 90%;
+  height: 95%;
   background-color: white;
   border-radius: 15px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
