@@ -11,12 +11,17 @@ export const Bckgrnd = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  @media screen and (max-width: 1030px) {
+    height: 120vh;
+  }
 `;
 
 export const ModalContainer = styled.div`
   width: 90%;
   height: 95%;
   position: relative;
+  margin-top: 100px;
 `;
 
 export const UpperModal = styled.div`
@@ -53,7 +58,6 @@ export const Title = styled.h1`
   color: #cd2222;
   font-size: 20px;
   margin-bottom: 20px;
-  margin-right: 10px;
   width: 100px;
 
   display: flex;
@@ -63,30 +67,30 @@ export const Title = styled.h1`
 `;
 
 export const Form = styled.form`
-  width: 90%;
-  margin-top: 30px;
+  width: 80%;
+  margin-top: 80px;
   display: flex;
-  flex-wrap: wrap;  /* Allows form groups to wrap when necessary */
+  flex-wrap: wrap;  
   justify-content: space-between;
-  gap: 20px;  /* Space between form groups */
+  gap: 20px; 
   
   @media screen and (max-width: 1030px) {
     flex-direction: column;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 50px;
   }
 `;
 
 export const FormGroup = styled.div`
   display: flex;
-  justify-content: flex-start;  /* Aligns elements in the group */
+  justify-content: flex-start; 
+  flex-direction: column;
   margin-bottom: 15px;
   width: 100%;
   gap: 10px;  
-
   
   @media screen and (max-width: 1030px) {
-    width: 100%;  /* Stacks form groups vertically */
+    width: 100%; 
   }
 `;
 
@@ -97,21 +101,20 @@ export const FormContainer = styled.div`
   gap: 10px;
 
   @media screen and (max-width: 1030px) {
-    width: 100%;  /* Stacks form groups vertically */
+    width: 100%; 
   }
 `;
 
 export const TitleContainer = styled.div`
-display: flex;
-justify-content: flex-start;
-gap: 10px;
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 40px;
+  width: 50%;
 
-width: 50%;
-
-@media screen and (max-width: 1030px) {
-  width: 100%;  /* Stacks form groups vertically */
-}
-
+  @media screen and (max-width: 1030px) {
+    width: 100%; 
+    margin-top: 0px;
+  }
 `
 
 export const Label = styled.label`
@@ -127,13 +130,13 @@ export const Label = styled.label`
 export const Input = styled.input`
   width: 100%;
   padding: 15px;
-  font-size: 12px;
-  border: 2px solid #cd2222;
+  font-size: 16px;
+  height: 26px;
+  border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
   background-color: white; 
   font: Arial;
-  font-weight: bold;
 
   &:focus {
     border-color: #cd2222;
@@ -152,16 +155,15 @@ export const Input = styled.input`
 
 export const TitleInput = styled.input`
   width: 500px;
-  height: 30px;
-  padding: 10px;
+  height: 26px;
+  padding: 15px;
   font-size: 16px;
-  border: 2px solid #cd2222;
+  border: 1px solid #ccc;
   background-color: white;
   color: black;
-  border-radius: 10px;
+  border-radius: 5px;
   outline: none;
   font: Arial;
-  font-weight: bold;
 
   &:focus {
     border-color: #cd2222;
@@ -196,10 +198,16 @@ export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 45px;
 
   &:hover {
     background-color:  #620707;
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
+  }
+
+  @media screen and (max-width: 1030px) {
+    width: 100%; 
+    margin-top: 0px;
   }
 `;
 

@@ -8,7 +8,7 @@ const RecurringWeekly = () => {
     <>
       <PrivNavbar/>
       <RecurringWeeklyModal/>
-      <Footer />
+      <Footer/>
     </>
   );
 };
