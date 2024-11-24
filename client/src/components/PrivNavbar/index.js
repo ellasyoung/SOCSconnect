@@ -53,7 +53,7 @@ const Navbar = () => {
         <NavLink as={Link} to="/" href="#">Home</NavLink>
           <NavLink as={Link} to="/booking" href="#">Booking</NavLink>
           <NavLink as={Link} to="/my-appointments" href="#">My Appointments</NavLink>
-          <NavLink as={Link} to="#" href="#">Request Time</NavLink>
+          <NavLink as={Link} to="/request-time" href="#">Request Time</NavLink>
         </NavLinks>
         <NewApptDropdown />
       </NavItems>

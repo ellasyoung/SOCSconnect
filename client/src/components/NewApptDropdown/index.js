@@ -38,7 +38,7 @@ const NewApptDropdown = () => {
 
         {isRecurringOpen && (
             <div style={{ display: "block"}}>
-                <MenuItem href="#" className="sub">
+                <MenuItem href="/recurring-weekly" className="sub">
                     <FaCalendarWeek size="1em" style={{ marginLeft: "22px"}} /> Weekly
                 </MenuItem>
                 <MenuItem href="#" className="sub">
