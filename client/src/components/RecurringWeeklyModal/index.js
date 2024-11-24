@@ -167,8 +167,6 @@ const RecurringWeeklyModal = () => {
                         </FormGroup>
                         </FormContainer>
 
-                        
-
                         <TitleContainer>
                             <Title>Title:</Title>
                             <TitleInput 

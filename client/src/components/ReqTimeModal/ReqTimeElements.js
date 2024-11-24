@@ -3,8 +3,8 @@ import HeroBackground from "../../assets/images/hero-background.svg";
 
 export const Bckgrnd = styled.div`
   width: 100%;
-  min-height: 800px;
-  height: 100vh;
+  min-height: 1000px;
+  height: 115vh;
   position: relative;
   background: url(${HeroBackground});
   background-size: cover;
@@ -15,7 +15,17 @@ export const Bckgrnd = styled.div`
 
 export const FormGroup = styled.div`
   text-align: left;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+`;
+
+export const FormRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 80px;
+  @media screen and (max-width: 775px) {
+    flex-direction: column;
+    gap: 0px;
+  }
 `;
 
 export const Form = styled.form`
@@ -27,9 +37,8 @@ export const Form = styled.form`
 
 export const OuterModal = styled.div`
   width: 70%;
-  margin-top: -20px;
-  min-height: 550px;
-  height: 80vh;
+  min-height: 800px;
+  height: 95vh;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
@@ -38,6 +47,9 @@ export const OuterModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 775px) {
+    height: 100vh;
+  }
 `;
 
 export const InnerModal = styled.div`
@@ -57,20 +69,55 @@ export const Title = styled.h1`
   color: #cd2222;
   font-size: 40px;
   margin-bottom: 50px;
+  @media screen and (max-width: 775px) {
+    font-size: 30px;
+  }
+   @media screen and (max-width: 575px) {
+    font-size: 20px;
+  }
+`;
+
+export const Title2 = styled.h2`
+  font-family: 'SunbornSansOne', sans-serif;
+  color: #cd2222;
+  font-size: 20px;
+  margin-right: 20px;
+  @media screen and (max-width: 775px) {
+    margin-right: 0px;
+  }
 `;
 
 
 export const Input = styled.input`
-  width: 300px;
+  width: 415px;
   padding: 15px;
+  height: 26px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
   outline: none;
 
+  &#startTime{
+    width: 150px;
+  }
+
+  &#endTime{
+    width: 150px;
+  }
+
   &:focus {
     border-color: #cd2222;
     box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
+  }
+
+  @media screen and (max-width: 775px) {
+    width: 200px;
+    &#startTime{
+      width: 200px;
+    }
+    &#endTime{
+      width: 200px;
+    }
   }
 
 `;
@@ -85,7 +132,7 @@ export const Label = styled.label`
 
 export const Button = styled.button`
   padding: 15px 30px;
-  width: 330px;
+  width: 415px;
   border: none;
   color: white;
   background-color: #cd2222;
@@ -104,4 +151,39 @@ export const Button = styled.button`
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
   }
 
+  @media screen and (max-width: 775px) {
+    width: 200px;
+  }
+
+`;
+
+export const TitleContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 20px;
+  width: 415px;
+  @media screen and (max-width: 775px) {
+    flex-direction: column;
+    width: 200px;
+    margin-top: 0px;
+    margin-left: -30px;
+  }
+`;
+
+export const TitleInput = styled.input`
+  width: 100%;
+  height: 26px;
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+  outline: none;
+  font: Arial;
+
+  &:focus {
+    border-color: #cd2222;
+    box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
+  }
 `;
