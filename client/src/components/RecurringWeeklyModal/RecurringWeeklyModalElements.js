@@ -13,7 +13,7 @@ export const Bckgrnd = styled.div`
   align-items: center;
 
   @media screen and (max-width: 1030px) {
-    height: 120vh;
+    height: 135vh;
   }
 `;
 
