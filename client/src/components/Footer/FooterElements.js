@@ -5,6 +5,8 @@ export const FooterCont = styled.div`
     display: flex;
     height: 200px;
     color: white;
+    position: relative;
+    z-index: 7;
     
     padding: 40px;
     padding-bottom: 60px;

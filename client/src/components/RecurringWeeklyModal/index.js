@@ -38,7 +38,6 @@ const RecurringWeeklyModal = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         
-        // Validation for day of the week
         const validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         const dayOfWeek = formData.dayOfWeek.toLowerCase();
 
@@ -46,8 +45,6 @@ const RecurringWeeklyModal = () => {
             alert('Please enter a valid day of the week (e.g., Monday, Tuesday, etc.)');
             return;
         }
-
-        
 
         const startDate = new Date(formData.startDate);
         const endDate = new Date(formData.endDate);
@@ -64,7 +61,6 @@ const RecurringWeeklyModal = () => {
 
         console.log('Form submitted:', formData);
         
-        // Clear the form by resetting the state
         setFormData({
             startDate: '',
             endDate: '',
@@ -86,24 +82,26 @@ const RecurringWeeklyModal = () => {
                     <Form onSubmit={handleSubmit}>
                         <FormContainer>
                             <FormGroup>
-                                <Label>Start Date:</Label>
+                                <Label>Start Date</Label>
                                 <Input 
                                     type="date" 
                                     id="startDate"
                                     name="startDate"
                                     value={formData.startDate}
                                     onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label>End Date:</Label>
+                                <Label>End Date</Label>
                                 <Input 
                                     type="date" 
                                     id="endDate"
                                     name="endDate"
                                     value={formData.endDate}
                                     onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
                             </FormGroup>
@@ -111,7 +109,7 @@ const RecurringWeeklyModal = () => {
                         
                         <FormContainer>
                             <FormGroup>
-                                <Label>Day of the Week:</Label>
+                                <Label>Day of the Week</Label>
                                 <Input 
                                     type="text" 
                                     id="dayOfWeek"
@@ -119,12 +117,13 @@ const RecurringWeeklyModal = () => {
                                     placeholder="Monday"
                                     value={formData.dayOfWeek}
                                     onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
                             </FormGroup>
 
                             <FormGroup>
-                                <Label>Attendees Allowed:</Label>
+                                <Label>Attendees Allowed</Label>
                                 <Input 
                                     type="number" 
                                     min="1"
@@ -132,6 +131,7 @@ const RecurringWeeklyModal = () => {
                                     name="attendees"
                                     value={formData.attendees}
                                     onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
                             </FormGroup>
@@ -141,25 +141,27 @@ const RecurringWeeklyModal = () => {
                         <FormContainer>
 
                         <FormGroup>
-                            <Label>Start Time:</Label>
+                            <Label>Start Time</Label>
                             <Input 
                                     type="time" 
                                     id="startTime"
                                     name="startTime"
                                     value={formData.startTime}
                                     onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
                         </FormGroup>
 
                         <FormGroup>
-                            <Label>End Time:</Label>
+                            <Label>End Time</Label>
                             <Input 
                                     type="time" 
                                     id="endTime"
                                     name="endTime"
                                     value={formData.endTime}
                                     onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
                         </FormGroup>
@@ -168,7 +170,7 @@ const RecurringWeeklyModal = () => {
                         
 
                         <TitleContainer>
-                            <Title>Title: </Title>
+                            <Title>Title:</Title>
                             <TitleInput 
                                 type="text"  
                                 id="title"
