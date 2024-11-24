@@ -44,7 +44,7 @@ export const OuterModal = styled.div`
 
 export const InnerModal = styled.div`
   width: 95%;
-  height: 95%;
+  height: 91%;
   background-color: white;
   border-radius: 15px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
