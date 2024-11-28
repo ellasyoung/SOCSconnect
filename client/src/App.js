@@ -10,6 +10,8 @@ import SunbornSansOne from './assets/fonts/Sunborn-SansOne.otf';
 import Dashboard from './pages/Dashboard';
 import RequestTime from "./pages/RequestTime";
 import RecurringWeekly from "./pages/RecurringWeekly";
+import AuthProvider from "./auth/AuthProvider";
+import ProtectedRoute from "./auth/ProtectedRoute"; 
 
 const GlobalStyle = createGlobalStyle`
 
@@ -27,24 +29,46 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
 function App() {
-
   return (
     <>
-      <GlobalStyle/>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/my-appointments" element={<MyAppointments />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/request-time" element={<RequestTime />} />
-          <Route path="/recurring-weekly" element={<RecurringWeekly />} />
-        </Routes>
-      </Router>
+      <GlobalStyle />
+      <AuthProvider> 
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/my-appointments" element={<MyAppointments />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/request-time" 
+              element={
+                <ProtectedRoute>
+                  <RequestTime />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/recurring-weekly" 
+              element={
+                <ProtectedRoute>
+                  <RecurringWeekly />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </>
   );
 }

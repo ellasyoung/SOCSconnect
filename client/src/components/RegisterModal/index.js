@@ -14,12 +14,13 @@ import {
     PwdCont,
 } from './RegisterModalElements';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+import axios from 'axios';
 
 const RegisterModal = () => {
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        username: '',
+        email: '',
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
@@ -32,14 +33,26 @@ const RegisterModal = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const emailRegex = /@(mail\.mcgill\.ca|mcgill\.ca)$/;
-        if (!emailRegex.test(formData.username)) {
+        if (!emailRegex.test(formData.email)) {
             alert("Please enter a valid McGill email ending with @mail.mcgill.ca or @mcgill.ca.");
             return;
         }
-        console.log('Form submitted:', formData);
+        //console.log('Form submitted:', formData);
+        try {
+            const response = await axios.post("http://localhost:5001/api/register", formData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            console.log('Response:', response.data);
+            alert("Registration successful! Please proceed to the Login page.");
+        } catch (error) {
+            console.error('Error:', error.response?.data || error.message);
+            alert(error.response?.data?.message || "Registration failed. Please try again.");
+        }
     };
 
     const togglePasswordVisibility = () => {
@@ -80,13 +93,13 @@ const RegisterModal = () => {
                         </Col>
                         <Col>
                             <FormGroup>
-                                <Label htmlFor="username">McGill Email</Label>
+                                <Label htmlFor="email">McGill Email</Label>
                                 <Input
                                     type="text"
-                                    id="username"
-                                    name="username"
+                                    id="email"
+                                    name="email"
                                     placeholder="first.last@mcgill.ca"
-                                    value={formData.username}
+                                    value={formData.email}
                                     onChange={handleChange}
                                     required
                                 />

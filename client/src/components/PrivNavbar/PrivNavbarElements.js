@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { FaTimes } from "react-icons/fa";
 
 export const Nav = styled.nav`
   height: 80px;
@@ -112,18 +113,6 @@ export const NavLink = styled.a`
   }
 
 `;
-export const ProfileDropdown = styled.div`
-  position: absolute;
-  top: 70%; 
-  right: 0;
-  background-color: white;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  width: 150px;
-  z-index: 10;
-  border-radius: 10px;
-`;
-
 
 export const ButtonContainer = styled.div`
   display: flex;
@@ -156,7 +145,76 @@ export const Hamburger = styled.div`
   }
 `;
 
+export const ProfileDropdown = styled.div`
+  width: 600px;
+  height: 300px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 8px 8px 10px rgba(98, 7, 7, 0.7);
+`;
 
 
+
+export const LogoutBtn = styled.button`
+  padding: 15px 30px;
+  width: 300px;
+  border: none;
+  color: white;
+  background-color: #cd2222;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  font-family: Arial;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color:  #620707;
+    box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
+  }
+`;
+
+export const Dim = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5); 
+  z-index: 10;
+`;
+
+export const CloseButton = styled(FaTimes)`
+  font-size: 24px; 
+  color: #cd2222;
+  background-color: white; 
+  border-radius: 50%;
+  padding: 8px; 
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  position: absolute;
+  top: 25px;
+  right: 25px;
+
+  &:hover {
+    color: #fff;
+    background-color: #cd2222; 
+    transform: scale(1.1) rotate(360deg); 
+  }
+`;
 
 

@@ -74,7 +74,7 @@ export const Input = styled.input`
   border-radius: 5px;
   outline: none;
 
-  &#username{
+  &#email{
     width: 325px;
   }
 
