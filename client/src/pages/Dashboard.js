@@ -1,12 +1,12 @@
 import React from 'react';
-import PubNavbar from "../components/PrivNavbar";
+import PrivNavbar from "../components/PrivNavbar";
 import HeroImage from '../components/HeroImage';
 import Footer from "../components/Footer";
 
 const Dashboard = () => {
     return(
       <>
-        <PubNavbar/>
+        <PrivNavbar/>
         <HeroImage />
         <Footer />
         

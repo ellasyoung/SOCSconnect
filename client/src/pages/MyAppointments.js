@@ -1,11 +1,11 @@
 import React from 'react';
-import PubNavbar from "../components/PubNavbar";
+import PrivNavbar from "../components/PrivNavbar";
 import Footer from "../components/Footer";
 
 const MyAppointments = () => {
   return(
     <>
-      <PubNavbar/>
+      <PrivNavbar/>
       <h1>My Appointments</h1>
       <Footer />
     </>
