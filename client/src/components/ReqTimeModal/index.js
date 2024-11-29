@@ -25,6 +25,7 @@ const ReqTimeModal = () => {
             setError(null); 
         } catch (err) {
             setError(err.message);
+            console.log(error);
             setRecInfo(null); 
         }
     };
