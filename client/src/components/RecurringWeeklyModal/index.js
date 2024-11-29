@@ -36,7 +36,7 @@ const RecurringWeeklyModal = () => {
 
     const toggleConfirmation = () => {
         setIsConfirmed(!isConfirmed);
-      };
+    };
 
     const [formData, setFormData] = useState({
         startDate: '',
