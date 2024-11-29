@@ -3,7 +3,7 @@ import HeroBackground from "../../assets/images/hero-background.svg";
 
 export const Bckgrnd = styled.div`
   width: 100%;
-  min-height: 800px;
+  min-height: 900px;
   height: 90vh;
   position: relative;
   background: url(${HeroBackground});
@@ -24,7 +24,7 @@ export const Col = styled.div``;
 export const OuterModal = styled.div`
   width: 70%;
   margin-top: -20px;
-  min-height: 550px;
+  min-height: 650px;
   height: 75vh;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 16px;
@@ -44,7 +44,7 @@ export const OuterModal = styled.div`
 
 export const InnerModal = styled.div`
   width: 95%;
-  height: 95%;
+  height: 90%;
   background-color: white;
   border-radius: 15px;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
