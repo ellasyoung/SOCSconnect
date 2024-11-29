@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
     Bckgrnd,  
     InnerModal, 
@@ -15,8 +15,13 @@ import {
     FormContainer,
     TitleContainer,
 } from './RecurringWeeklyModalElements';
+import axios from 'axios';
+import { AuthContext } from '../../auth/AuthProvider'; 
 
 const RecurringWeeklyModal = () => {
+
+    const { email } = useContext(AuthContext); 
+
     const [formData, setFormData] = useState({
         startDate: '',
         endDate: '',
@@ -35,9 +40,10 @@ const RecurringWeeklyModal = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         const dayOfWeek = formData.dayOfWeek.toLowerCase();
 
@@ -54,23 +60,40 @@ const RecurringWeeklyModal = () => {
             return;
         }
 
-        if (startDate.toDateString() === endDate.toDateString()) {
-            alert('The start date and end date cannot be the same day for a weekly recurring meeting. Please choose different dates.');
-            return;
-        }
+        try {
+            const requestData = {
+                hostEmail: email,
+                title: formData.title,
+                dayOfWeek,
+                startDate: formData.startDate,
+                endDate: formData.endDate,
+                startTime: formData.startTime,
+                endTime: formData.endTime,
+                maxNumParticipants: formData.attendees,
+            };
 
-        console.log('Form submitted:', formData);
-        
-        setFormData({
-            startDate: '',
-            endDate: '',
-            dayOfWeek: '',
-            attendees: '',
-            startTime: '',
-            endTime: '',
-            title: ''
-        });
+            const response = await axios.post('http://localhost:5001/api/new-weekly-meeting', requestData);
+
+            console.log('Meeting created successfully:', response.data);
+            alert('Recurring weekly meeting created successfully!');
+
+            setFormData({
+                hostEmail: '',
+                startDate: '',
+                endDate: '',
+                dayOfWeek: '',
+                attendees: '',
+                startTime: '',
+                endTime: '',
+                title: '',
+            });
+        } catch (error) {
+            console.error('Error creating weekly meeting:', error.response?.data || error.message);
+            alert('There was an error creating the meeting. Please try again.');
+        }
     };
+
+    
 
     return (
         <Bckgrnd>

@@ -24,11 +24,14 @@ const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
 const logoutRoute = require("./routes/logout");
 const altTimeRoutne = require("./routes/alternaterequest");
+const weeklyMeeting = require("./routes/weeklyMeeting");
+
 
 app.use("/api/register", registerRoute); 
 app.use("/api/login", loginRoute);     
 app.use("/api/logout", logoutRoute);     
 app.use("/api/alternate-request", altTimeRoutne);     
+app.use("/api/new-weekly-meeting", weeklyMeeting);     
 
 
 app.get("/", (req, res) => {
