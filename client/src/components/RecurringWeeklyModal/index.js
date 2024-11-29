@@ -48,6 +48,13 @@ const RecurringWeeklyModal = () => {
         title: ''
     });
 
+    const formatDateToMMDDYYYY = (dateString) => {
+        const datePart = dateString.split('T')[0];
+        const [year, month, day] = datePart.split('-');
+        return `${month}/${day}/${year}`;
+    };
+    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -228,9 +235,10 @@ const RecurringWeeklyModal = () => {
                 <ConfirmationModal>
                 <CloseButton onClick={toggleConfirmation} />
                 <ModalTitle>Meeting Created!</ModalTitle>
-                <ModalText>                
-                    {`This meeting will occur on the first ${confirmationDetails.schedule.dayOfWeek} of each month at ${new Date(`1970-01-01T${confirmationDetails.schedule.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}-${new Date(`1970-01-01T${confirmationDetails.schedule.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${new Date(confirmationDetails.schedule.startDate).toLocaleDateString()} until ${new Date(confirmationDetails.schedule.endDate).toLocaleDateString()}.`}
+                <ModalText>
+                    {`This meeting will occur on the first ${confirmationDetails.schedule.dayOfWeek} of each month at ${new Date(`1970-01-01T${confirmationDetails.schedule.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}-${new Date(`1970-01-01T${confirmationDetails.schedule.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${formatDateToMMDDYYYY(confirmationDetails.schedule.startDate)} until ${formatDateToMMDDYYYY(confirmationDetails.schedule.endDate)}.`}
                 </ModalText>
+
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
