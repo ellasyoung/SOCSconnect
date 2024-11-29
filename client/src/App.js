@@ -13,7 +13,6 @@ import RecurringWeekly from "./pages/RecurringWeekly";
 import AuthProvider from "./auth/AuthProvider";
 import ProtectedRoute from "./auth/ProtectedRoute"; 
 import AppWrapper from "./auth/AppWrapper";
-import PubMyAppointments from "./pages/PubMyAppointments";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -44,7 +43,6 @@ function App() {
             <Route path="/my-appointments" element={<MyAppointments />} />
             <Route path="/register" element={<Register />} />
             <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/appointments-sign-in" element={<PubMyAppointments />} />
             
             <Route 
               path="/dashboard" 
