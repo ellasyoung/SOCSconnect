@@ -32,6 +32,7 @@ const RecurringWeeklyModal = () => {
 
     const { email } = useContext(AuthContext); 
     const [isConfirmed, setIsConfirmed] = useState(false);
+    const [url, setURL] = useState('');
     const [confirmationDetails, setConfirmationDetails] = useState({
         startDate: '',
         endDate: '',
@@ -101,6 +102,7 @@ const RecurringWeeklyModal = () => {
 
             const response = await axios.post('http://localhost:5001/api/new-weekly-meeting', requestData);
             console.log('Meeting created successfully:', response.data);
+            setURL(response.data.url);
             //alert('Recurring weekly meeting created successfully!');
 
             setFormData({
@@ -239,17 +241,17 @@ const RecurringWeeklyModal = () => {
                 <CloseButton onClick={toggleConfirmation} />
                 <ModalTitle>Meeting Created!</ModalTitle>
                 <ModalText>                
-                    {`This meeting will occur on  ${confirmationDetails.dayOfWeek} of each week at ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}-${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${confirmationDetails.startDate} until ${confirmationDetails.endDate}.`}
+                    {`This meeting will occur on  ${confirmationDetails.dayOfWeek} of each week at ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${confirmationDetails.startDate} until ${confirmationDetails.endDate}.`}
                 </ModalText>
 
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
-                        <ModalLink href='https://www.google.com' target='_blank'>                
-                            {`https://www.socsconnect.com/wsetdrytfuygiu23456789`}
+                        <ModalLink href={`http://localhost:3000/${url}`} target='_blank'>                
+                            {`http://localhost:3000/${url}`}
                         </ModalLink>
                     </FormGroup>
-                    <SendIcon link="https://www.socsconnect.com/wsetdrytfuygiu23456789"/>
+                    <SendIcon link={`http://localhost:3000/${url}`}/>
                 </Line>
                 <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
                 </ConfirmationModal>

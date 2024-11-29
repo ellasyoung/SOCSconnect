@@ -84,7 +84,7 @@ export const Input = styled.input`
   }
   @media screen and (max-width: 550px) {
     width: 200px;
-    &#username{
+    &#email{
       width: 225px;
     }
   }
@@ -92,7 +92,7 @@ export const Input = styled.input`
   @media screen and (max-width: 500px) {
     width: 150px;
     font-size: 12px;
-    &#username{
+    &#email{
       width: 175px;
     }
   }
