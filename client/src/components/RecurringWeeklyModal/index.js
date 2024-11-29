@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
     Bckgrnd,  
     InnerModal, 
@@ -14,9 +14,30 @@ import {
     TitleInput,
     FormContainer,
     TitleContainer,
+    Dim,
+    ConfirmationModal,
+    CloseButton,
+    ModalTitle,
+    ModalText,
+    ModalLink,
+    Line,
+    SendIcon,
 } from './RecurringWeeklyModalElements';
+import axios from 'axios';
+import { AuthContext } from '../../auth/AuthProvider'; 
+import { FaAngleRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const RecurringWeeklyModal = () => {
+
+    const { email } = useContext(AuthContext); 
+    const [isConfirmed, setIsConfirmed] = useState(false);
+    const [confirmationDetails, setConfirmationDetails] = useState(null);
+
+    const toggleConfirmation = () => {
+        setIsConfirmed(!isConfirmed);
+      };
+
     const [formData, setFormData] = useState({
         startDate: '',
         endDate: '',
@@ -35,9 +56,10 @@ const RecurringWeeklyModal = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         const dayOfWeek = formData.dayOfWeek.toLowerCase();
 
@@ -54,23 +76,41 @@ const RecurringWeeklyModal = () => {
             return;
         }
 
-        if (startDate.toDateString() === endDate.toDateString()) {
-            alert('The start date and end date cannot be the same day for a weekly recurring meeting. Please choose different dates.');
-            return;
-        }
+        try {
+            const requestData = {
+                hostEmail: email,
+                title: formData.title,
+                dayOfWeek,
+                startDate: formData.startDate,
+                endDate: formData.endDate,
+                startTime: formData.startTime,
+                endTime: formData.endTime,
+                maxNumParticipants: formData.attendees,
+            };
 
-        console.log('Form submitted:', formData);
-        
-        setFormData({
-            startDate: '',
-            endDate: '',
-            dayOfWeek: '',
-            attendees: '',
-            startTime: '',
-            endTime: '',
-            title: ''
-        });
+            const response = await axios.post('http://localhost:5001/api/new-weekly-meeting', requestData);
+            setConfirmationDetails(response.data); 
+            console.log('Meeting created successfully:', response.data);
+            //alert('Recurring weekly meeting created successfully!');
+
+            setFormData({
+                hostEmail: '',
+                startDate: '',
+                endDate: '',
+                dayOfWeek: '',
+                attendees: '',
+                startTime: '',
+                endTime: '',
+                title: '',
+            });
+            toggleConfirmation();
+        } catch (error) {
+            console.error('Error creating weekly meeting:', error.response?.data || error.message);
+            alert('There was an error creating the meeting. Please try again.');
+        }
     };
+
+    
 
     return (
         <Bckgrnd>
@@ -183,6 +223,27 @@ const RecurringWeeklyModal = () => {
                     </Form>
                 </InnerModal>
             </ModalContainer>
+            {isConfirmed && (
+            <Dim>
+                <ConfirmationModal>
+                <CloseButton onClick={toggleConfirmation} />
+                <ModalTitle>Meeting Created!</ModalTitle>
+                <ModalText>                
+                    {`This meeting will occur on the first ${confirmationDetails.schedule.dayOfWeek} of each month at ${new Date(`1970-01-01T${confirmationDetails.schedule.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}-${new Date(`1970-01-01T${confirmationDetails.schedule.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${new Date(confirmationDetails.schedule.startDate).toLocaleDateString()} until ${new Date(confirmationDetails.schedule.endDate).toLocaleDateString()}.`}
+                </ModalText>
+                <Line>
+                    <FormGroup className='conf'>
+                        <Label className='label'>Booking Link: </Label>
+                        <ModalLink href='https://www.google.com' target='_blank'>                
+                            {`https://www.socsconnect.com/wsetdrytfuygiu23456789`}
+                        </ModalLink>
+                    </FormGroup>
+                    <SendIcon link="https://www.socsconnect.com/wsetdrytfuygiu23456789"/>
+                </Line>
+                <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
+                </ConfirmationModal>
+            </Dim>
+            )}
         </Bckgrnd>
     );
 };
