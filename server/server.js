@@ -25,6 +25,7 @@ const loginRoute = require("./routes/login");
 const logoutRoute = require("./routes/logout");
 const altTimeRoutne = require("./routes/alternaterequest");
 const weeklyMeeting = require("./routes/weeklyMeeting");
+const userInfo = require("./routes/userInfo");
 
 
 app.use("/api/register", registerRoute); 
@@ -32,7 +33,7 @@ app.use("/api/login", loginRoute);
 app.use("/api/logout", logoutRoute);     
 app.use("/api/alternate-request", altTimeRoutne);     
 app.use("/api/new-weekly-meeting", weeklyMeeting);     
-
+app.use("/api/user-info", userInfo);
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");

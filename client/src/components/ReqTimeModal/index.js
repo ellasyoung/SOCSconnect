@@ -1,11 +1,65 @@
 import React, { useState, useContext } from 'react';
-import { Bckgrnd, OuterModal, InnerModal, Title, FormRow, Button, Form, Label, Input, FormGroup, TitleContainer, TitleInput, Title2 } from "./ReqTimeElements";
+import { Bckgrnd, OuterModal, InnerModal, Title, FormRow, Button, Form, Label, Input, FormGroup, TitleContainer, TitleInput, Title2,
+    ConfirmationModal, Dim, CloseButton, ModalText, ModalTitle, Line,
+} from "./ReqTimeElements";
 import axios from 'axios';
 import { AuthContext } from '../../auth/AuthProvider'; 
+import { FaAngleRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const ReqTimeModal = () => {
 
     const { email } = useContext(AuthContext); 
+    const [isConfirmed, setIsConfirmed] = useState(false);
+    const [recInfo, setRecInfo] = useState({
+        firstName: '',
+        lastName: ''
+    });
+
+    const [error, setError] = useState(null);
+
+    const handleFetchUserInfo = async () => {
+        try {
+            const data = await getUserInfo(formData.recEmail);
+            setRecInfo(data);
+            setError(null); 
+        } catch (err) {
+            setError(err.message);
+            console.log(error);
+            setRecInfo(null); 
+        }
+    };
+
+    const getUserInfo = async (email) => {
+        try {
+            const response = await fetch(`http://localhost:5001/api/user-info?email=${encodeURIComponent(email)}`);
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch user info');
+            }
+    
+            const data = await response.json();
+            console.log('User Info:', data);
+            return data; 
+        } catch (error) {
+            console.error('Error fetching user info:', error.message);
+            throw error;
+        }
+    };
+
+    const [confirmationDetails, setConfirmationDetails] = useState({
+        recEmail: '',
+        startTime: '',
+        startPeriod: '', 
+        endTime: '',
+        endPeriod: '', 
+        date: '',
+        title: ''
+    });
+
+    const toggleConfirmation = () => {
+        setIsConfirmed(!isConfirmed);
+    };
 
     const [formData, setFormData] = useState({
         recEmail: '',
@@ -50,6 +104,9 @@ const ReqTimeModal = () => {
     
             const response = await axios.post("http://localhost:5001/api/alternate-request", data);
             console.log("Request submitted successfully:", response.data);
+
+            setConfirmationDetails(formData);
+            handleFetchUserInfo();
     
             setFormData({
                 recEmail: '',
@@ -58,8 +115,8 @@ const ReqTimeModal = () => {
                 date: '',
                 title: ''
             });
-    
-            alert("Meeting request submitted successfully!");
+            toggleConfirmation();
+            //alert("Meeting request submitted successfully!");
         } catch (error) {
             console.error("Error submitting request:", error);
             alert("There was an error submitting your request. Please try again.");
@@ -139,6 +196,24 @@ const ReqTimeModal = () => {
                     </Form>
                 </InnerModal>
             </OuterModal>
+            {isConfirmed && (
+            <Dim>
+                <ConfirmationModal>
+                <CloseButton onClick={toggleConfirmation} />
+                <ModalTitle>Request Sent!</ModalTitle>
+                <ModalText>                
+                    {`Your request to meet with ${recInfo.firstName} ${recInfo.lastName} on ${confirmationDetails.date} from
+                     ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - 
+                     ${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} has been 
+                     successfully sent. You can see the request's status under My Appointments.`}
+                </ModalText>
+                <Line>
+                    
+                </Line>
+                <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
+                </ConfirmationModal>
+            </Dim>
+            )}
         </Bckgrnd>
     );
 };

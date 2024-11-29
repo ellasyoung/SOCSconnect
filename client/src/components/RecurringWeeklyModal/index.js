@@ -56,6 +56,13 @@ const RecurringWeeklyModal = () => {
         title: ''
     });
 
+    const formatDateToMMDDYYYY = (dateString) => {
+        const datePart = dateString.split('T')[0];
+        const [year, month, day] = datePart.split('-');
+        return `${month}/${day}/${year}`;
+    };
+    
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -240,6 +247,7 @@ const RecurringWeeklyModal = () => {
                 <ModalText>                
                     {`This meeting will occur on  ${confirmationDetails.dayOfWeek} of each week at ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}-${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${confirmationDetails.startDate} until ${confirmationDetails.endDate}.`}
                 </ModalText>
+
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
