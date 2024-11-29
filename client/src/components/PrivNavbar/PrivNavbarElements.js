@@ -157,6 +157,11 @@ export const ProfileDropdown = styled.div`
   flex-direction: column;
   position: relative;
   box-shadow: 8px 8px 10px rgba(98, 7, 7, 0.7);
+
+  @media screen and (max-width: 700px) {
+    width: 300px;
+    margin-top: -100px;
+  }
 `;
 
 
@@ -182,6 +187,10 @@ export const LogoutBtn = styled.button`
   &:hover {
     background-color:  #620707;
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
+  }
+
+  @media screen and (max-width: 700px) {
+    width: 150px;
   }
 `;
 
@@ -214,6 +223,11 @@ export const CloseButton = styled(FaTimes)`
     color: #fff;
     background-color: #cd2222; 
     transform: scale(1.1) rotate(360deg); 
+  }
+
+  @media screen and (max-width: 700px) {
+    top: 15px;
+    right: 15px;
   }
 `;
 

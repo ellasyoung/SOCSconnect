@@ -10,13 +10,13 @@ import {
     Input,
     Button, 
     Text,
-} from './SignInModalElements';
+} from '../SignInModal/SignInModalElements';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import axios from 'axios';
 import { AuthContext } from '../../auth/AuthProvider'; 
 import { useNavigate } from 'react-router-dom';
 
-const SignInModal = () => {
+const PubApptsModal = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -61,7 +61,7 @@ const SignInModal = () => {
         <Bckgrnd> 
             <OuterModal>
                 <InnerModal>
-                    <Title>Sign In</Title>
+                    <Title>Sign In to See Your Appointments</Title>
                     <Form onSubmit={handleSubmit}>
                         <FormGroup>
                             <Label htmlFor="email">McGill Email</Label>
@@ -112,4 +112,4 @@ const SignInModal = () => {
     );
 };
 
-export default SignInModal;
+export default PubApptsModal;
