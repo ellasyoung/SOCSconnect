@@ -13,6 +13,7 @@ import RecurringWeekly from "./pages/RecurringWeekly";
 import AuthProvider from "./auth/AuthProvider";
 import ProtectedRoute from "./auth/ProtectedRoute"; 
 import AppWrapper from "./auth/AppWrapper";
+import MeetingPage from './pages/MeetingPage';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -43,6 +44,7 @@ function App() {
             <Route path="/my-appointments" element={<MyAppointments />} />
             <Route path="/register" element={<Register />} />
             <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/meeting/:meetingId" element={<MeetingPage />} />
             
             <Route 
               path="/dashboard" 

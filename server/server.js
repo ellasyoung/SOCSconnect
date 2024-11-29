@@ -32,7 +32,7 @@ app.use("/api/register", registerRoute);
 app.use("/api/login", loginRoute);     
 app.use("/api/logout", logoutRoute);     
 app.use("/api/alternate-request", altTimeRoutne);     
-app.use("/api/new-weekly-meeting", weeklyMeeting);     
+app.use("/api", weeklyMeeting);     
 app.use("/api/user-info", userInfo);
 
 app.get("/", (req, res) => {

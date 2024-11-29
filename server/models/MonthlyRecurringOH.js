@@ -5,6 +5,11 @@ const MonthlyOfficeHoursSchema = new mongoose.Schema({
         type: String, 
         default: ''
     }, 
+    hostId: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Users", 
+        required: true
+    }, 
     schedule:{
         dayOrNum:{
             type: String,
