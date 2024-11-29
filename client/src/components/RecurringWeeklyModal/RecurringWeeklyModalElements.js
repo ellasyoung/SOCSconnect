@@ -373,6 +373,7 @@ export const ModalLink = styled.a`
   @media screen and (max-width: 700px) {
     font-size: 10px;
     margin-right: 20px;
+    width: 200px;
   }
 `;
 
