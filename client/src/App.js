@@ -13,6 +13,7 @@ import RecurringWeekly from "./pages/RecurringWeekly";
 import AuthProvider from "./auth/AuthProvider";
 import ProtectedRoute from "./auth/ProtectedRoute"; 
 import AppWrapper from "./auth/AppWrapper";
+import RecurringMonthly from "./pages/RecurringMonthly";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -42,8 +43,7 @@ function App() {
             <Route path="/booking" element={<Booking />} />
             <Route path="/my-appointments" element={<MyAppointments />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            
+            <Route path="/sign-in" element={<SignIn />} />            
             <Route 
               path="/dashboard" 
               element={
@@ -68,6 +68,14 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            <Route
+              path="/recurring-monthly"
+              element={
+                <ProtectedRoute>
+                  <RecurringMonthly />
+                </ProtectedRoute>
+              }
+              />
           </Routes>
         </Router>
       </AppWrapper>
