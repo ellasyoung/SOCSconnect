@@ -33,7 +33,10 @@ router.post('/', async (req, res) => {
 
         await session.save();
 
-        res.status(200).json({ token });
+        res.status(200).json({
+            token,
+            email: user.email
+        });
     } catch (error) {
         res.status(500).json({ error: 'Internal server error' });
     }

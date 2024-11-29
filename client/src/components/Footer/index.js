@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FooterCont, FooterLogo, LinksContainer, ExternalLink, FooterLinksCont} from "./FooterElements";
 import SOCSLogo from "../../assets/images/footer-logo.svg"; 
+import { AuthContext } from "../../auth/AuthProvider"; 
 
 const Footer = () => {
+    const { isLoggedIn } = useContext(AuthContext); 
     return (
         <FooterCont>
             <FooterLogo src={SOCSLogo} alt="SOCS Logo"/>
@@ -12,8 +14,18 @@ const Footer = () => {
                         <LinksContainer>
                             <ExternalLink href="/">Home</ExternalLink>
                             <ExternalLink href="/booking">Booking</ExternalLink>
-                            <ExternalLink href="/register">Register</ExternalLink>
-                            <ExternalLink href="/sign-in">Sign In</ExternalLink>
+
+                            {isLoggedIn ? 
+                                (<>
+                                    <ExternalLink href="/my-appointments">My Appointments</ExternalLink>
+                                    <ExternalLink href="/request-time">Request Time</ExternalLink>
+                                </>)
+                            : 
+                                (<>
+                                    <ExternalLink href="/register">Register</ExternalLink>
+                                    <ExternalLink href="/sign-in">Sign In</ExternalLink>
+                                </>)
+                            }
                         </LinksContainer>   
                     </div>
                     <div className="Column">

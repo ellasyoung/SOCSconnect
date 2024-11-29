@@ -34,7 +34,7 @@ const Navbar = () => {
       <Dropdown style={{ display: isMenuOpen && windowWidth < 1000 ? "flex" : "none" }}>
           <NavLink as={Link} to="/" className="top" href="#">Home</NavLink>
           <NavLink as={Link} to="/booking" href="#">Booking</NavLink>
-          <NavLink as={Link} to="/sign-in" href="#">My Appointments</NavLink>
+          <NavLink as={Link} to="/appointments-sign-in" href="#">My Appointments</NavLink>
           <Button as={Link} to="/register" className="register">Register</Button>
           <Button as={Link} to="/sign-in" className="sign-in">Sign in</Button>
       </Dropdown>
@@ -43,7 +43,7 @@ const Navbar = () => {
         <NavLinks>
         <NavLink as={Link} to="/" href="#">Home</NavLink>
           <NavLink as={Link} to="/booking" href="#">Booking</NavLink>
-          <NavLink as={Link} to="/sign-in" href="#">My Appointments</NavLink>
+          <NavLink as={Link} to="/appointments-sign-in" href="#">My Appointments</NavLink>
         </NavLinks>
         <ButtonContainer>
         <Button as={Link} to="/register" className="register">Register</Button>

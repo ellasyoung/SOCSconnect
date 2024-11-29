@@ -107,7 +107,7 @@ export const Button = styled.a`
     text-decoration: none;
     transition: background-color 0.3s ease;
     background-color: white;
-    width: 200px;
+    width: 250px;
     margin-top: 30px;
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.8);
     display: flex;
