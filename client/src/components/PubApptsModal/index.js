@@ -61,7 +61,12 @@ const PubApptsModal = () => {
         <Bckgrnd> 
             <OuterModal>
                 <InnerModal>
-                    <Title>Sign In to See Your Appointments</Title>
+                    <Title
+                    style={{
+                        fontSize: '24px',
+                        paddingLeft: '5px;'}}
+                    
+                    >Sign In to See Your Appointments</Title>
                     <Form onSubmit={handleSubmit}>
                         <FormGroup>
                             <Label htmlFor="email">McGill Email</Label>

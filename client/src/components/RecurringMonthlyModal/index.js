@@ -1,6 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { 
     Bckgrnd,  
+    Select
+} from './RecurringMonthlyModalElements';
+
+import {
     InnerModal, 
     UpperModal,
     ModalContainer,
@@ -21,9 +25,8 @@ import {
     ModalText,
     ModalLink,
     Line,
-    SendIcon,
-    Select
-} from './RecurringMonthlyModalElements';
+    SendIcon
+} from '../RecurringWeeklyModal/RecurringWeeklyModalElements';
 import axios from 'axios';
 import { AuthContext } from '../../auth/AuthProvider'; 
 import { FaAngleRight } from "react-icons/fa";
