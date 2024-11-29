@@ -12,11 +12,21 @@ import {
     Text,
     Col,
     PwdCont,
+    ConfirmationModal, 
+    CloseButton,
+    ModalText,
+    ModalTitle,
+    Dim,
 } from './RegisterModalElements';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
 import axios from 'axios';
+import { FaAngleRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const RegisterModal = () => {
+
+    const [isConfirmed, setIsConfirmed] = useState(false);
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -24,6 +34,10 @@ const RegisterModal = () => {
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
+
+    const toggleConfirmation = () => {
+        setIsConfirmed(!isConfirmed);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -48,7 +62,8 @@ const RegisterModal = () => {
                 },
             });
             console.log('Response:', response.data);
-            alert("Registration successful! Please proceed to the Login page.");
+            toggleConfirmation();
+            //alert("Registration successful! Please proceed to the Login page.");
         } catch (error) {
             console.error('Error:', error.response?.data || error.message);
             alert(error.response?.data?.message || "Registration failed. Please try again.");
@@ -138,6 +153,18 @@ const RegisterModal = () => {
                     </Form>
                 </InnerModal>
             </OuterModal>
+            {isConfirmed && (
+            <Dim>
+                <ConfirmationModal>
+                <CloseButton onClick={toggleConfirmation} />
+                <ModalTitle>Registration Successful!</ModalTitle>
+                <ModalText>                
+                    {`You have registered with SOCSconnect.`}
+                </ModalText>
+                <Button className='seeApts' as={Link} to="/sign-in">Sign In Now <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
+                </ConfirmationModal>
+            </Dim>
+            )}
         </Bckgrnd>
     );
 };
