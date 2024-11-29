@@ -32,7 +32,15 @@ const RecurringWeeklyModal = () => {
 
     const { email } = useContext(AuthContext); 
     const [isConfirmed, setIsConfirmed] = useState(false);
-    const [confirmationDetails, setConfirmationDetails] = useState(null);
+    const [confirmationDetails, setConfirmationDetails] = useState({
+        startDate: '',
+        endDate: '',
+        dayOfWeek: '',
+        attendees: '',
+        startTime: '',
+        endTime: '',
+        title: ''
+    });
 
     const toggleConfirmation = () => {
         setIsConfirmed(!isConfirmed);
@@ -95,8 +103,9 @@ const RecurringWeeklyModal = () => {
                 maxNumParticipants: formData.attendees,
             };
 
+            setConfirmationDetails(formData);
+
             const response = await axios.post('http://localhost:5001/api/new-weekly-meeting', requestData);
-            setConfirmationDetails(response.data); 
             console.log('Meeting created successfully:', response.data);
             //alert('Recurring weekly meeting created successfully!');
 
@@ -235,8 +244,8 @@ const RecurringWeeklyModal = () => {
                 <ConfirmationModal>
                 <CloseButton onClick={toggleConfirmation} />
                 <ModalTitle>Meeting Created!</ModalTitle>
-                <ModalText>
-                    {`This meeting will occur on the first ${confirmationDetails.schedule.dayOfWeek} of each month at ${new Date(`1970-01-01T${confirmationDetails.schedule.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}-${new Date(`1970-01-01T${confirmationDetails.schedule.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${formatDateToMMDDYYYY(confirmationDetails.schedule.startDate)} until ${formatDateToMMDDYYYY(confirmationDetails.schedule.endDate)}.`}
+                <ModalText>                
+                    {`This meeting will occur on  ${confirmationDetails.dayOfWeek} of each week at ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}-${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${confirmationDetails.startDate} until ${confirmationDetails.endDate}.`}
                 </ModalText>
 
                 <Line>
