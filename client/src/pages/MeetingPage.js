@@ -39,7 +39,6 @@ function MeetingPage() {
         return <div>Loading...</div>;
     }
 
-    // Pass hostInfo to the booking components as needed
     if (meetingData.type === 'weekly') {
         return <WeeklyBook meetingData={meetingData} hostInfo={hostInfo} />;
     } else if (meetingData.type === 'monthly') {

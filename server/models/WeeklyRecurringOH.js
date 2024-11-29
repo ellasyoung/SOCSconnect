@@ -37,14 +37,13 @@ const WeeklyOfficeHoursSchema = new mongoose.Schema ({
             date: {
                 type: Date,
             }, 
-            requesterId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Users", 
-            }, 
             bookingCreated: { 
                 type: Date, 
                 default: Date.now
-            }
+            },
+            requesterEmail: {
+                type: String,
+            },
         }
     ], 
     url: {

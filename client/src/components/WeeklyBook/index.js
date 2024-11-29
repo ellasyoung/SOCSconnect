@@ -4,8 +4,9 @@ import PrivNavbar from "../PrivNavbar";
 import PubNavbar from "../PubNavbar";
 import Footer from "../Footer";
 import { AuthContext } from '../../auth/AuthProvider'; 
-import { Bckgrnd, Container, Title, TextCol, CalendarCol, CalContainer, Button } from './WeeklyBookElements';
+import { Bckgrnd, Container, Title, TextCol, CalendarCol, CalContainer, Button, Input, Submit, Line, Dim, ConfirmationModal, ModalText, ModalTitle, CloseButton } from './WeeklyBookElements';
 import { FaAngleRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const calculateRecurringDates = (startDate, endDate, dayOfWeek) => {
   const recurringDates = [];
@@ -26,9 +27,10 @@ const calculateRecurringDates = (startDate, endDate, dayOfWeek) => {
 };
 
 const WeeklyBook = ({ meetingData, hostInfo }) => {
-  const { isLoggedIn } = useContext(AuthContext); 
+  const { isLoggedIn, email: loggedInEmail } = useContext(AuthContext); 
   const [selectedDate, setSelectedDate] = useState(null);
   const [spotsLeft, setSpotsLeft] = useState(null);
+  const [requesterEmail, setRequesterEmail] = useState('');
 
   const [isConfirmed, setIsConfirmed] = useState(false);
   const toggleConfirmation = () => {
@@ -40,7 +42,7 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
       (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
     ).length;
 
-    return Math.max(meetingData.maxNumParticipants - bookingsForDate, 0); // Ensure non-negative value
+    return Math.max(meetingData.maxNumParticipants - bookingsForDate, 0); 
   };
 
   const recurringDates = calculateRecurringDates(
@@ -59,6 +61,46 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
     if (isRecurringDate(date)) {
       setSelectedDate(date);
       setSpotsLeft(getAvailableSpots(date));
+    }
+  };
+
+  const handleBook = async () => {
+    if (!selectedDate) {
+      alert('Please select a date before booking.');
+      return;
+    }
+
+    const email = isLoggedIn ? loggedInEmail : requesterEmail;
+
+    if (!isLoggedIn && (!email || !/\S+@\S+\.\S+/.test(email))) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5001/api/book-slot`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          meetingId: meetingData._id,
+          date: selectedDate,
+          requesterEmail: email,
+        }),
+      });
+
+      if (response.ok) {
+        //alert('Booking successful!');
+        setSpotsLeft((prev) => (prev > 0 ? prev - 1 : 0));
+        toggleConfirmation();
+      } else {
+        const errorData = await response.json();
+        alert(`Booking failed: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error booking slot:', error);
+      alert('An error occurred while booking the slot.');
     }
   };
 
@@ -84,7 +126,18 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
             <p>
                 <b>Spots Left:</b> {selectedDate ? `${spotsLeft} / ${meetingData.maxNumParticipants}` : "please select a date to see the number of spots available"}
             </p>
-            <Button>
+            {!isLoggedIn && (
+              <Line>
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={requesterEmail}
+                  onChange={(e) => setRequesterEmail(e.target.value)}
+                />
+                <Submit><FaAngleRight/></Submit>
+              </Line>
+            )}
+            <Button onClick={handleBook} disabled={!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>
@@ -101,6 +154,23 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
               </CalContainer>
             </CalendarCol>
         </Container>
+        
+        {isConfirmed && (
+          <Dim>
+            <ConfirmationModal>
+              <CloseButton onClick={toggleConfirmation} />
+              <ModalTitle>Booking Confirmed!</ModalTitle>
+              <ModalText>                
+                  {`This meeting will occur on ${selectedDate.toDateString()} from ${new Date(`1970-01-01T${meetingData.schedule.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                   - ${new Date(`1970-01-01T${meetingData.schedule.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    with ${hostInfo.firstName} ${hostInfo.lastName}
+                  `}
+              </ModalText>
+              <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
+            </ConfirmationModal>
+        </Dim>
+        )}
+
       </Bckgrnd>
       <Footer />
     </>
