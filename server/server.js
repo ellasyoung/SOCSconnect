@@ -23,10 +23,13 @@ mongoose
 const registerRoute = require("./routes/register");
 const loginRoute = require("./routes/login");
 const logoutRoute = require("./routes/logout");
+const altTimeRoutne = require("./routes/alternaterequest");
 
 app.use("/api/register", registerRoute); 
 app.use("/api/login", loginRoute);     
 app.use("/api/logout", logoutRoute);     
+app.use("/api/alternate-request", altTimeRoutne);     
+
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");

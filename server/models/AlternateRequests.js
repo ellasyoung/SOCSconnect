@@ -35,15 +35,15 @@ const AlternateRequestsSchema = new mongoose.Schema({
     hostResponse: {
         responseDate: {
             type: Date, 
-            required: true
+            required: false
         }, 
         responseStartTime: {
             type: String, 
-            required: true
+            required: false
         }, 
         responseEndTime: {
             type: String, 
-            required: true
+            required: false
         }
     }, 
     createdAt:{
