@@ -1,15 +1,24 @@
 import React, { useContext } from 'react';
 import PrivNavbar from "../components/PrivNavbar";
+import PubNavbar from "../components/PubNavbar";
 import Footer from "../components/Footer";
 import { AuthContext } from '../auth/AuthProvider'; 
+import PubApptsModal from "../components/PubApptsModal";
 
 const MyAppointments = () => {
-  const { email } = useContext(AuthContext); 
+  const { isLoggedIn, email } = useContext(AuthContext); 
   return(
     <>
-      <PrivNavbar/>
-      <h1>My Appointments</h1>
-      <p>{email}</p>
+      {isLoggedIn ? <PrivNavbar /> : <PubNavbar />}
+      {isLoggedIn ? 
+      <>
+        <h1>My Appointments</h1>
+        <p>{email}</p>
+      </> 
+      : 
+      <>
+        <PubApptsModal/>
+      </>}
       <Footer />
     </>
   );
