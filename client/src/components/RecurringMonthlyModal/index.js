@@ -22,25 +22,26 @@ import {
     ModalLink,
     Line,
     SendIcon,
-} from './RecurringWeeklyModalElements';
+    Select
+} from './RecurringMonthlyModalElements';
 import axios from 'axios';
 import { AuthContext } from '../../auth/AuthProvider'; 
 import { FaAngleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const RecurringWeeklyModal = () => {
+const RecurringMonthlyModal = () => {
 
     const { email } = useContext(AuthContext); 
     const [isConfirmed, setIsConfirmed] = useState(false);
-    const [url, setURL] = useState('');
     const [confirmationDetails, setConfirmationDetails] = useState({
         startDate: '',
         endDate: '',
-        dayOfWeek: '',
+        repeatOn: '',
         attendees: '',
         startTime: '',
         endTime: '',
-        title: ''
+        title: '',
+        dayOfWeek: ''
     });
 
     const toggleConfirmation = () => {
@@ -50,11 +51,12 @@ const RecurringWeeklyModal = () => {
     const [formData, setFormData] = useState({
         startDate: '',
         endDate: '',
-        dayOfWeek: '',
+        repeatOn: '',
         attendees: '',
         startTime: '',
         endTime: '',
-        title: ''
+        title: '',
+        dayOfWeek: ''
     });
     
 
@@ -71,9 +73,9 @@ const RecurringWeeklyModal = () => {
         e.preventDefault();
 
         const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        const dayOfWeek = formData.dayOfWeek;
 
-        if (!validDays.includes(dayOfWeek)) {
+        // Only validate dayOfWeek if repeatOn is 'day'
+        if (formData.repeatOn === 'day' && !validDays.includes(formData.dayOfWeek)) {
             alert('Please enter a valid day of the week (e.g., Monday, Tuesday, etc.)');
             return;
         }
@@ -90,7 +92,7 @@ const RecurringWeeklyModal = () => {
             const requestData = {
                 hostEmail: email,
                 title: formData.title,
-                dayOfWeek: formData.dayOfWeek,
+                repeatOn: formData.repeatOn,
                 startDate: formData.startDate,
                 endDate: formData.endDate,
                 startTime: formData.startTime,
@@ -98,26 +100,32 @@ const RecurringWeeklyModal = () => {
                 maxNumParticipants: formData.attendees,
             };
 
-            setConfirmationDetails(formData);
+            if (formData.repeatOn=== 'day') {
+                requestData.dayOfWeek = formData.dayOfWeek;
+            }
 
-            const response = await axios.post('http://localhost:5001/api/new-weekly-meeting', requestData);
-            console.log('Meeting created successfully:', response.data);
-            setURL(response.data.url);
-            //alert('Recurring weekly meeting created successfully!');
+            setConfirmationDetails(formData);
+            console.log("Request Data: ", requestData); // Log request data for debugging
+
+            console.log('Success')
+
+            /*const response = await axios.post('http://localhost:5001/api/new-monthly-meeting', requestData);
+            console.log('Meeting created successfully:', response.data);*/
 
             setFormData({
                 hostEmail: '',
                 startDate: '',
                 endDate: '',
-                dayOfWeek: '',
+                repeatOn: '',
                 attendees: '',
                 startTime: '',
                 endTime: '',
                 title: '',
+                dayOfWeek: ''
             });
             toggleConfirmation();
         } catch (error) {
-            console.error('Error creating weekly meeting:', error.response?.data || error.message);
+            console.error('Error creating monthly meeting:', error.response?.data || error.message);
             alert('There was an error creating the meeting. Please try again.');
         }
     };
@@ -128,7 +136,7 @@ const RecurringWeeklyModal = () => {
         <Bckgrnd>
             <ModalContainer>
                 <UpperModal>
-                    <Text>Recurring Weekly Meeting</Text>
+                    <Text>Recurring Monthly Meeting</Text>
                 </UpperModal>
                 <InnerModal>
                     <Form onSubmit={handleSubmit}>
@@ -161,32 +169,34 @@ const RecurringWeeklyModal = () => {
                         
                         <FormContainer>
                             <FormGroup>
-                                <Label>Day of the Week</Label>
-                                <Input 
-                                    type="text" 
-                                    id="dayOfWeek"
-                                    name="dayOfWeek"
-                                    placeholder="Monday"
-                                    value={formData.dayOfWeek}
+                                <Label>Repeat On </Label>
+                                <Select 
+                                    id="repeatOn"
+                                    name="repeatOn"
+                                    value={formData.repeatOn}
                                     onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
-                                />
+                                >
+                                    <option value="" disabled selected>Select an option</option>
+                                    <option value="date">Date Selected</option>
+                                    <option value="day">Day of the Week</option>
+                                </Select>
                             </FormGroup>
 
-                            <FormGroup>
-                                <Label>Attendees Allowed</Label>
-                                <Input 
-                                    type="number" 
-                                    min="1"
-                                    id="attendees"
-                                    name="attendees"
-                                    value={formData.attendees}
-                                    onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
-                                    required
-                                />
-                            </FormGroup>
+                            {formData.repeatOn === 'day' && (
+                                <FormGroup>
+                                    <Label>Day of the Week</Label>
+                                    <Input 
+                                        type="text"
+                                        id="dayOfWeek"
+                                        name="dayOfWeek"
+                                        placeholder="Monday"
+                                        value={formData.dayOfWeek}
+                                        onChange={handleChange}
+                                        required={formData.repeatOn === 'day'}
+                                    />
+                                </FormGroup>
+                        )}
                         </FormContainer>
 
                         
@@ -217,6 +227,20 @@ const RecurringWeeklyModal = () => {
                                     required
                                 />
                         </FormGroup>
+
+                        <FormGroup>
+                                <Label>Attendees Allowed</Label>
+                                <Input 
+                                    type="number" 
+                                    min="1"
+                                    id="attendees"
+                                    name="attendees"
+                                    value={formData.attendees}
+                                    onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
+                                    required
+                                />
+                            </FormGroup>
                         </FormContainer>
 
                         <TitleContainer>
@@ -231,7 +255,7 @@ const RecurringWeeklyModal = () => {
                             />
                         </TitleContainer>
                         
-                        <Button type="submit">Create Weekly Meeting</Button>
+                        <Button type="submit">Create Monthly Meeting</Button>
                     </Form>
                 </InnerModal>
             </ModalContainer>
@@ -240,18 +264,27 @@ const RecurringWeeklyModal = () => {
                 <ConfirmationModal>
                 <CloseButton onClick={toggleConfirmation} />
                 <ModalTitle>Meeting Created!</ModalTitle>
-                <ModalText>                
-                    {`This meeting will occur on  ${confirmationDetails.dayOfWeek} of each week at ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${confirmationDetails.startDate} until ${confirmationDetails.endDate}.`}
+                <ModalText>
+                    {confirmationDetails.repeatOn === 'date' ? (
+                    `This meeting will occur on the ${confirmationDetails.startDate.split('-')[2]} of each month at 
+                    ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} 
+                    from ${confirmationDetails.startDate} to ${confirmationDetails.endDate}.`
+                    ) : (
+                    `This meeting will occur on ${confirmationDetails.dayOfWeek} of each month at 
+                    ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    to ${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    on ${confirmationDetails.startDate} until ${confirmationDetails.endDate}.`
+                    )}
                 </ModalText>
 
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
-                        <ModalLink href={`http://localhost:3000/${url}`} target='_blank'>                
-                            {`http://localhost:3000/${url}`}
+                        <ModalLink href='https://www.google.com' target='_blank'>                
+                            {`https://www.socsconnect.com/wsetdrytfuygiu23456789`}
                         </ModalLink>
                     </FormGroup>
-                    <SendIcon link={`http://localhost:3000/${url}`}/>
+                    <SendIcon link="https://www.socsconnect.com/wsetdrytfuygiu23456789"/>
                 </Line>
                 <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
                 </ConfirmationModal>
@@ -261,4 +294,4 @@ const RecurringWeeklyModal = () => {
     );
 };
 
-export default RecurringWeeklyModal;
+export default RecurringMonthlyModal;

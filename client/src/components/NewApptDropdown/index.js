@@ -41,7 +41,7 @@ const NewApptDropdown = () => {
               <MenuItem as={Link} to="/recurring-weekly" className="sub">
                 <FaCalendarWeek size="1em" style={{ marginLeft: "22px" }} /> Weekly
               </MenuItem>
-              <MenuItem as={Link} to="#" className="sub">
+              <MenuItem as={Link} to="/recurring-monthly" className="sub">
                 <FaCalendarAlt size="1em" style={{ marginLeft: "22px" }} /> Monthly
               </MenuItem>
             </div>
