@@ -200,7 +200,7 @@ const RecurringWeeklyModal = () => {
                             />
                         </TitleContainer>
                         
-                        <Button style={{marginLeft: 'auto'}}type="submit">Create Weekly Meeting</Button>
+                        <Button style={{marginLeft: 'auto'}}type="submit">Create Meeting</Button>
                     </Form>
                 </InnerModal>
             </ModalContainer>
