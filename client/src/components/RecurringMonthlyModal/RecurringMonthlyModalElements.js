@@ -18,17 +18,23 @@ export const Bckgrnd = styled.div`
 `;
 
 export const Select = styled.select`
-  width: 80%;
+  width: 100%;
   font-size: 16px;
-  height: 50px;
+  height: 56px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding-left: 15px;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding: 15px;
   
   font: Arial;
   text-align: left;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23000" d="M2 4L0 0h4z"/></svg>') no-repeat;
+  background-size: 10px;
+  background-position: right 15px center; 
 
   &:focus {
     border-color: #cd2222;

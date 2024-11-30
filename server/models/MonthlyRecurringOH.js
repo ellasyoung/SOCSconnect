@@ -11,13 +11,14 @@ const MonthlyOfficeHoursSchema = new mongoose.Schema({
         required: true
     }, 
     schedule:{
-        dayOrNum:{
+        day:{
             type: String,
-            required: true
         }, 
-        recurringSlot: {
-            type: [Date], 
-            required: true
+        week:{
+            type: String,
+        }, 
+        date:{
+            type: String,
         }, 
         startTime: {
             type: String,
@@ -40,12 +41,10 @@ const MonthlyOfficeHoursSchema = new mongoose.Schema({
         {
             date: {
                 type: Date,
-                required: true
             }, 
             requesterId: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'User', 
-                required: true
             }, 
             bookingCreated: { 
                 type: Date, 
