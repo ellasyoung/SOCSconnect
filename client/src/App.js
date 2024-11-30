@@ -47,7 +47,15 @@ function App() {
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/meeting/:meetingId" element={<MeetingPage />} />
 
-            <Route path="/single-booking" element={<SingleBooking />} />
+            <Route 
+            path="/single-booking" 
+            element={
+              <ProtectedRoute>
+                <SingleBooking />
+              </ProtectedRoute>
+            }
+            />
+            
             
             <Route 
               path="/dashboard" 
