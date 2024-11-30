@@ -44,8 +44,12 @@ const RecurringMonthlyModal = () => {
         startTime: '',
         endTime: '',
         title: '',
-        dayOfWeek: ''
+        dayOfWeek: '',
+        weekOfMonth: '',
+        dayOfMonth: '',
     });
+
+    const [url, setURL] = useState('');
 
     const toggleConfirmation = () => {
         setIsConfirmed(!isConfirmed);
@@ -74,18 +78,17 @@ const RecurringMonthlyModal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
-        // Only validate dayOfWeek if repeatOn is 'day'
+    
         if (formData.repeatOn === 'day' && !validDays.includes(formData.dayOfWeek)) {
             alert('Please enter a valid day of the week (e.g., Monday, Tuesday, etc.)');
             return;
         }
-
+    
         const startDate = new Date(formData.startDate);
         const endDate = new Date(formData.endDate);
-
+    
         if (startDate > endDate) {
             alert('The end date cannot be earlier than the start date. Please correct it.');
             return;
@@ -98,46 +101,47 @@ const RecurringMonthlyModal = () => {
 
         try {
             const requestData = {
-                hostEmail: email,
                 title: formData.title,
-                repeatOn: formData.repeatOn,
-                startDate: formData.startDate,
-                endDate: formData.endDate,
-                startTime: formData.startTime,
-                endTime: formData.endTime,
-                maxNumParticipants: formData.attendees,
+                hostEmail: email,
+                schedule: {
+                    day: formData.dayOfWeek,
+                    week: formData.weekOfMonth,
+                    date: formData.dayOfMonth,
+                    startTime: formData.startTime,
+                    endTime: formData.endTime,
+                    startDate: formData.startDate,
+                    endDate: formData.endDate,
+                },
+                maxNumParticipants: formData.attendees || 1,
             };
-
-            if (formData.repeatOn=== 'day') {
-                requestData.dayOfWeek = formData.dayOfWeek;
+    
+            const response = await axios.post('http://localhost:5001/api/monthly-meeting', requestData);
+    
+            if (response.status === 201) {
+                //alert('Meeting created successfully!');
+                setConfirmationDetails(formData);
+                setIsConfirmed(true);
+                setURL(response.data.url);
+    
+                setFormData({
+                    startDate: '',
+                    endDate: '',
+                    repeatOn: '',
+                    attendees: '',
+                    startTime: '',
+                    endTime: '',
+                    title: '',
+                    dayOfWeek: '',
+                    weekOfMonth: '',
+                    dayOfMonth: '',
+                });
             }
-
-            setConfirmationDetails(formData);
-            console.log("Request Data: ", requestData); // Log request data for debugging
-
-            console.log('Success')
-
-            /*const response = await axios.post('http://localhost:5001/api/new-monthly-meeting', requestData);
-            console.log('Meeting created successfully:', response.data);*/
-
-            setFormData({
-                hostEmail: '',
-                startDate: '',
-                endDate: '',
-                repeatOn: '',
-                attendees: '',
-                startTime: '',
-                endTime: '',
-                title: '',
-                dayOfWeek: ''
-            });
-            toggleConfirmation();
         } catch (error) {
-            console.error('Error creating monthly meeting:', error.response?.data || error.message);
-            alert('There was an error creating the meeting. Please try again.');
+            console.error('Error creating meeting:', error.response?.data || error.message);
+            alert('Failed to create the meeting. Please try again.');
         }
     };
-
+    
     
 
     return (
@@ -185,25 +189,71 @@ const RecurringMonthlyModal = () => {
                                     onChange={handleChange}
                                     required
                                 >
-                                    <option value="" disabled selected>Select an option</option>
-                                    <option value="date">Date Selected</option>
+                                    <option value="" disabled selected>Select option...</option>
+                                    <option value="date">Specific Date</option>
                                     <option value="day">Day of the Week</option>
                                 </Select>
                             </FormGroup>
 
                             {formData.repeatOn === 'day' && (
-                                <FormGroup>
-                                    <Label>Day of the Week</Label>
-                                    <Input 
-                                        type="text"
-                                        id="dayOfWeek"
-                                        name="dayOfWeek"
-                                        placeholder="Monday"
-                                        value={formData.dayOfWeek}
-                                        onChange={handleChange}
-                                        required={formData.repeatOn === 'day'}
-                                    />
-                                </FormGroup>
+                                <>
+                                    <FormGroup>
+                                        <Label>Day of the Week</Label>
+                                        <Select 
+                                            id="dayOfWeek"
+                                            name="dayOfWeek"
+                                            value={formData.dayOfWeek}
+                                            onChange={handleChange}
+                                            required={formData.repeatOn === 'day'}
+                                        >
+                                            <option value="" disabled selected>Select day...</option>
+                                            <option value="Monday">Monday</option>
+                                            <option value="Tuesday">Tuesday</option>
+                                            <option value="Wednesday">Wednesday</option>
+                                            <option value="Thursday">Thursday</option>
+                                            <option value="Friday">Friday</option>
+                                            <option value="Saturday">Saturday</option>
+                                            <option value="Sunday">Sunday</option>
+                                        </Select>
+                                    </FormGroup>
+                                    <FormGroup>
+                                        <Label>Week of the Month</Label>
+                                        <Select 
+                                            id="weekOfMonth"
+                                            name="weekOfMonth"
+                                            value={formData.weekOfMonth}
+                                            onChange={handleChange}
+                                            required={formData.repeatOn === 'day'}
+                                        >
+                                            <option value="" disabled selected>Select week...</option>
+                                            <option value="first">First {formData.dayOfWeek} of each month</option>
+                                            <option value="second">Second {formData.dayOfWeek} of each month</option>
+                                            <option value="third">Third {formData.dayOfWeek} of each month</option>
+                                            <option value="fourth">Fourth {formData.dayOfWeek} of each month</option>
+                                            <option value="last">Last {formData.dayOfWeek} of each month</option>
+                                        </Select>
+                                    </FormGroup>
+                                </>
+                                
+                        )}
+                        {formData.repeatOn === 'date' && (
+                            <FormGroup>
+                            <Label>Day of the Month</Label>
+                            <Select 
+                                id="dayOfMonth"
+                                name="dayOfMonth"
+                                value={formData.dayOfMonth}
+                                onChange={handleChange}
+                                required={formData.repeatOn === 'day'}
+                            >
+                                <option value="" disabled selected>Select day...</option>
+                                {Array.from({ length: 30 }, (_, i) => (
+                                    <option key={i + 1} value={i + 1}>
+                                    {i + 1}
+                                    </option>
+                                ))}
+                            </Select>
+                        </FormGroup>
                         )}
                         </FormContainer>
 
@@ -288,11 +338,11 @@ const RecurringMonthlyModal = () => {
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
-                        <ModalLink href='https://www.google.com' target='_blank'>                
-                            {`https://www.socsconnect.com/wsetdrytfuygiu23456789`}
+                        <ModalLink href={`http://localhost:3000/${url}`} target='_blank'>                
+                            {`http://localhost:3000/${url}`}
                         </ModalLink>
                     </FormGroup>
-                    <SendIcon link="https://www.socsconnect.com/wsetdrytfuygiu23456789"/>
+                    <SendIcon link={`http://localhost:3000/${url}`}/>
                 </Line>
                 <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
                 </ConfirmationModal>

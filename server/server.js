@@ -27,6 +27,7 @@ const altTimeRoutne = require("./routes/alternaterequest");
 const weeklyMeeting = require("./routes/weeklyMeeting");
 const userInfo = require("./routes/userInfo");
 const singleMeeting = require("./routes/singleBooking");
+const monthlyMeeting = require("./routes/monthlyMeeting");
 
 
 app.use("/api/register", registerRoute); 
@@ -36,6 +37,7 @@ app.use("/api/alternate-request", altTimeRoutne);
 app.use("/api", weeklyMeeting);     
 app.use("/api/user-info", userInfo);
 app.use("/api", singleMeeting);
+app.use("/api", monthlyMeeting);   
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
