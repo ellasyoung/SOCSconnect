@@ -118,7 +118,7 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
                 value={selectedDate}
                 tileDisabled={() => true} 
                 tileClassName={({ date, view }) => 
-                  view === 'month' && selectedDate.toDateString() === date.toDateString() ? 'selected-date' : null
+                  view === 'month' && selectedDate? (selectedDate.toDateString() === date.toDateString() ? 'selected-date' : null) : null
                 }
               />
             </CalContainer>
