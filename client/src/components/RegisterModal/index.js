@@ -54,16 +54,13 @@ const RegisterModal = () => {
             alert("Please enter a valid McGill email ending with @mail.mcgill.ca or @mcgill.ca.");
             return;
         }
-        //console.log('Form submitted:', formData);
         try {
             const response = await axios.post("http://localhost:5001/api/register", formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
-            console.log('Response:', response.data);
             toggleConfirmation();
-            //alert("Registration successful! Please proceed to the Login page.");
         } catch (error) {
             console.error('Error:', error.response?.data || error.message);
             alert(error.response?.data?.message || "Registration failed. Please try again.");
