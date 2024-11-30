@@ -1,6 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { 
     Bckgrnd,  
+    Select
+} from './RecurringMonthlyModalElements';
+
+import {
     InnerModal, 
     UpperModal,
     ModalContainer,
@@ -21,9 +25,8 @@ import {
     ModalText,
     ModalLink,
     Line,
-    SendIcon,
-    Select
-} from './RecurringMonthlyModalElements';
+    SendIcon
+} from '../RecurringWeeklyModal/RecurringWeeklyModalElements';
 import axios from 'axios';
 import { AuthContext } from '../../auth/AuthProvider'; 
 import { FaAngleRight } from "react-icons/fa";
@@ -90,7 +93,12 @@ const RecurringMonthlyModal = () => {
             alert('The end date cannot be earlier than the start date. Please correct it.');
             return;
         }
-    
+
+        if (formData.startTime >= formData.endTime) {
+            alert('The meeting cannot start later than it is supposed to end.');
+            return;
+        }
+
         try {
             const requestData = {
                 title: formData.title,

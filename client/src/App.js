@@ -15,6 +15,7 @@ import ProtectedRoute from "./auth/ProtectedRoute";
 import AppWrapper from "./auth/AppWrapper";
 import RecurringMonthly from "./pages/RecurringMonthly";
 import MeetingPage from './pages/MeetingPage';
+import SingleBooking from './pages/SingleBooking'
 const GlobalStyle = createGlobalStyle`
 
   @font-face {
@@ -45,6 +46,16 @@ function App() {
             <Route path="/register" element={<Register />} />            
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/meeting/:meetingId" element={<MeetingPage />} />
+
+            <Route 
+            path="/single-booking" 
+            element={
+              <ProtectedRoute>
+                <SingleBooking />
+              </ProtectedRoute>
+            }
+            />
+            
             
             <Route 
               path="/dashboard" 

@@ -22,7 +22,7 @@ import {
     ModalLink,
     Line,
     SendIcon,
-} from './RecurringWeeklyModalElements';
+} from '../RecurringWeeklyModal/RecurringWeeklyModalElements';
 import axios from 'axios';
 import { AuthContext } from '../../auth/AuthProvider'; 
 import { FaAngleRight } from "react-icons/fa";
@@ -34,9 +34,7 @@ const RecurringWeeklyModal = () => {
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [url, setURL] = useState('');
     const [confirmationDetails, setConfirmationDetails] = useState({
-        startDate: '',
-        endDate: '',
-        dayOfWeek: '',
+        date: '',
         attendees: '',
         startTime: '',
         endTime: '',
@@ -48,9 +46,7 @@ const RecurringWeeklyModal = () => {
     };
 
     const [formData, setFormData] = useState({
-        startDate: '',
-        endDate: '',
-        dayOfWeek: '',
+        date: '',
         attendees: '',
         startTime: '',
         endTime: '',
@@ -66,38 +62,22 @@ const RecurringWeeklyModal = () => {
         });
     };
 
+    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        const dayOfWeek = formData.dayOfWeek;
-
-        if (!validDays.includes(dayOfWeek)) {
-            alert('Please enter a valid day of the week (e.g., Monday, Tuesday, etc.)');
-            return;
-        }
-
-        const startDate = new Date(formData.startDate);
-        const endDate = new Date(formData.endDate);
-
-        if (startDate > endDate) {
-            alert('The end date cannot be earlier than the start date. Please correct it.');
-            return;
-        }
-
         if (formData.startTime >= formData.endTime) {
-            alert('The meeting cannot start later than it is supposed to end.');
-            return;
+            alert('Start time must be earlier than end time!');
+            return; // Prevent form submission if the times are not valid
         }
 
         try {
             const requestData = {
                 hostEmail: email,
                 title: formData.title,
-                dayOfWeek: formData.dayOfWeek,
-                startDate: formData.startDate,
-                endDate: formData.endDate,
+                date: formData.date,
                 startTime: formData.startTime,
                 endTime: formData.endTime,
                 maxNumParticipants: formData.attendees,
@@ -105,16 +85,16 @@ const RecurringWeeklyModal = () => {
 
             setConfirmationDetails(formData);
 
-            const response = await axios.post('http://localhost:5001/api/new-weekly-meeting', requestData);
+            /*const response = await axios.post('http://localhost:5001/api/new-weekly-meeting', requestData);
             console.log('Meeting created successfully:', response.data);
             setURL(response.data.url);
             //alert('Recurring weekly meeting created successfully!');
+            */
+           console.log("Success");
 
             setFormData({
                 hostEmail: '',
-                startDate: '',
-                endDate: '',
-                dayOfWeek: '',
+                date: '',
                 attendees: '',
                 startTime: '',
                 endTime: '',
@@ -133,30 +113,18 @@ const RecurringWeeklyModal = () => {
         <Bckgrnd>
             <ModalContainer>
                 <UpperModal>
-                    <Text>Recurring Weekly Meeting</Text>
+                    <Text>Single Meeting</Text>
                 </UpperModal>
                 <InnerModal>
                     <Form onSubmit={handleSubmit}>
                         <FormContainer>
                             <FormGroup>
-                                <Label>Start Date</Label>
+                                <Label>Date</Label>
                                 <Input 
                                     type="date" 
-                                    id="startDate"
-                                    name="startDate"
-                                    value={formData.startDate}
-                                    onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
-                                    required
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label>End Date</Label>
-                                <Input 
-                                    type="date" 
-                                    id="endDate"
-                                    name="endDate"
-                                    value={formData.endDate}
+                                    id="date"
+                                    name="date"
+                                    value={formData.date}
                                     onChange={handleChange}
                                     style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
@@ -165,21 +133,38 @@ const RecurringWeeklyModal = () => {
                         </FormContainer>
                         
                         <FormContainer>
-                            <FormGroup>
-                                <Label>Day of the Week</Label>
-                                <Input 
-                                    type="text" 
-                                    id="dayOfWeek"
-                                    name="dayOfWeek"
-                                    placeholder="Monday"
-                                    value={formData.dayOfWeek}
+                        <FormGroup>
+                            <Label>Start Time</Label>
+                            <Input 
+                                    type="time" 
+                                    id="startTime"
+                                    name="startTime"
+                                    value={formData.startTime}
                                     onChange={handleChange}
                                     style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
-                            </FormGroup>
+                        </FormGroup>
 
-                            <FormGroup>
+                            
+                        </FormContainer>
+
+                        
+                        <FormContainer>
+
+                        <FormGroup>
+                            <Label>End Time</Label>
+                            <Input 
+                                    type="time" 
+                                    id="endTime"
+                                    name="endTime"
+                                    value={formData.endTime}
+                                    onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
+                                    required
+                                />
+                        </FormGroup>
+                        <FormGroup>
                                 <Label>Attendees Allowed</Label>
                                 <Input 
                                     type="number" 
@@ -194,36 +179,6 @@ const RecurringWeeklyModal = () => {
                             </FormGroup>
                         </FormContainer>
 
-                        
-                        <FormContainer>
-
-                        <FormGroup>
-                            <Label>Start Time</Label>
-                            <Input 
-                                    type="time" 
-                                    id="startTime"
-                                    name="startTime"
-                                    value={formData.startTime}
-                                    onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
-                                    required
-                                />
-                        </FormGroup>
-
-                        <FormGroup>
-                            <Label>End Time</Label>
-                            <Input 
-                                    type="time" 
-                                    id="endTime"
-                                    name="endTime"
-                                    value={formData.endTime}
-                                    onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
-                                    required
-                                />
-                        </FormGroup>
-                        </FormContainer>
-
                         <TitleContainer>
                             <Title>Title:</Title>
                             <TitleInput 
@@ -236,7 +191,7 @@ const RecurringWeeklyModal = () => {
                             />
                         </TitleContainer>
                         
-                        <Button type="submit">Create Weekly Meeting</Button>
+                        <Button style={{marginLeft: 'auto'}}type="submit">Create Weekly Meeting</Button>
                     </Form>
                 </InnerModal>
             </ModalContainer>
@@ -246,7 +201,7 @@ const RecurringWeeklyModal = () => {
                 <CloseButton onClick={toggleConfirmation} />
                 <ModalTitle>Meeting Created!</ModalTitle>
                 <ModalText>                
-                    {`This meeting will occur on  ${confirmationDetails.dayOfWeek} of each week at ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} from ${confirmationDetails.startDate} until ${confirmationDetails.endDate}.`}
+                    {`This meeting will occur on  ${confirmationDetails.date} from ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${new Date(`1970-01-01T${confirmationDetails.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}.`}
                 </ModalText>
 
                 <Line>

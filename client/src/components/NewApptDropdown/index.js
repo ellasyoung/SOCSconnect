@@ -47,7 +47,7 @@ const NewApptDropdown = () => {
             </div>
           )}
 
-        <MenuItem href="#" onClick={() => setRecurringOpen(false)}>
+        <MenuItem as={Link} to="/single-booking" onClick={() => setRecurringOpen(false)}>
           <FaAngleRight size="1em" /> Single Meeting
         </MenuItem>
 
