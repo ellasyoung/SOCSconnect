@@ -13,7 +13,7 @@ const MonthlyBook = () => {
       {isLoggedIn ? <PrivNavbar /> : <PubNavbar />}
       {isLoggedIn ? 
       <>
-        <h1>woooo weekly meeting</h1>
+        <h1>woooo monthly meeting</h1>
         <p>{email}</p>
       </> 
       : 

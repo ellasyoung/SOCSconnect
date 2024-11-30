@@ -78,7 +78,7 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/book-slot`, {
+      const response = await fetch(`http://localhost:5001/api/book-slot-weekly`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

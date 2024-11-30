@@ -240,6 +240,10 @@ export const CalContainer = styled.div`
                 border: 2px solid #620707;
             }
         }
+
+        &.selected-date{
+          color: white;
+        }
     }
 
     /* ~~~ day grid styles ~~~ */
