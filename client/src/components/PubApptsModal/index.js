@@ -63,8 +63,11 @@ const PubApptsModal = () => {
                 <InnerModal>
                     <Title
                     style={{
-                        fontSize: '24px',
-                        paddingLeft: '5px;'}}
+                        fontSize: '30px',
+                        paddingLeft: '5px;',
+                        textAlign: 'center'
+                        
+                    }}
                     
                     >Sign In to See Your Appointments</Title>
                     <Form onSubmit={handleSubmit}>
