@@ -35,7 +35,6 @@ const SignInModal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
 
         try {
             const response = await axios.post("http://localhost:5001/api/login", formData, {
@@ -44,7 +43,6 @@ const SignInModal = () => {
                 },
             });
             const { token, email } = response.data; 
-            //console.log("Login successful:", response.data);
             login(token, email);
             navigate("/dashboard");
         } catch (error) {

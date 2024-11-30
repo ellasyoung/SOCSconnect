@@ -35,8 +35,6 @@ const PubApptsModal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
-
         try {
             const response = await axios.post("http://localhost:5001/api/login", formData, {
                 headers: {
@@ -44,7 +42,6 @@ const PubApptsModal = () => {
                 },
             });
             const { token, email } = response.data; 
-            //console.log("Login successful:", response.data);
             login(token, email);
             navigate("/dashboard");
         } catch (error) {
