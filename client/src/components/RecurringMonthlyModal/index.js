@@ -65,6 +65,25 @@ const RecurringMonthlyModal = () => {
         title: '',
         dayOfWeek: ''
     });
+
+    const getDaysInMonth = (year, month) => {
+        return new Date(year, month, 0).getDate();
+    };
+    
+    const isValidDayOfMonth = (dayOfMonth, startDate, endDate) => {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+    
+        let currentDate = new Date(start);
+        while (currentDate <= end) {
+            const daysInMonth = getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth() + 1);
+            if (dayOfMonth > daysInMonth) {
+                return false; 
+            }
+            currentDate.setMonth(currentDate.getMonth() + 1);
+        }
+        return true; 
+    };
     
 
     const handleChange = (e) => {
@@ -78,16 +97,30 @@ const RecurringMonthlyModal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const now = new Date();
     
-        const validDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const startDate = new Date(formData.startDate);
+        const [startHours, startMinutes] = formData.startTime.split(':').map(num => parseInt(num, 10));
+        startDate.setHours(startHours, startMinutes, 0, 0);
     
-        if (formData.repeatOn === 'day' && !validDays.includes(formData.dayOfWeek)) {
-            alert('Please enter a valid day of the week (e.g., Monday, Tuesday, etc.)');
+        if (startDate < now) {
+            alert('The start date and time cannot be in the past. Please select a future date and time.');
             return;
         }
     
-        const startDate = new Date(formData.startDate);
         const endDate = new Date(formData.endDate);
+
+        if (formData.repeatOn === 'date' && formData.dayOfMonth) {
+            const dayOfMonth = parseInt(formData.dayOfMonth, 10);
+            const startDate = formData.startDate;
+            const endDate = formData.endDate;
+    
+            if (!isValidDayOfMonth(dayOfMonth, startDate, endDate)) {
+                alert('The selected day does not exist in one or more months between the start and end dates.');
+                return;
+            }
+        }
     
         if (startDate > endDate) {
             alert('The end date cannot be earlier than the start date. Please correct it.');
@@ -118,7 +151,6 @@ const RecurringMonthlyModal = () => {
             const response = await axios.post('http://localhost:5001/api/monthly-meeting', requestData);
     
             if (response.status === 201) {
-                //alert('Meeting created successfully!');
                 setConfirmationDetails(formData);
                 setIsConfirmed(true);
                 setURL(response.data.url);
@@ -237,23 +269,23 @@ const RecurringMonthlyModal = () => {
                                 
                         )}
                         {formData.repeatOn === 'date' && (
-                            <FormGroup>
-                            <Label>Day of the Month</Label>
-                            <Select 
-                                id="dayOfMonth"
-                                name="dayOfMonth"
-                                value={formData.dayOfMonth}
-                                onChange={handleChange}
-                                required={formData.repeatOn === 'day'}
-                            >
-                                <option value="" disabled selected>Select day...</option>
-                                {Array.from({ length: 30 }, (_, i) => (
-                                    <option key={i + 1} value={i + 1}>
-                                    {i + 1}
-                                    </option>
-                                ))}
-                            </Select>
-                        </FormGroup>
+                         <FormGroup>
+                         <Label>Day of the Month</Label>
+                         <Select 
+                             id="dayOfMonth"
+                             name="dayOfMonth"
+                             value={formData.dayOfMonth}
+                             onChange={handleChange}
+                             required={formData.repeatOn === 'date'}
+                         >
+                             <option value="" disabled selected>Select day...</option>
+                             {Array.from({ length: 31 }, (_, i) => (
+                                 <option key={i + 1} value={i + 1}>
+                                     {i + 1}
+                                 </option>
+                             ))}
+                         </Select>
+                     </FormGroup>
                         )}
                         </FormContainer>
 
@@ -324,7 +356,7 @@ const RecurringMonthlyModal = () => {
                 <ModalTitle>Meeting Created!</ModalTitle>
                 <ModalText>
                     {confirmationDetails.repeatOn === 'date' ? (
-                    `This meeting will occur on the ${confirmationDetails.startDate.split('-')[2]} of each month at 
+                    `This meeting will occur on the ${confirmationDetails.dayOfMonth} of each month at 
                     ${new Date(`1970-01-01T${confirmationDetails.startTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} 
                     from ${confirmationDetails.startDate} to ${confirmationDetails.endDate}.`
                     ) : (

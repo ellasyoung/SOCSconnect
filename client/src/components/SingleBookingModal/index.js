@@ -70,7 +70,18 @@ const RecurringWeeklyModal = () => {
 
         if (formData.startTime >= formData.endTime) {
             alert('Start time must be earlier than end time!');
-            return; // Prevent form submission if the times are not valid
+            return; 
+        }
+
+        const now = new Date();
+    
+        const startDate = new Date(formData.startDate);
+        const [startHours, startMinutes] = formData.startTime.split(':').map(num => parseInt(num, 10));
+        startDate.setHours(startHours, startMinutes, 0, 0);
+    
+        if (startDate < now) {
+            alert('The date and time cannot be in the past. Please select a future date and time.');
+            return;
         }
 
         try {
