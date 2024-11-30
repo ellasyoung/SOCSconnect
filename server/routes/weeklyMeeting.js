@@ -6,7 +6,7 @@ const SingleAppointment = require('../models/Appointments');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 
-router.post('/book-slot', async (req, res) => {
+router.post('/book-slot-weekly', async (req, res) => {
     const { meetingId, date, requesterEmail } = req.body;
   
     try {
