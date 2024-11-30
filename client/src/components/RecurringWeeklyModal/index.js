@@ -86,6 +86,11 @@ const RecurringWeeklyModal = () => {
             return;
         }
 
+        if (formData.startTime >= formData.endTime) {
+            alert('The meeting cannot start later than it is supposed to end.');
+            return;
+        }
+
         try {
             const requestData = {
                 hostEmail: email,
