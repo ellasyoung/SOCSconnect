@@ -107,5 +107,9 @@ export const Input = styled.input`
       width: 155px;
     }
   }
+
+  @media screen and (max-width 550px){
+    font-size: 7px;
+  }
 `;
 
