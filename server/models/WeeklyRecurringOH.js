@@ -1,6 +1,11 @@
 const mongoose = require('mongoose'); 
 
 const WeeklyOfficeHoursSchema = new mongoose.Schema ({
+    hostId: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Users", 
+        required: true
+    }, 
     title:{
         type: String, 
         default: ''
@@ -9,11 +14,6 @@ const WeeklyOfficeHoursSchema = new mongoose.Schema ({
         dayOfWeek: {
             type: String, 
             required: [true, 'Please add a day of the week when the meeting will recurr.']
-        }, 
-        recurringSlot: {
-            type : [Date], 
-            required: true
-
         }, 
         startTime: {
             type: String,
@@ -36,22 +36,18 @@ const WeeklyOfficeHoursSchema = new mongoose.Schema ({
         {
             date: {
                 type: Date,
-                required: true
-            }, 
-            requesterId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Users", 
-                required: true
             }, 
             bookingCreated: { 
                 type: Date, 
                 default: Date.now
-            }
+            },
+            requesterEmail: {
+                type: String,
+            },
         }
     ], 
     url: {
         type: String,
-        required: [true, 'Please add the booking URL.']
     },
     maxNumParticipants: {
         type: Number, 

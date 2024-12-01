@@ -12,17 +12,32 @@ import {
     Text,
     Col,
     PwdCont,
+    ConfirmationModal, 
+    CloseButton,
+    ModalText,
+    ModalTitle,
+    Dim,
 } from './RegisterModalElements';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+import axios from 'axios';
+import { FaAngleRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const RegisterModal = () => {
+
+    const [isConfirmed, setIsConfirmed] = useState(false);
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
-        username: '',
+        email: '',
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
+
+    const toggleConfirmation = () => {
+        setIsConfirmed(!isConfirmed);
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -32,9 +47,24 @@ const RegisterModal = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
+        const emailRegex = /@(mail\.mcgill\.ca|mcgill\.ca)$/;
+        if (!emailRegex.test(formData.email)) {
+            alert("Please enter a valid McGill email ending with @mail.mcgill.ca or @mcgill.ca.");
+            return;
+        }
+        try {
+            const response = await axios.post("http://localhost:5001/api/register", formData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            toggleConfirmation();
+        } catch (error) {
+            console.error('Error:', error.response?.data || error.message);
+            alert(error.response?.data?.message || "Registration failed. Please try again.");
+        }
     };
 
     const togglePasswordVisibility = () => {
@@ -75,13 +105,13 @@ const RegisterModal = () => {
                         </Col>
                         <Col>
                             <FormGroup>
-                                <Label htmlFor="username">McGill Email</Label>
+                                <Label htmlFor="email">McGill Email</Label>
                                 <Input
                                     type="text"
-                                    id="username"
-                                    name="username"
+                                    id="email"
+                                    name="email"
                                     placeholder="first.last@mcgill.ca"
-                                    value={formData.username}
+                                    value={formData.email}
                                     onChange={handleChange}
                                     required
                                 />
@@ -120,6 +150,18 @@ const RegisterModal = () => {
                     </Form>
                 </InnerModal>
             </OuterModal>
+            {isConfirmed && (
+            <Dim>
+                <ConfirmationModal>
+                <CloseButton onClick={toggleConfirmation} />
+                <ModalTitle>Registration Successful!</ModalTitle>
+                <ModalText>                
+                    {`You have registered with SOCSconnect.`}
+                </ModalText>
+                <Button className='seeApts' as={Link} to="/sign-in">Sign In Now <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
+                </ConfirmationModal>
+            </Dim>
+            )}
         </Bckgrnd>
     );
 };

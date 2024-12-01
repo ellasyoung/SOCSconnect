@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import HeroBackground from "../../assets/images/hero-background.svg"; 
+import { FaTimes } from "react-icons/fa";
 
 export const Bckgrnd = styled.div`
   width: 100%;
-  min-height: 800px;
+  min-height: 900px;
   height: 90vh;
   position: relative;
   background: url(${HeroBackground});
@@ -24,8 +25,8 @@ export const Col = styled.div``;
 export const OuterModal = styled.div`
   width: 70%;
   margin-top: -20px;
-  min-height: 550px;
-  height: 70vh;
+  min-height: 650px;
+  height: 75vh;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
@@ -38,7 +39,7 @@ export const OuterModal = styled.div`
     height: 80vh;
   }
   @media screen and (max-width: 400px) {
-    height: 100vh;
+    height: 105vh;
   }
 `;
 
@@ -137,6 +138,12 @@ export const Button = styled.button`
     width: 180px;
     font-size: 12px;
   }
+
+  &.seeApts{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 export const Text = styled.p`
@@ -159,3 +166,111 @@ export const PwdCont = styled.div`
     font-size: 12px;
   }
 `;
+
+export const ConfirmationModal = styled.div`
+  width: 650px;
+  height: 350px;
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  position: relative;
+  box-shadow: 8px 8px 10px rgba(98, 7, 7, 0.7);
+
+  @media screen and (max-width: 900px) {
+    width: 600px;
+    margin-top: -100px;
+  }
+  @media screen and (max-width: 700px) {
+    width: 400px;
+    height: 400px;
+    margin-top: -100px;
+  }
+`;
+
+
+export const Dim = styled.div`
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.5); 
+  z-index: 20;
+`;
+
+export const CloseButton = styled(FaTimes)`
+  font-size: 24px; 
+  color: #cd2222;
+  background-color: white; 
+  border-radius: 50%;
+  padding: 8px; 
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  position: absolute;
+  top: 25px;
+  right: 25px;
+
+  &:hover {
+    color: #fff;
+    background-color: #cd2222; 
+    transform: scale(1.1) rotate(360deg); 
+  }
+
+  @media screen and (max-width: 700px) {
+    top: 15px;
+    right: 15px;
+  }
+`;
+
+export const ModalTitle = styled.h1`
+  font-family: 'SunbornSansOne', sans-serif;
+  color: #cd2222;
+  font-size: 40px;
+  @media screen and (max-width: 700px) {
+    font-size: 30px;
+  }
+`;
+
+export const ModalText = styled.p`
+  font-family: Arial, sans-serif;
+  color: #000;
+  font-size: 16px;
+  line-height: 1.6;
+  width: 450px;
+  margin-top: -10px;
+
+  &.label {
+    width: auto;
+    font-weight: bold;
+    margin-right: 20px;
+    margin-top: 18px;
+  }
+
+  @media screen and (max-width: 900px) {
+    font-size: 14px;
+    &.label {
+      margin-top: 14px;
+      margin-right: 10px;
+    }
+  }
+  @media screen and (max-width: 700px) {
+    width: 320px;
+    &.label {
+      display: none;
+    }
+  }
+`;
+
+
+
+
+
+

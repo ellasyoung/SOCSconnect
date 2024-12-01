@@ -8,7 +8,14 @@ import SignIn from './pages/SignIn';
 import { createGlobalStyle } from "styled-components";
 import SunbornSansOne from './assets/fonts/Sunborn-SansOne.otf';
 import Dashboard from './pages/Dashboard';
-
+import RequestTime from "./pages/RequestTime";
+import RecurringWeekly from "./pages/RecurringWeekly";
+import AuthProvider from "./auth/AuthProvider";
+import ProtectedRoute from "./auth/ProtectedRoute"; 
+import AppWrapper from "./auth/AppWrapper";
+import RecurringMonthly from "./pages/RecurringMonthly";
+import MeetingPage from './pages/MeetingPage';
+import SingleBooking from './pages/SingleBooking'
 const GlobalStyle = createGlobalStyle`
 
   @font-face {
@@ -25,22 +32,67 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-
 function App() {
-
   return (
     <>
-      <GlobalStyle/>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/booking" element={<Booking />} />
-          <Route path="/my-appointments" element={<MyAppointments />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-      </Router>
+      <GlobalStyle />
+      <AuthProvider> 
+      <AppWrapper>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/my-appointments" element={<MyAppointments />} />
+            <Route path="/register" element={<Register />} />            
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/meeting/:meetingId" element={<MeetingPage />} />
+
+            <Route 
+            path="/single-booking" 
+            element={
+              <ProtectedRoute>
+                <SingleBooking />
+              </ProtectedRoute>
+            }
+            />
+            
+            
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/request-time" 
+              element={
+                <ProtectedRoute>
+                  <RequestTime />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/recurring-weekly" 
+              element={
+                <ProtectedRoute>
+                  <RecurringWeekly />
+                </ProtectedRoute>
+              } 
+            />
+            <Route
+              path="/recurring-monthly"
+              element={
+                <ProtectedRoute>
+                  <RecurringMonthly />
+                </ProtectedRoute>
+              }
+              />
+          </Routes>
+        </Router>
+      </AppWrapper>
+      </AuthProvider>
     </>
   );
 }

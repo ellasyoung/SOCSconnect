@@ -32,10 +32,8 @@ const AppointmentsSchema = new mongoose.Schema({
     }, 
     bookings: [
         {
-            requesterId: {
-                type: mongoose.Schema.Types.ObjectId, 
-                ref: "Users", 
-                required: true
+            requesterEmail: {
+                type: String
             }, 
             bookingTime:{
                 type: Date, 

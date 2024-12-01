@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
     Bckgrnd, 
     OuterModal, 
@@ -12,13 +12,18 @@ import {
     Text,
 } from './SignInModalElements';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; 
+import axios from 'axios';
+import { AuthContext } from '../../auth/AuthProvider'; 
+import { useNavigate } from 'react-router-dom';
 
 const SignInModal = () => {
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
+    const { login } = useContext(AuthContext); 
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,9 +33,22 @@ const SignInModal = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted:', formData);
+
+        try {
+            const response = await axios.post("http://localhost:5001/api/login", formData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            const { token, email } = response.data; 
+            login(token, email);
+            navigate("/dashboard");
+        } catch (error) {
+            console.error('Error:', error.response?.data || error.message);
+            alert(error.response?.data?.message || "Registration failed. Please try again.");
+        }
     };
 
     const togglePasswordVisibility = () => {
@@ -44,13 +62,13 @@ const SignInModal = () => {
                     <Title>Sign In</Title>
                     <Form onSubmit={handleSubmit}>
                         <FormGroup>
-                            <Label htmlFor="username">McGill Email</Label>
+                            <Label htmlFor="email">McGill Email</Label>
                             <Input
                                 type="text"
-                                id="username"
-                                name="username"
+                                id="email"
+                                name="email"
                                 placeholder="Enter your McGill email address"
-                                value={formData.username}
+                                value={formData.email}
                                 onChange={handleChange}
                                 required
                             />

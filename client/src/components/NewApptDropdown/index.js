@@ -13,6 +13,7 @@ import {
   DropdownContent,
   MenuItem
 } from "./NewApptDropdownElements";
+import { Link } from "react-router-dom"; 
 
 const NewApptDropdown = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -31,23 +32,22 @@ const NewApptDropdown = () => {
       </DropdownButton>
 
       <DropdownContent $isOpen={isDropdownOpen}>
-        {/* Recurring Meeting Menu Item */}
         <MenuItem onClick={toggleRecurring} $isHighlighted={isRecurringOpen}>
           <FaSync size="1em" /> Recurring Meeting
         </MenuItem>
 
         {isRecurringOpen && (
             <div style={{ display: "block"}}>
-                <MenuItem href="#" className="sub">
-                    <FaCalendarWeek size="1em" style={{ marginLeft: "22px"}} /> Weekly
-                </MenuItem>
-                <MenuItem href="#" className="sub">
-                    <FaCalendarAlt size="1em" style={{ marginLeft: "22px"}} /> Monthly
-                </MenuItem>
+              <MenuItem as={Link} to="/recurring-weekly" className="sub">
+                <FaCalendarWeek size="1em" style={{ marginLeft: "22px" }} /> Weekly
+              </MenuItem>
+              <MenuItem as={Link} to="/recurring-monthly" className="sub">
+                <FaCalendarAlt size="1em" style={{ marginLeft: "22px" }} /> Monthly
+              </MenuItem>
             </div>
           )}
 
-        <MenuItem href="#" onClick={() => setRecurringOpen(false)}>
+        <MenuItem as={Link} to="/single-booking" onClick={() => setRecurringOpen(false)}>
           <FaAngleRight size="1em" /> Single Meeting
         </MenuItem>
 
