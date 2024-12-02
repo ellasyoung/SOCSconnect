@@ -17,12 +17,6 @@ router.post('/book-slot-single', async (req, res) => {
             return res.status(404).json({ message: 'Meeting not found.' });
         }
 
-        const meetingDate = new Date(meeting.date).toDateString();
-        const requestedDate = new Date(date).toDateString();
-        if (meetingDate !== requestedDate) {
-            return res.status(400).json({ message: 'Invalid date for this meeting.' });
-        }
-
         const currentBookings = meeting.bookings.length;
         if (currentBookings >= meeting.maxNumParticipants) {
             return res.status(400).json({ message: 'No spots left for this meeting.' });
