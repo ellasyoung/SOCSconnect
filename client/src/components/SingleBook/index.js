@@ -30,8 +30,13 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
   const [requesterEmail, setRequesterEmail] = useState('');
   const [isConfirmed, setIsConfirmed] = useState(false);
 
+  const normalizeDate = (dateString) => {
+    const [year, month, day] = dateString.split(/[-T]/);
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  };
+
   useEffect(() => {
-    setSelectedDate(new Date(meetingData.date));
+    setSelectedDate(normalizeDate(meetingData.date));
     const bookingsForDate = meetingData.bookings.length;
     setSpotsLeft(Math.max(meetingData.maxNumParticipants - bookingsForDate, 0));
   }, [meetingData]);
