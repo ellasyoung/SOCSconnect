@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
-    BckgrndBar,
-    OuterModal,
+    Bckgrnd,
+    Container,
     Title, 
     Dropdown, 
     DropdownTitle, 
@@ -15,9 +15,9 @@ import {
     PopupContainer,
     PopupHeader,
     PopupTitle,
-    PopupCloseButton, 
     PopupFooter,
-    ControlButton
+    ControlButton,
+    CloseButton,
   
 } from './PrivAppointments';
 
@@ -46,9 +46,8 @@ const PrivAppointments = () => {
 
     return (
         <>
-        <BckgrndBar />
-
-        <OuterModal>
+        <Bckgrnd>
+        <Container>
             <Title>My Appointments</Title>
             
             <Dropdown>
@@ -104,7 +103,7 @@ const PrivAppointments = () => {
                             buttons: [],
                     
                    })}>
-                   <FaClock size={22} style={{ color:"#cd2222", marginRight: "30px" }} />
+                   <FaClock size={22} style={{ marginRight: "30px" }} />
                         Past Appointment
                    </HistoryButton>
                 </DropdownContents>
@@ -117,7 +116,7 @@ const PrivAppointments = () => {
                         onClick={(e) => e.stopPropagation()}>   
                         <PopupHeader>
                             <PopupTitle>{popupData.title}</PopupTitle>
-                            <PopupCloseButton onClick={closePopup}>X</PopupCloseButton>
+                            <CloseButton onClick={closePopup}></CloseButton>
                        </PopupHeader>
                         <b>From:</b> <br></br><br></br>
                         <b>For: </b><br></br><br></br>
@@ -134,16 +133,15 @@ const PrivAppointments = () => {
                             >
 
                             {button.text}
-                            <button.icon size={20}/>
+                            <button.icon size={15}/>
                             </ControlButton>
                         ))}
                         </PopupFooter>
                     </PopupContainer>
-            </PopupBackground>
+            </PopupBackground>)} 
 
-            )}; 
-    
-        </OuterModal>
+        </Container>
+        </Bckgrnd>
         </>
     
     )
