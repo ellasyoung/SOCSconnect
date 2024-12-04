@@ -170,3 +170,4 @@ export const Trash = styled(FaTrash)`
     transform: scale(1.1) rotate(360deg); 
   }
 `;
+

@@ -15,7 +15,7 @@ const PollsSchema = new mongoose.Schema({
             date: {
                 type: Date,
             }, 
-            times: [
+            timeOptions: [
                 {
                     startTime: {
                         type: String, 

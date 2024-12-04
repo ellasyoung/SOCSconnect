@@ -19,6 +19,15 @@ import {
     Trash,
     DropRow,
     Edit,
+    Dim,
+    ConfirmationModal,
+    ModalLink,
+    ModalTitle,
+    CloseButton,
+    Line,
+    FormGroup,
+    Label,
+    SendIcon,
 } from './PollElements';
 import { AuthContext } from '../../auth/AuthProvider';
 import { FaPlusSquare } from "react-icons/fa";
@@ -84,11 +93,13 @@ const MeetingPollModal = () => {
         const pollData = {
             title,
             pollOption: pollOptions,
-            hostId: 'USER_ID'
+            hostEmail: email
         };
 
+        console.log(pollData);
+
         try {
-            const response = await fetch('/api/polls', {
+            const response = await fetch('http://localhost:5001/api/new-poll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,7 +107,11 @@ const MeetingPollModal = () => {
                 body: JSON.stringify(pollData),
             });
             const result = await response.json();
-            console.log('Poll created:', result);
+            setURL(result.url);
+            toggleConfirmation();
+            setPollOptions([]);
+            setTitle('');
+            //console.log('Poll created:', result);
         } catch (error) {
             console.error('Error creating poll:', error);
         }
@@ -160,6 +175,23 @@ const MeetingPollModal = () => {
                     onAddDate={editIndex === null ? handleAddDate : handleEditDate} 
                     initialData={editIndex !== null ? pollOptions[editIndex] : null} 
                 />
+            )}
+            {isConfirmed && (
+                <Dim>
+                <ConfirmationModal>
+                <CloseButton onClick={toggleConfirmation} />
+                <ModalTitle>Poll Created!</ModalTitle>
+                <Line>
+                    <FormGroup className='conf'>
+                        <Label className='label'>Booking Link: </Label>
+                        <ModalLink href={`http://localhost:3000/${url}`} target='_blank'>                
+                            {`http://localhost:3000/${url}`}
+                        </ModalLink>
+                    </FormGroup>
+                    <SendIcon link={`http://localhost:3000/${url}`}/>
+                </Line>
+                </ConfirmationModal>
+            </Dim>
             )}
         </Bckgrnd>
     );
