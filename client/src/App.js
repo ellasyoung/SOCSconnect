@@ -16,6 +16,8 @@ import AppWrapper from "./auth/AppWrapper";
 import RecurringMonthly from "./pages/RecurringMonthly";
 import MeetingPage from './pages/MeetingPage';
 import SingleBooking from './pages/SingleBooking'
+import MeetingPoll from "./pages/MeetingPolls";
+
 const GlobalStyle = createGlobalStyle`
 
   @font-face {
@@ -86,6 +88,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <RecurringMonthly />
+                </ProtectedRoute>
+              }
+              />
+            <Route
+              path="/meeting-poll"
+              element={
+                <ProtectedRoute>
+                  <MeetingPoll />
                 </ProtectedRoute>
               }
               />

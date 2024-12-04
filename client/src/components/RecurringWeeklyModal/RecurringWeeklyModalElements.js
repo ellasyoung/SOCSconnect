@@ -53,6 +53,9 @@ export const InnerModal = styled.div`
   z-index: 0;
   border: 5px solid #cd2222;
   border-bottom: none;
+  @media screen and (max-width: 1030px) {
+    height: 130vh;
+  }
 `;
 
 export const Title = styled.h1`
@@ -61,10 +64,8 @@ export const Title = styled.h1`
   font-size: 20px;
   margin-bottom: 20px;
   width: 100px;
-
   display: flex;
   align-items: center;
-  
     
 `;
 
