@@ -3,10 +3,20 @@ const router = express.Router();
 const MonthlyOfficeHours = require('../models/MonthlyRecurringOH');
 const { v4: uuidv4 } = require('uuid');
 const Users = require('../models/Users');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail', 
+  auth: {
+      user: 'socsconnect@gmail.com', 
+      pass: 'tprd zosy lktd ksvi',  
+  },
+});
 
 router.post('/book-slot-monthly', async (req, res) => {
   try {
     const { meetingId, date, requesterEmail } = req.body;
+    const myDate = date.split('T')[0];
 
     if (!meetingId || !date || !requesterEmail) {
       return res.status(400).json({ message: 'Meeting ID, date, and requester email are required.' });
@@ -51,6 +61,30 @@ router.post('/book-slot-monthly', async (req, res) => {
       booking: newBooking,
       spotsLeft: meeting.maxNumParticipants - bookingsForDate.length - 1,
     });
+
+    const user = await Users.findById(meeting.hostId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' })};
+      
+    const mailOptions = {
+      from: 'socsconnect@gmail.com', 
+      to: requesterEmail,                    
+      subject: 'Booking Confirmation',
+      html: `
+        <h3>Meeting confirmed!</h3>
+        <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.schedule.startTime} until ${meeting.schedule.endTime}
+        with ${user.firstName} ${user.lastName}.
+        <p>If you have any questions or need support, feel free to contact us.</p>
+        `,
+      };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error sending email:', error);
+        return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
+      }
+      console.log('Confirmation email sent: ' + info.response);
+    });
   } catch (error) {
     console.error('Error booking slot:', error.message);
     res.status(500).json({ message: 'Server error. Please try again later.' });
@@ -82,6 +116,49 @@ router.post('/monthly-meeting', async (req, res) => {
 
         const savedMeeting = await newMeeting.save();
         res.status(201).json(savedMeeting);
+
+        let mailOptions;
+
+        if(schedule.date !== "") {
+
+          mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: hostEmail,                    
+            subject: 'Monthly Recurring Meeting Confirmation',
+            html: `
+                <h3>Thank you for booking with us!</h3>
+                <p>You have created a monthly recurring meeting for "${title}" 
+                on the ${schedule.date} of the month beginning from ${schedule.startDate} and ending on ${schedule.endDate}
+                starting at ${schedule.startTime} until ${schedule.endTime}.</p>
+                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
+                <p>If you have any questions or need support, feel free to contact us.</p>
+            `,
+          };
+        }
+
+        else {
+          mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: hostEmail,                    
+            subject: 'Monthly Recurring Meeting Confirmation',
+            html: `
+                <h3>Thank you for booking with us!</h3>
+                <p>You have created a monthly recurring meeting for "${title}" 
+                on each ${schedule.day} beginning from ${schedule.startDate} and ending on ${schedule.endDate}
+                starting at ${schedule.startTime} until ${schedule.endTime}.</p>
+                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
+                <p>If you have any questions or need support, feel free to contact us.</p>
+            `,
+          }
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              console.log('Error sending email:', error);
+              return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
+          }
+          console.log('Confirmation email sent: ' + info.response);
+      });
     } catch (error) {
         console.error('Error creating monthly meeting:', error.message);
         res.status(500).json({ error: 'Server error. Please try again later.' });
