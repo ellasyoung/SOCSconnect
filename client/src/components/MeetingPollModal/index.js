@@ -66,7 +66,12 @@ const MeetingPollModal = () => {
     };
 
     const handleAddDate = (pollOption) => {
-        console.log("Received Poll Option: ", pollOption); 
+        //console.log("Received Poll Option: ", pollOption); 
+        const dateExists = pollOptions.some(option => option.date === pollOption.date);
+        if (dateExists) {
+            alert("This date already exists in the poll options. Please edit the existing date. Instead");
+            return;
+        }
         if (pollOption) {
             setPollOptions([...pollOptions, pollOption]);
         }
@@ -89,7 +94,14 @@ const MeetingPollModal = () => {
     };
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
+
+        if (pollOptions.length === 0) {
+            alert("Please add at least one date before creating the poll.");
+            return;
+        }
+
         const pollData = {
             title,
             pollOption: pollOptions,
@@ -127,7 +139,7 @@ const MeetingPollModal = () => {
                     <Form onSubmit={handleSubmit}>
                         <TitleCont>
                             <Title>Title:</Title>
-                            <TitleInput value={title} onChange={(e) => setTitle(e.target.value)} />
+                            <TitleInput value={title} onChange={(e) => setTitle(e.target.value)} required />
                         </TitleCont>
                         <ColCont>
                             <Col>

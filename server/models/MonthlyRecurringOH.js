@@ -42,9 +42,8 @@ const MonthlyOfficeHoursSchema = new mongoose.Schema({
             date: {
                 type: Date,
             }, 
-            requesterId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User', 
+            requesterEmail: {
+                type: String,
             }, 
             bookingCreated: { 
                 type: Date, 
