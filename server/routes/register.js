@@ -1,7 +1,16 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const Users = require('../models/Users'); 
 const router = express.Router();
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+        user: 'socsconnect@gmail.com', 
+        pass: 'tprd zosy lktd ksvi',  
+    },
+});
 
 router.post('/', async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
@@ -21,7 +30,30 @@ router.post('/', async (req, res) => {
 
         await newUser.save();
 
+        const mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: email,                    
+            subject: 'Welcome to SOCSConnect!',
+            html: `
+                <h3>Dear ${firstName} ${lastName},</h3>
+                <p>Thank you for registering on our platform.</p>
+                <p>Your account has been successfully created!</p>
+                <p>To get started, you can visit our website at:</p>
+                <p><a href="http://localhost:3000">Click here to visit our site</a></p>
+                <p>If you have any questions or need support, feel free to contact us.</p>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
+
         res.status(201).json({ message: 'User registered successfully' });
+
     } catch (error) {
         console.error('Error occurred during user registration:', error);
         res.status(500).json({ error: 'Internal server error' });
