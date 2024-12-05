@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import HeroBackground from "../../assets/images/hero-background.svg"; 
-import { FaTimes } from "react-icons/fa";
-import { FaPaperPlane } from "react-icons/fa";
+import { FaTrash, FaEdit, FaTimes, FaPaperPlane } from "react-icons/fa";
 
 export const Bckgrnd = styled.div`
   width: 100%;
@@ -53,121 +52,44 @@ export const InnerModal = styled.div`
   z-index: 0;
   border: 5px solid #cd2222;
   border-bottom: none;
+
   @media screen and (max-width: 1030px) {
     height: 130vh;
   }
+`;
+
+export const Text = styled.p`
+  padding-bottom: 5px;
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+  color: #cd2222;
+  margin-bottom: 10px;
+`;
+
+export const Form = styled.form`
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+`;
+
+export const TitleCont = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 `;
 
 export const Title = styled.h1`
   font-family: 'SunbornSansOne', sans-serif;
   color: #cd2222;
   font-size: 20px;
-  margin-bottom: 20px;
-  width: 100px;
-  display: flex;
-  align-items: center;
-    
-`;
-
-export const Form = styled.form`
-  width: 80%;
-  margin-top: 80px;
-  display: flex;
-  flex-wrap: wrap;  
-  justify-content: space-between;
-  gap: 20px; 
-  
-  @media screen and (max-width: 1030px) {
-    flex-direction: column;
-    align-items: center;
-    margin-top: 50px;
-  }
-`;
-
-export const FormGroup = styled.div`
-  display: flex;
-  justify-content: flex-start; 
-  flex-direction: column;
-  margin-bottom: 15px;
-  width: 100%;
-  gap: 10px;  
-
-  &.conf{
-    gap: 0px; 
-    margin-top: 20px;
-  }
-  
-  @media screen and (max-width: 1030px) {
-    width: 100%; 
-  }
-`;
-
-export const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 25%;
-  gap: 10px;
-
-  @media screen and (max-width: 1030px) {
-    width: 100%; 
-  }
-`;
-
-export const TitleContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  margin-top: 40px;
-  width: 50%;
-
-  @media screen and (max-width: 1030px) {
-    width: 100%; 
-    margin-top: 0px;
-  }
-`
-
-export const Label = styled.label`
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: bold;
-  color: black;
-  width: 200px;  
-  margin-right: 10px;  
-
-  &.label{
-    margin-bottom: 10px;
-  }
-`;
-
-export const Input = styled.input`
-  width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  height: 26px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  background-color: white; 
-  font: Arial;
-
-  &:focus {
-    border-color: #cd2222;
-    box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
-  }
-
-  @media screen and (max-width: 1525px) {
-    width: 100%;
-  }
-
-  @media screen and (max-width: 400px) {
-    width: 150px;
-    font-size: 12px;
-  }
 `;
 
 export const TitleInput = styled.input`
-  width: 500px;
-  height: 26px;
+  width: 90%;
   padding: 15px;
   font-size: 16px;
   border: 1px solid #ccc;
@@ -176,26 +98,47 @@ export const TitleInput = styled.input`
   border-radius: 5px;
   outline: none;
   font: Arial;
+  margin-left: 30px;
 
   &:focus {
     border-color: #cd2222;
     box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
   }
+`;
 
-  @media screen and (max-width: 550px) {
-    width: 300px;
-  }
+export const ColCont = styled.div`
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+    @media screen and (max-width: 800px) {
+        flex-direction: column;
+    }
+`;
 
-  @media screen and (max-width: 500px) {
-    width: 300px;
-    font-size: 12px;
-  }
+export const Col = styled.div`
+    width: 40%; 
+    @media screen and (max-width: 1100px) {
+        width: 47%;
+    }
+    @media screen and (max-width: 800px) {
+        width: 100%;
+        margin-bottom: 50px;
+    }
+`;
+
+export const Center = styled.div`
+    width: 20%;
+    @media screen and (max-width: 1100px) {
+        width: 6%;
+    }
+    @media screen and (max-width: 800px) {
+        display: none;
+    }
 `;
 
 export const Button = styled.button`
   padding: 15px 30px;
-  width: 300px;
-  height: 50px;
+  width: 100%;
   border: none;
   color: white;
   background-color: #cd2222;
@@ -210,42 +153,75 @@ export const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 45px;
+  gap: 10px;
 
   &:hover {
     background-color:  #620707;
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
   }
+`;
 
-  &.seeApts{
-    margin-top: 30px;
-    width:70%;
-    height: 30px;
-  }
+export const Dropdown = styled.div`
+    border: 3px solid #cd2222;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    margin-bottom: 30px;
+    width: 80%;
+`;
 
-  @media screen and (max-width: 1030px) {
-    width: 100%; 
-    margin-top: 0px;
-    &.seeApts{
-      margin-top: 30px;
-      width:70%;
-    }
-  }
+export const DropTitle = styled.div`
+    font-weight: bold;
+    color: #cd2222;
+    font-size: 18px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+`;
 
-  @media screen and (max-width: 700px) {
-    &.seeApts{
-      font-size: 14px;
-    }
+export const Time = styled.p`
+    font-size: 14px;
+`;
+
+export const Trash = styled(FaTrash)`
+  font-size: 20px; 
+  color: #cd2222;
+  background-color: white; 
+  border-radius: 50%;
+  padding: 10px 10px; 
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  margin-left: 15px;
+  margin-top: 8px;
+
+  &:hover {
+    color: #fff;
+    background-color: #cd2222; 
+    transform: scale(1.1) rotate(360deg); 
   }
 `;
 
-export const Text = styled.p`
-  padding-bottom: 5px;
-  font-size: 20px;
-  font-family: Arial, sans-serif;
-  font-weight: 700;
+export const Edit = styled(FaEdit)`
+  font-size: 20px; 
   color: #cd2222;
-  margin-bottom: 10px;
+  background-color: white; 
+  border-radius: 20%;
+  padding: 10px 10px; 
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+  margin-left: 15px;
+  margin-top: 8px;
+
+  &:hover {
+    color: #fff;
+    background-color: #cd2222; 
+    transform: scale(1.1) rotate(360deg); 
+  }
+`;
+
+export const DropRow = styled.div`
+    display: flex;
+    width: 100%;
 `;
 
 export const ConfirmationModal = styled.div`
@@ -406,6 +382,38 @@ export const StyledSendIcon = styled(FaPaperPlane)`
   }
 `;
 
+export const FormGroup = styled.div`
+  display: flex;
+  justify-content: flex-start; 
+  flex-direction: column;
+  margin-bottom: 15px;
+  width: 100%;
+  gap: 10px;  
+
+  &.conf{
+    gap: 0px; 
+    margin-top: 20px;
+  }
+  
+  @media screen and (max-width: 1030px) {
+    width: 100%; 
+  }
+`;
+
+export const Label = styled.label`
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  width: 200px;  
+  margin-right: 10px;  
+
+  &.label{
+    margin-bottom: 10px;
+  }
+`;
+
 export const SendIcon = ({ link }) => {
   const handleCopyToClipboard = () => {
       if (!link) {
@@ -427,3 +435,4 @@ export const SendIcon = ({ link }) => {
 };
 
 export default SendIcon;
+

@@ -51,7 +51,7 @@ const NewApptDropdown = () => {
           <FaAngleRight size="1em" /> Single Meeting
         </MenuItem>
 
-        <MenuItem href="#" onClick={() => setRecurringOpen(false)}>
+        <MenuItem as={Link} to="/meeting-poll" onClick={() => setRecurringOpen(false)}>
           <FaChartBar size="1em" /> Meeting Time Poll
         </MenuItem>
       </DropdownContent>
