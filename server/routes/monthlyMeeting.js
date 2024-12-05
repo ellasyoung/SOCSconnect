@@ -3,7 +3,6 @@ const router = express.Router();
 const MonthlyOfficeHours = require('../models/MonthlyRecurringOH');
 const { v4: uuidv4 } = require('uuid');
 const Users = require('../models/Users');
-  
 
 router.post('/book-slot-monthly', async (req, res) => {
   try {
@@ -20,8 +19,21 @@ router.post('/book-slot-monthly', async (req, res) => {
 
     const selectedDate = new Date(date);
 
-    const currentBookings = meeting.bookSlot.filter((slot) => new Date(slot.date).toDateString() === selectedDate.toDateString()).length;
-    if (currentBookings >= meeting.maxNumParticipants) {
+    const alreadyBooked = meeting.bookSlot.some(
+      (slot) => 
+        new Date(slot.date).toDateString() === selectedDate.toDateString() &&
+        slot.requesterEmail === requesterEmail
+    );
+
+    if (alreadyBooked) {
+      return res.status(400).json({ message: 'You have already signed up for this meeting on the selected date.' });
+    }
+
+    const bookingsForDate = meeting.bookSlot.filter(
+      (slot) => new Date(slot.date).toDateString() === selectedDate.toDateString()
+    );
+
+    if (bookingsForDate.length >= meeting.maxNumParticipants) {
       return res.status(400).json({ message: 'No spots left for the selected date.' });
     }
 
@@ -37,7 +49,7 @@ router.post('/book-slot-monthly', async (req, res) => {
     res.status(200).json({
       message: 'Booking successful!',
       booking: newBooking,
-      spotsLeft: meeting.maxNumParticipants - currentBookings - 1,
+      spotsLeft: meeting.maxNumParticipants - bookingsForDate.length - 1,
     });
   } catch (error) {
     console.error('Error booking slot:', error.message);
