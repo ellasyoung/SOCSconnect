@@ -115,7 +115,7 @@ router.post('/new-single-meeting', async (req, res) => {
                 <h3>Thank you for booking with us!</h3>
                 <p>You have created a meeting for "${title}" on ${date}, from ${startTime} until ${endTime}</p>
                 <p>To get started, you can visit our website at:</p>
-                <p><a href="${uniqueUrl}">Copy this link to your unique booking!</a></p>
+                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
                 <p>If you have any questions or need support, feel free to contact us.</p>
             `,
         };
