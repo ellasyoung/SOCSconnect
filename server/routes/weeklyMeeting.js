@@ -18,6 +18,15 @@ router.post('/book-slot-weekly', async (req, res) => {
       const existingBookings = meeting.bookSlot.filter(
         (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
       );
+
+      const alreadyBooked = existingBookings.some(
+        (slot) => slot.requesterEmail === requesterEmail
+      );
+
+      if (alreadyBooked) {
+        return res.status(400).json({ message: 'You have already signed up for this date.' });
+      }
+
   
       if (existingBookings.length >= meeting.maxNumParticipants) {
         return res.status(400).json({ message: 'No spots left for this date.' });

@@ -29,6 +29,13 @@ router.post('/book-slot-single', async (req, res) => {
             return res.status(404).json({ message: 'Meeting not found.' });
         }
 
+        const alreadyBooked = meeting.bookings.some(
+            (booking) => booking.requesterEmail === requesterEmail
+        );
+        if (alreadyBooked) {
+            return res.status(400).json({ message: 'You have already signed up for this meeting.' });
+        }
+
         const currentBookings = meeting.bookings.length;
         if (currentBookings >= meeting.maxNumParticipants) {
             return res.status(400).json({ message: 'No spots left for this meeting.' });
