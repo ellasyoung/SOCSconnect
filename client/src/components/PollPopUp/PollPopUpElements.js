@@ -23,7 +23,12 @@ export const ConfirmationModal = styled.div`
   display: flex;
   position: relative;
   box-shadow: 8px 8px 10px rgba(98, 7, 7, 0.7);
-
+  @media screen and (max-width: 850px) {
+      width: 500px;
+  }
+  @media screen and (max-width: 500px) {
+    width: 350px;
+  }
 `;
 
 export const CloseButton = styled(FaTimes)`
@@ -65,7 +70,7 @@ export const Form = styled.form`
 
 export const Times = styled.div`
     height: 280px;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
     overflow-y: scroll;
 `;
 
@@ -79,6 +84,10 @@ export const FormGroup = styled.div`
 
   &.date{
     margin-bottom: 20px;
+  }
+
+  @media screen and (max-width: 500px) {
+    justify-content: center;
   }
 `;
 
@@ -106,6 +115,13 @@ export const Input = styled.input`
     border-color: #cd2222;
     box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
   }
+  @media screen and (max-width: 850px) {
+      width: 120px;
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 200px;
+  }
 `;
 
 export const Row = styled.div`
@@ -115,6 +131,11 @@ export const Row = styled.div`
     margin-top: 10px;
     align-items: center; 
     justify-content: space-between;
+    position: relative;
+    @media screen and (max-width: 500px) {
+      flex-direction: column;
+      align-items: flex-start; 
+    }
 `;
 
 export const Button = styled.button`
@@ -149,6 +170,14 @@ export const Button = styled.button`
         background-color: #620707;
         box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
     }
+      @media screen and (max-width: 850px) {
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 850px) {
+    width: 100%;
+    margin-top: 20px;
   }
 `;
 
@@ -168,6 +197,22 @@ export const Trash = styled(FaTrash)`
     color: #fff;
     background-color: #cd2222; 
     transform: scale(1.1) rotate(360deg); 
+  }
+
+  @media screen and (max-width: 850px) {
+    padding: 2px 10px; 
+    margin-right: 10px;
+    margin-left: -20px;
+    margin-top: 14px;
+  }
+
+  @media screen and (max-width: 500px) {
+    position: absolute;
+    top: 15px;
+    right: 0;
+    font-size: 25px; 
+    padding: 8px 8px;
+    align-self: flex-end;
   }
 `;
 

@@ -110,14 +110,30 @@ export const ColCont = styled.div`
     display: flex;
     flex-direction: row;
     margin-top: 50px;
+    @media screen and (max-width: 800px) {
+        flex-direction: column;
+    }
 `;
 
 export const Col = styled.div`
     width: 40%; 
+    @media screen and (max-width: 1100px) {
+        width: 47%;
+    }
+    @media screen and (max-width: 800px) {
+        width: 100%;
+        margin-bottom: 50px;
+    }
 `;
 
 export const Center = styled.div`
     width: 20%;
+    @media screen and (max-width: 1100px) {
+        width: 6%;
+    }
+    @media screen and (max-width: 800px) {
+        display: none;
+    }
 `;
 
 export const Button = styled.button`

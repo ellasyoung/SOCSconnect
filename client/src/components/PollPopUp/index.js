@@ -105,7 +105,7 @@ const PollPopUp = ({ toggleAddDate, onAddDate, initialData }) => {
                             {index === 0 && (<div style={{ width: "100px", height: "30px"}}></div>)}
                         </Row>
                     ))}
-                    <Button type="button" onClick={addTimeOption}>
+                    <Button type="button" onClick={addTimeOption} className='add'>
                         Add Meeting Time Option
                         <FaPlusSquare style={{ color:"white" }} />
                     </Button>
