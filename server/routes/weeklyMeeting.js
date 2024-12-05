@@ -25,10 +25,6 @@ router.post('/book-slot-weekly', async (req, res) => {
         if (!meeting) {
             return res.status(404).json({ message: 'Meeting not found' });
         }
-  
-        const existingBookings = meeting.bookSlot.filter(
-            (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
-        );
       
         const existingBookings = meeting.bookSlot.filter(
           (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
