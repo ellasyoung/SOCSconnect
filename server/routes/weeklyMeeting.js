@@ -5,41 +5,80 @@ const MonthlyOfficeHours = require('../models/MonthlyRecurringOH');
 const SingleAppointment = require('../models/Appointments'); 
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+        user: 'socsconnect@gmail.com', 
+        pass: 'tprd zosy lktd ksvi',  
+    },
+});
 
 router.post('/book-slot-weekly', async (req, res) => {
     const { meetingId, date, requesterEmail } = req.body;
+
+    const myDate = date.split('T')[0];
   
     try {
-      const meeting = await WeeklyOfficeHours.findById(meetingId);
-      if (!meeting) {
-        return res.status(404).json({ message: 'Meeting not found' });
-      }
+        const meeting = await WeeklyOfficeHours.findById(meetingId);
+        if (!meeting) {
+            return res.status(404).json({ message: 'Meeting not found' });
+        }
   
-      const existingBookings = meeting.bookSlot.filter(
-        (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
-      );
+        const existingBookings = meeting.bookSlot.filter(
+            (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
+        );
+      
+        const existingBookings = meeting.bookSlot.filter(
+          (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
+        );
 
-      const alreadyBooked = existingBookings.some(
-        (slot) => slot.requesterEmail === requesterEmail
-      );
+        const alreadyBooked = existingBookings.some(
+          (slot) => slot.requesterEmail === requesterEmail
+       );
 
-      if (alreadyBooked) {
-        return res.status(400).json({ message: 'You have already signed up for this date.' });
-      }
+        if (alreadyBooked) {
+          return res.status(400).json({ message: 'You have already signed up for this date.' });
+        }
+  
+        if (existingBookings.length >= meeting.maxNumParticipants) {
+            return res.status(400).json({ message: 'No spots left for this date.' });
+        }
+  
+        meeting.bookSlot.push({ date, requesterEmail });
+        await meeting.save();
+  
+        res.status(200).json({ message: 'Booking successful.' });
 
-  
-      if (existingBookings.length >= meeting.maxNumParticipants) {
-        return res.status(400).json({ message: 'No spots left for this date.' });
-      }
-  
-      meeting.bookSlot.push({ date, requesterEmail });
-      await meeting.save();
-  
-      res.status(200).json({ message: 'Booking successful.' });
+        const user = await Users.findById(meeting.hostId);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' })};
+      
+        const mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: requesterEmail,                    
+            subject: 'Booking Confirmation',
+            html: `
+                <h3>Meeting confirmed!</h3>
+                <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.schedule.startTime} until ${meeting.schedule.endTime}
+                with ${user.firstName} ${user.lastName}.
+                <p>If you have any questions or need support, feel free to contact us.</p>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
+
     } catch (error) {
       console.error('Error booking slot:', error);
       res.status(500).json({ message: 'Internal server error' });
-    }
+    } 
 });
 
 router.get('/meetings/:meetingId', async (req, res) => {
@@ -111,6 +150,30 @@ router.post('/new-weekly-meeting', async (req, res) => {
 
         const savedMeeting = await newMeeting.save();
         res.status(201).json(savedMeeting);
+
+        const mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: hostEmail,                    
+            subject: 'Weekly Recurring Meeting Confirmation',
+            html: `
+                <h3>Thank you for booking with us!</h3>
+                <p>You have created a weekly recurring meeting for "${title}" 
+                on each ${dayOfWeek} beginning from ${startDate} and ending on ${endDate}
+                starting at ${startTime} until ${endTime}.</p>
+                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
+                <p>If you have any questions or need support, feel free to contact us.</p>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
+
+        
     } catch (error) {
         console.error('Error creating weekly office hours:', error);
         res.status(500).json({ message: 'Internal server error', error });
