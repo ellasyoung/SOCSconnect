@@ -7,30 +7,36 @@ const mongoose = require('mongoose');
 
 router.post('/polls/:pollId/vote', async (req, res) => {
     const { pollId } = req.params;
-    const { votes } = req.body; 
+    const { votes } = req.body;
 
     try {
         const poll = await Polls.findById(pollId);
-
         if (!poll) {
             return res.status(404).json({ message: 'Poll not found' });
         }
 
+        const userEmails = votes.map(vote => vote.requesterEmail);
+        poll.pollOption.forEach(option => {
+            option.timeOptions.forEach(time => {
+                time.votes = time.votes.filter(
+                    vote => !userEmails.includes(vote.requesterEmail)
+                );
+            });
+        });
+
         votes.forEach(({ date, startTime, endTime, requesterEmail }) => {
-            const pollDate = poll.pollOption.find(option => 
-                option.date.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]
+            const pollDate = poll.pollOption.find(option =>
+                option.date.toISOString().split('T')[0] ===
+                new Date(date).toISOString().split('T')[0]
             );
 
             if (pollDate) {
-                const timeOption = pollDate.timeOptions.find(option => 
+                const timeOption = pollDate.timeOptions.find(option =>
                     option.startTime === startTime && option.endTime === endTime
                 );
 
                 if (timeOption) {
-                    const voteExists = timeOption.votes.some(vote => vote.requesterEmail === requesterEmail);
-                    if (!voteExists) {
-                        timeOption.votes.push({ requesterEmail });
-                    }
+                    timeOption.votes.push({ requesterEmail });
                 }
             }
         });
@@ -43,6 +49,7 @@ router.post('/polls/:pollId/vote', async (req, res) => {
         res.status(500).json({ message: 'An error occurred while saving votes' });
     }
 });
+
 
 router.get('/polls/:pollId/vote-count', async (req, res) => {
     const { pollId } = req.params;
@@ -155,6 +162,30 @@ router.get('/polls/:pollId/user-votes', async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+router.get('/polls/:pollId/check-vote', async (req, res) => {
+    const { pollId } = req.params;
+    const { email } = req.query;
+
+    try {
+        const poll = await Polls.findById(pollId);
+        if (!poll) {
+            return res.status(404).json({ message: 'Poll not found' });
+        }
+
+        const hasVoted = poll.pollOption.some(option =>
+            option.timeOptions.some(time =>
+                time.votes.some(vote => vote.requesterEmail === email)
+            )
+        );
+
+        res.status(200).json({ hasVoted });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error checking votes' });
+    }
+});
+
 
 
 module.exports = router;
