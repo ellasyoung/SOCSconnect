@@ -28,6 +28,7 @@ const weeklyMeeting = require("./routes/weeklyMeeting");
 const userInfo = require("./routes/userInfo");
 const singleMeeting = require("./routes/singleBooking");
 const monthlyMeeting = require("./routes/monthlyMeeting");
+const privAppointments = require("./routes/privAppointments");
 
 
 app.use("/api/register", registerRoute); 
@@ -38,6 +39,7 @@ app.use("/api", weeklyMeeting);
 app.use("/api/user-info", userInfo);
 app.use("/api", singleMeeting);
 app.use("/api", monthlyMeeting);   
+app.use("/api", privAppointments);
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");

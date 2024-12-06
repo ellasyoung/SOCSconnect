@@ -7,7 +7,7 @@ router.post('/', async (req, res) => {
     const { requesterEmail, hostEmail, alternateTimes, requestStatus } = req.body;
 
     try {
-        const requester = await Users.findOne({ email: requesterEmail });
+        const requester = await Users.findOne({ email: requesterEmail }); /*this one*/
         const host = await Users.findOne({ email: hostEmail });
 
         if (!requester || !host) {
