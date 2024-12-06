@@ -100,9 +100,20 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
             <p>
               <b>End Time:</b> {new Date(`1970-01-01T${meetingData.endTime}`).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
             </p>
+            {meetingData.location && (
+              <p>
+                <b>Location:</b> {meetingData.location}
+              </p>
+            )}
+            {meetingData.notes && (
+              <p>
+                <b>Things to note:</b> {meetingData.notes}
+              </p>
+            )}
             <p>
               <b>Spots Left:</b> {`${spotsLeft} / ${meetingData.maxNumParticipants}`}
             </p>
+
             {!isLoggedIn && (
               <Line>
                 <Input

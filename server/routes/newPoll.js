@@ -4,6 +4,15 @@ const { v4: uuidv4 } = require('uuid');
 const Users = require('../models/Users');
 const Polls = require('../models/Polls');
 const mongoose = require('mongoose');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+        user: 'socsconnect@gmail.com', 
+        pass: 'tprd zosy lktd ksvi',  
+    },
+});
 
 router.post('/polls/:pollId/vote', async (req, res) => {
     const { pollId } = req.params;
@@ -122,6 +131,26 @@ router.post('/new-poll', async (req, res) => {
 
         const savedPoll = await newPoll.save();
         res.status(201).json(savedPoll);
+
+        const mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: hostEmail,                    
+            subject: 'Meeting Poll Confirmation',
+            html: `
+                <h3>Thank you for booking with us!</h3>
+                <p>You have created a poll for "${title}". 
+                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique meeting poll!</a></p>
+                <p>If you have any questions or need support, feel free to contact us.</p>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
 
     } catch (error) {
         console.error('Error creating weekly office hours:', error);
