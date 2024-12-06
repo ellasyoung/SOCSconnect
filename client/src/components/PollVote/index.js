@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import {
   Bckgrnd,
   Container,
@@ -62,6 +62,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
     const [confirmVotes, setConfirmVotes] = useState({});
     const [requesterEmail, setRequesterEmail] = useState('');
     const [voteCounts, setVoteCounts] = useState({});
+    const [hasVotedBefore, setHasVotedBefore] = useState(false);
 
     const toggleConfirmation = () => {
         setIsConfirmed(!isConfirmed);
@@ -88,6 +89,23 @@ const PollVote = ({ meetingData, hostInfo }) => {
             console.error('Error fetching vote count:', error);
         }
     };
+
+    const checkIfVoted = useCallback(async () => {
+        if (isLoggedIn) {
+            try {
+                const response = await fetch(`http://localhost:5001/api/polls/${meetingData._id}/check-vote?email=${email}`);
+                const data = await response.json();
+                setHasVotedBefore(data.hasVoted);
+            } catch (error) {
+                console.error('Error checking previous votes:', error);
+            }
+        }
+    }, [isLoggedIn, meetingData, email]);
+    
+    useEffect(() => {
+        checkIfVoted();
+    }, [checkIfVoted]);
+    
     
 
     const handleDateClick = async (value) => {
@@ -120,14 +138,15 @@ const PollVote = ({ meetingData, hostInfo }) => {
     
 
     const handleCheck = () =>{
-        if (selectedOptions.length === 0) {
-            alert("Please select at least one date/time before submitting.");
-            return;
-        }
         const updatedVotesByDate = {
             ...votesByDate,
             [selectedDate.toDateString()]: selectedOptions,
         };
+        const validVotes = Object.values(updatedVotesByDate).some(options => options.length > 0);
+        if (!validVotes) {
+            alert("Please select at least one date/time before submitting.");
+            return;
+        }
         setVotesByDate(updatedVotesByDate);
         const allVotes = Object.entries(updatedVotesByDate).flatMap(([date, options]) =>
             options.map(option => ({
@@ -193,6 +212,11 @@ const PollVote = ({ meetingData, hostInfo }) => {
                     <p>
                         <b>With: </b>{hostInfo.firstName} {hostInfo.lastName}
                     </p>
+                    {hasVotedBefore && (
+                        <p style={{fontStyle: "italic", color: "#cd2222"}}>
+                            You have already voted in this poll. Submitting again will override your previous votes.
+                        </p>
+                    )}
                     {!selectedDate && (
                         <>
                             <p style={{fontStyle: "italic", color: "#cd2222"}}>Select dates on the calendar to vote on times</p>
