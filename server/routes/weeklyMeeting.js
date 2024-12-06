@@ -3,6 +3,7 @@ const WeeklyOfficeHours = require('../models/WeeklyRecurringOH');
 const Users = require('../models/Users');
 const MonthlyOfficeHours = require('../models/MonthlyRecurringOH'); 
 const SingleAppointment = require('../models/Appointments'); 
+const Polls = require('../models/Polls');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
@@ -94,6 +95,11 @@ router.get('/meetings/:meetingId', async (req, res) => {
         meeting = await SingleAppointment.findOne({ url: `meeting/${meetingId}` });
         if (meeting) {
             return res.status(200).json({ ...meeting.toObject(), type: 'single' });
+        }
+
+        meeting = await Polls.findOne({ url: `meeting/${meetingId}` });
+        if (meeting) {
+            return res.status(200).json({ ...meeting.toObject(), type: 'poll' });
         }
 
         return res.status(404).json({ message: 'Meeting not found' });

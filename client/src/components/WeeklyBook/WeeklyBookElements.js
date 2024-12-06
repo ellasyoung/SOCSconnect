@@ -95,6 +95,15 @@ export const Button = styled.button`
     margin-top: 20px;
   }
 
+  &.pollSub{
+    margin-top: 0px;
+  }
+
+  &.pollSub2{
+    margin-top: 0px;
+    width: auto;
+  }
+
 `;
 
 export const Submit = styled.button`
@@ -143,6 +152,9 @@ export const Line = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
+    &.pollSub{
+      margin-top: 0px;
+    }
 `;
 
 export const CalContainer = styled.div`
@@ -300,6 +312,10 @@ export const ConfirmationModal = styled.div`
   position: relative;
   box-shadow: 8px 8px 10px rgba(98, 7, 7, 0.7);
 
+  &.confVotes{
+    height: 600px;
+  }
+
   @media screen and (max-width: 900px) {
     width: 600px;
     margin-top: -100px;
@@ -353,6 +369,13 @@ export const ModalTitle = styled.h1`
   font-family: 'SunbornSansOne', sans-serif;
   color: #cd2222;
   font-size: 50px;
+
+  &.confVotes{
+    font-size: 30px;
+    position: absolute;
+    top: 25px;
+  }
+
   @media screen and (max-width: 700px) {
     font-size: 30px;
   }
@@ -386,4 +409,78 @@ export const ModalText = styled.p`
       display: none;
     }
   }
+`;
+
+export const Checkbox = styled.input`
+
+  cursor: pointer;
+  transform: scale(1.0);
+  margin-right: 15px;
+  width: 25px; 
+  height: 25px; 
+  appearance: none; 
+  -webkit-appearance: none; 
+  border: 1px solid #000;
+  border-radius: 4px; 
+  background-color: white;
+
+  &:focus {
+    border-color: #cd2222;
+    box-shadow: 0 0 5px rgba(98, 7, 7, 0.5);
+  }
+
+  &:checked{
+    background-color: #cd2222;
+  }
+
+  &:checked::before {
+    content: '✓'; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px; 
+    color: white; 
+  }
+`;
+
+export const CheckCont = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+`;
+
+export const ScrollCont = styled.div`
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  height: 350px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px;
+  margin-bottom: 30px;
+  box-shadow: inset 0 0 5px rgba(98, 7, 7, 0.5);
+`;
+
+export const ButtonCont = styled.div`
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  display: flex;
+  justify-content: center;
+  align-items; center;
+  &.needEmail{
+    justify-content: space-between;
+  }
+`;
+
+export const ConfTimes = styled.div`
+  text-align: left;
+  border: 3px solid #cd2222;
+  padding: 15px 25px;
+  border-radius: 10px;
+  margin-top: 25px;
+  width: 70%;
 `;

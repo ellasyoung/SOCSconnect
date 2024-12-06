@@ -4,6 +4,8 @@ import axios from 'axios';
 import WeeklyBook from '../components/WeeklyBook'; 
 import MonthlyBook from '../components/MonthlyBook';
 import SingleBook from '../components/SingleBook'; 
+import PollVote from '../components/PollVote';
+import Footer from '../components/Footer';
 
 function MeetingPage() {
     const { meetingId } = useParams(); 
@@ -40,11 +42,33 @@ function MeetingPage() {
     }
 
     if (meetingData.type === 'weekly') {
-        return <WeeklyBook meetingData={meetingData} hostInfo={hostInfo} />;
+        return (
+            <>
+                <WeeklyBook meetingData={meetingData} hostInfo={hostInfo} />
+                <Footer/>
+            </>
+        );
     } else if (meetingData.type === 'monthly') {
-        return <MonthlyBook meetingData={meetingData} hostInfo={hostInfo} />;
-    } else {
-        return <SingleBook meetingData={meetingData} hostInfo={hostInfo} />;
+        return (
+            <>
+                <MonthlyBook meetingData={meetingData} hostInfo={hostInfo} />
+                <Footer/>
+            </>
+        );
+    } else if (meetingData.type === 'single') {
+        return (
+            <>
+                <SingleBook meetingData={meetingData} hostInfo={hostInfo} />
+                <Footer/>
+            </>
+        );
+    } else if (meetingData.type === 'poll') {
+        return (
+            <>
+                <PollVote meetingData={meetingData} hostInfo={hostInfo} />
+                <Footer/>
+            </>
+        );
     }
 }
 

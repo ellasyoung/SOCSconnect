@@ -4,6 +4,47 @@ const { v4: uuidv4 } = require('uuid');
 const Users = require('../models/Users');
 const Polls = require('../models/Polls');
 
+router.post('/polls/:pollId/vote', async (req, res) => {
+    const { pollId } = req.params;
+    const { votes } = req.body; 
+
+    try {
+        const poll = await Polls.findById(pollId);
+
+        if (!poll) {
+            return res.status(404).json({ message: 'Poll not found' });
+        }
+
+        votes.forEach(({ date, startTime, endTime, requesterEmail }) => {
+            const pollDate = poll.pollOption.find(option => 
+                option.date.toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]
+            );
+
+            if (pollDate) {
+                const timeOption = pollDate.timeOptions.find(option => 
+                    option.startTime === startTime && option.endTime === endTime
+                );
+
+                if (timeOption) {
+                    const voteExists = timeOption.votes.some(vote => vote.requesterEmail === requesterEmail);
+                    if (!voteExists) {
+                        timeOption.votes.push({ requesterEmail });
+                    }
+                }
+            }
+        });
+
+        await poll.save();
+
+        res.status(200).json({ message: 'Votes submitted successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'An error occurred while saving votes' });
+    }
+});
+
+
+
 router.post('/new-poll', async (req, res) => {
     const { title, pollOption, hostEmail } = req.body;
 
