@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
 // Middleware
 app.use(cors({

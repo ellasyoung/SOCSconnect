@@ -53,6 +53,9 @@ const MeetingPollModal = () => {
     const [expanded, setExpanded] = useState(null);
     const [editIndex, setEditIndex] = useState(null);
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+
     const toggleAddDate = (e) => {
         setAddDate(!addDate);
     };
@@ -111,7 +114,7 @@ const MeetingPollModal = () => {
         console.log(pollData);
 
         try {
-            const response = await fetch('http://localhost:5001/api/new-poll', {
+            const response = await fetch(`${backendUrl}/api/new-poll`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -196,11 +199,11 @@ const MeetingPollModal = () => {
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
-                        <ModalLink href={`http://localhost:3000/${url}`} target='_blank'>                
-                            {`http://localhost:3000/${url}`}
+                        <ModalLink href={`${frontendUrl}/${url}`} target='_blank'>                
+                        {`${frontendUrl}/${url}`}
                         </ModalLink>
                     </FormGroup>
-                    <SendIcon link={`http://localhost:3000/${url}`}/>
+                    <SendIcon link={`${frontendUrl}/${url}`}/>
                 </Line>
                 </ConfirmationModal>
             </Dim>

@@ -41,6 +41,9 @@ const RecurringWeeklyModal = () => {
         title: ''
     });
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+
     const toggleConfirmation = () => {
         setIsConfirmed(!isConfirmed);
     };
@@ -96,7 +99,7 @@ const RecurringWeeklyModal = () => {
 
             setConfirmationDetails(formData);
 
-            const response = await axios.post('http://localhost:5001/api/new-single-meeting', requestData);
+            const response = await axios.post(`${backendUrl}/api/new-single-meeting`, requestData);
             console.log('Meeting created successfully:', response.data);
             setURL(response.data.url);
             
@@ -216,11 +219,11 @@ const RecurringWeeklyModal = () => {
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
-                        <ModalLink href={`http://localhost:3000/${url}`} target='_blank'>                
-                            {`http://localhost:3000/${url}`}
+                        <ModalLink href={`${frontendUrl}/${url}`} target='_blank'>                
+                            {`${frontendUrl}/${url}`}
                         </ModalLink>
                     </FormGroup>
-                    <SendIcon link={`http://localhost:3000/${url}`}/>
+                    <SendIcon link={`${frontendUrl}/${url}`}/>
                 </Line>
                 <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
                 </ConfirmationModal>

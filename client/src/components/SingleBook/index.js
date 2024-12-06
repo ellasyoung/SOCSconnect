@@ -30,6 +30,8 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
   const [requesterEmail, setRequesterEmail] = useState('');
   const [isConfirmed, setIsConfirmed] = useState(false);
 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
   const normalizeDate = (dateString) => {
     const [year, month, day] = dateString.split(/[-T]/);
     return new Date(Number(year), Number(month) - 1, Number(day));
@@ -54,7 +56,7 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/book-slot-single`, {
+      const response = await fetch(`${backendUrl}/api/book-slot-single`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

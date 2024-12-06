@@ -27,6 +27,8 @@ const RegisterModal = () => {
 
     const [isConfirmed, setIsConfirmed] = useState(false);
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -55,7 +57,7 @@ const RegisterModal = () => {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:5001/api/register", formData, {
+            const response = await axios.post(`${backendUrl}/api/register`, formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },

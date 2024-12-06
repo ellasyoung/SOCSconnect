@@ -24,6 +24,7 @@ const PubApptsModal = () => {
     const [showPassword, setShowPassword] = useState(false);
     const { login } = useContext(AuthContext); 
     const navigate = useNavigate();
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -36,7 +37,7 @@ const PubApptsModal = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5001/api/login", formData, {
+            const response = await axios.post(`${backendUrl}/api/login`, formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
