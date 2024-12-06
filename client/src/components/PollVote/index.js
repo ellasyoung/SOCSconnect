@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Bckgrnd,
   Container,
@@ -6,7 +6,6 @@ import {
   Title,
   Line,
   Input,
-  Submit,
   Button,
   CalendarCol,
   CalContainer,
@@ -15,7 +14,6 @@ import {
   ConfirmationModal,
   CloseButton,
   ModalTitle,
-  ModalText,
   CheckCont,
   ScrollCont,
   ButtonCont,
@@ -63,6 +61,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
     const [votesByDate, setVotesByDate] = useState({});
     const [confirmVotes, setConfirmVotes] = useState({});
     const [requesterEmail, setRequesterEmail] = useState('');
+    const [voteCounts, setVoteCounts] = useState({});
 
     const toggleConfirmation = () => {
         setIsConfirmed(!isConfirmed);
@@ -79,22 +78,45 @@ const PollVote = ({ meetingData, hostInfo }) => {
 
     const pollDates = meetingData.pollOption.map(option => normalizeDate(option.date));
 
-    const handleDateClick = (value) => {
+    const fetchVoteCount = async (date, startTime, endTime) => {
+        //console.log(`http://localhost:5001/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
+        try {
+            const response = await fetch(`http://localhost:5001/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
+            const data = await response.json();
+            return data.voteCount;
+        } catch (error) {
+            console.error('Error fetching vote count:', error);
+        }
+    };
+    
+
+    const handleDateClick = async (value) => {
         if (selectedDate) {
             setVotesByDate(prev => ({
                 ...prev,
                 [selectedDate.toDateString()]: selectedOptions,
             }));
         }
+    
         const selectedPoll = meetingData.pollOption.find(
             option => normalizeDate(option.date).toDateString() === value.toDateString()
         );
+    
         if (selectedPoll) {
             setSelectedDate(value);
             setTimeOptions(selectedPoll.timeOptions);
             setSelectedOptions(votesByDate[value.toDateString()] || []);
+    
+            const counts = {};
+            for (const option of selectedPoll.timeOptions) {
+                const count = await fetchVoteCount(value.toISOString(), option.startTime, option.endTime);
+                //console.log(count);
+                counts[`${option.startTime}-${option.endTime}`] = count || 0;
+            }
+            setVoteCounts(counts);
         }
     };
+    
     
 
     const handleCheck = () =>{
@@ -117,7 +139,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
         );
         const groupedVotes = groupVotesByDate(allVotes); 
         setConfirmVotes(groupedVotes);
-        console.log(groupedVotes); 
+        //console.log(groupedVotes); 
         toggleCheckVotes();
     };
 
@@ -148,7 +170,6 @@ const PollVote = ({ meetingData, hostInfo }) => {
                 }),
             });
             if (response.ok) {
-                alert('Votes submitted successfully!');
                 toggleCheckVotes(); 
                 toggleConfirmation();
             } else {
@@ -180,19 +201,24 @@ const PollVote = ({ meetingData, hostInfo }) => {
                     {selectedDate && (
                     <>
                         <h3>Time Options on {selectedDate.toDateString()}</h3>
-                        {timeOptions.map((option, index) => (
-                        <CheckCont key={index}>
-                            <Checkbox
-                            type="checkbox"
-                            id={`time-${index}`}
-                            checked={selectedOptions.includes(option)}
-                            onChange={() => handleCheckboxChange(option)}
-                            />
-                            <label htmlFor={`time-${index}`}>
-                            {formatTime(option.startTime)} - {formatTime(option.endTime)}
-                            </label>
-                        </CheckCont>
-                        ))}
+                        {timeOptions.map((option, index) => {
+                        const timeKey = `${option.startTime}-${option.endTime}`;
+                        const voteCount = voteCounts[timeKey] || 0; 
+
+                        return (
+                            <CheckCont key={index}>
+                                <Checkbox
+                                    type="checkbox"
+                                    id={`time-${index}`}
+                                    checked={selectedOptions.includes(option)}
+                                    onChange={() => handleCheckboxChange(option)}
+                                />
+                                <label htmlFor={`time-${index}`}>
+                                    {formatTime(option.startTime)} - {formatTime(option.endTime)} ({voteCount} votes)
+                                </label>
+                            </CheckCont>
+                        );
+                    })}
                     </>
                     )}
                     <Button type='button' onClick={handleCheck}>Submit Votes</Button>
@@ -251,7 +277,17 @@ const PollVote = ({ meetingData, hostInfo }) => {
                 </ConfirmationModal>
             </Dim>
         )}
-
+        {isConfirmed && (
+          <Dim>
+            <ConfirmationModal>
+              <CloseButton onClick={toggleConfirmation} />
+              <ModalTitle>Poll Submitted!</ModalTitle>
+              <Button className="seeApts" as={Link} to="/my-appointments">
+                See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
+              </Button>
+            </ConfirmationModal>
+          </Dim>
+        )}
         </>
     );
 
