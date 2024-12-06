@@ -16,13 +16,15 @@ function MeetingPage() {
         lastName: ''
     });
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
     useEffect(() => {
         const fetchMeetingData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5001/api/meetings/${meetingId}`);
+                const response = await axios.get(`${backendUrl}/api/meetings/${meetingId}`);
                 const meeting = response.data;
                 setMeetingData(meeting);
-                const hostResponse = await axios.get(`http://localhost:5001/api/user-info/${meeting.hostId}`);
+                const hostResponse = await axios.get(`${backendUrl}/api/user-info/${meeting.hostId}`);
                 setHostInfo(hostResponse.data);
             } catch (error) {
                 console.error('Error fetching meeting data or host info:', error);
@@ -31,7 +33,7 @@ function MeetingPage() {
         };
 
         fetchMeetingData();
-    }, [meetingId]);
+    }, [meetingId, backendUrl]);
 
     if (error) {
         return <div>{error}</div>;

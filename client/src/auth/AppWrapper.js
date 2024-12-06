@@ -6,13 +6,15 @@ const AppWrapper = ({ children }) => {
   const { isLoggedIn } = useContext(AuthContext);
   const { logout } = useContext(AuthContext); 
 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
   useEffect(() => {
     const handleUnload = async () => {
       try {
         const token = localStorage.getItem("token");
         if (isLoggedIn && token) {
           await axios.post(
-            "http://localhost:5001/api/logout",
+            `${backendUrl}/api/logout`,
             {},
             {
               headers: {
@@ -32,7 +34,7 @@ const AppWrapper = ({ children }) => {
     return () => {
       window.removeEventListener("beforeunload", handleUnload);
     };
-  }, [isLoggedIn, logout]);
+  }, [isLoggedIn, logout, backendUrl]);
 
   return <>{children}</>;
 };

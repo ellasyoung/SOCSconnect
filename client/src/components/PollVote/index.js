@@ -64,6 +64,9 @@ const PollVote = ({ meetingData, hostInfo }) => {
     const [voteCounts, setVoteCounts] = useState({});
     const [hasVotedBefore, setHasVotedBefore] = useState(false);
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    //const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+
     const toggleConfirmation = () => {
         setIsConfirmed(!isConfirmed);
     };
@@ -80,9 +83,8 @@ const PollVote = ({ meetingData, hostInfo }) => {
     const pollDates = meetingData.pollOption.map(option => normalizeDate(option.date));
 
     const fetchVoteCount = async (date, startTime, endTime) => {
-        //console.log(`http://localhost:5001/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
         try {
-            const response = await fetch(`http://localhost:5001/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
+            const response = await fetch(`${backendUrl}/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
             const data = await response.json();
             return data.voteCount;
         } catch (error) {
@@ -93,14 +95,14 @@ const PollVote = ({ meetingData, hostInfo }) => {
     const checkIfVoted = useCallback(async () => {
         if (isLoggedIn) {
             try {
-                const response = await fetch(`http://localhost:5001/api/polls/${meetingData._id}/check-vote?email=${email}`);
+                const response = await fetch(`${backendUrl}/api/polls/${meetingData._id}/check-vote?email=${email}`);
                 const data = await response.json();
                 setHasVotedBefore(data.hasVoted);
             } catch (error) {
                 console.error('Error checking previous votes:', error);
             }
         }
-    }, [isLoggedIn, meetingData, email]);
+    }, [isLoggedIn, meetingData, email, backendUrl]);
     
     useEffect(() => {
         checkIfVoted();
@@ -172,7 +174,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch(`http://localhost:5001/api/polls/${meetingData._id}/vote`, {
+            const response = await fetch(`${backendUrl}/api/polls/${meetingData._id}/vote`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -49,6 +49,9 @@ const RecurringMonthlyModal = () => {
         dayOfMonth: '',
     });
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+
     const [url, setURL] = useState('');
 
     const toggleConfirmation = () => {
@@ -148,7 +151,7 @@ const RecurringMonthlyModal = () => {
                 maxNumParticipants: formData.attendees || 1,
             };
     
-            const response = await axios.post('http://localhost:5001/api/monthly-meeting', requestData);
+            const response = await axios.post(`${backendUrl}/api/monthly-meeting`, requestData);
     
             if (response.status === 201) {
                 setConfirmationDetails(formData);
@@ -370,11 +373,11 @@ const RecurringMonthlyModal = () => {
                 <Line>
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
-                        <ModalLink href={`http://localhost:3000/${url}`} target='_blank'>                
-                            {`http://localhost:3000/${url}`}
+                        <ModalLink href={`${frontendUrl}/${url}`} target='_blank'>                
+                            {`${frontendUrl}/${url}`}
                         </ModalLink>
                     </FormGroup>
-                    <SendIcon link={`http://localhost:3000/${url}`}/>
+                    <SendIcon link={`${frontendUrl}/${url}`}/>
                 </Line>
                 <Button className='seeApts' as={Link} to="/my-appointments">See Your Appointments <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/></Button>
                 </ConfirmationModal>

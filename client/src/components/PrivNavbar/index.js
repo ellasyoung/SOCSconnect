@@ -17,6 +17,8 @@ const Navbar = () => {
   const { logout } = useContext(AuthContext); 
   const navigate = useNavigate(); 
 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); 
   };
@@ -29,7 +31,7 @@ const Navbar = () => {
     try {
       const token = localStorage.getItem("token"); 
       await axios.post(
-        "http://localhost:5001/api/logout", 
+        `${backendUrl}/api/logout`, 
         {}, 
         {
           headers: {

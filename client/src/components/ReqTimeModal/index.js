@@ -17,6 +17,7 @@ const ReqTimeModal = () => {
     });
 
     const [error, setError] = useState(null);
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
     const handleFetchUserInfo = async () => {
         try {
@@ -32,7 +33,7 @@ const ReqTimeModal = () => {
 
     const getUserInfo = async (email) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/user-info?email=${encodeURIComponent(email)}`);
+            const response = await fetch(`${backendUrl}/api/user-info?email=${encodeURIComponent(email)}`);
     
             if (!response.ok) {
                 throw new Error('Failed to fetch user info');
@@ -102,7 +103,7 @@ const ReqTimeModal = () => {
                 requestStatus: 'Pending',
             };
     
-            const response = await axios.post("http://localhost:5001/api/alternate-request", data);
+            const response = await axios.post(`${backendUrl}/api/alternate-request`, data);
             console.log("Request submitted successfully:", response.data);
 
             setConfirmationDetails(formData);

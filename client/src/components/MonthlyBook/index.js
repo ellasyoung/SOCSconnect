@@ -67,6 +67,9 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
   const [spotsLeft, setSpotsLeft] = useState(null);
   const [requesterEmail, setRequesterEmail] = useState('');
 
+  const backendUrl = process.env.REACT_APP_BACKEND_URL;
+  //const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+
   const [isConfirmed, setIsConfirmed] = useState(false);
   const toggleConfirmation = () => {
     setIsConfirmed(!isConfirmed);
@@ -116,7 +119,7 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5001/api/book-slot-monthly`, {
+      const response = await fetch(`${backendUrl}/api/book-slot-monthly`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
