@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Bckgrnd,
   Container,
@@ -79,7 +79,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
     const pollDates = meetingData.pollOption.map(option => normalizeDate(option.date));
 
     const fetchVoteCount = async (date, startTime, endTime) => {
-        console.log(`http://localhost:5001/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
+        //console.log(`http://localhost:5001/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
         try {
             const response = await fetch(`http://localhost:5001/api/polls/${meetingData._id}/vote-count?date=${date}&startTime=${startTime}&endTime=${endTime}`);
             const data = await response.json();
@@ -110,7 +110,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
             const counts = {};
             for (const option of selectedPoll.timeOptions) {
                 const count = await fetchVoteCount(value.toISOString(), option.startTime, option.endTime);
-                console.log(count);
+                //console.log(count);
                 counts[`${option.startTime}-${option.endTime}`] = count || 0;
             }
             setVoteCounts(counts);

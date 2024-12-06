@@ -53,14 +53,10 @@ router.get('/polls/:pollId/vote-count', async (req, res) => {
     }
 
     try {
-        // Normalize the query date to midnight UTC
         const queryDate = new Date(date);
         const startOfDay = new Date(Date.UTC(queryDate.getUTCFullYear(), queryDate.getUTCMonth(), queryDate.getUTCDate()));
         const endOfDay = new Date(startOfDay);
         endOfDay.setUTCDate(startOfDay.getUTCDate() + 1);
-
-        console.log('Start of Day:', startOfDay);
-        console.log('End of Day:', endOfDay);
 
         const poll = await Polls.aggregate([
             {
@@ -126,5 +122,39 @@ router.post('/new-poll', async (req, res) => {
     }
 
 });
+
+
+router.get('/polls/:pollId/user-votes', async (req, res) => {
+    try {
+        const { email } = req.query;
+        const { pollId } = req.params;
+
+        const poll = await Polls.findById(pollId);
+        if (!poll) {
+            return res.status(404).json({ message: "Poll not found" });
+        }
+
+        const userVotes = [];
+        poll.pollOption.forEach(option => {
+            option.timeOptions.forEach(timeOption => {
+                timeOption.votes.forEach(vote => {
+                    if (vote.requesterEmail === email) {
+                        userVotes.push({
+                            date: option.date,
+                            startTime: timeOption.startTime,
+                            endTime: timeOption.endTime,
+                        });
+                    }
+                });
+            });
+        });
+
+        res.json({ votes: userVotes });
+    } catch (error) {
+        console.error("Error fetching user votes:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
 
 module.exports = router;
