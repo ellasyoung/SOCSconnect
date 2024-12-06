@@ -38,7 +38,9 @@ const RecurringWeeklyModal = () => {
         attendees: '',
         startTime: '',
         endTime: '',
-        title: ''
+        title: '',
+        location: '',
+        notes: ''
     });
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
@@ -53,7 +55,9 @@ const RecurringWeeklyModal = () => {
         attendees: '',
         startTime: '',
         endTime: '',
-        title: ''
+        title: '',
+        location: '',
+        notes: ''
     });
     
 
@@ -95,6 +99,8 @@ const RecurringWeeklyModal = () => {
                 startTime: formData.startTime,
                 endTime: formData.endTime,
                 maxNumParticipants: formData.attendees,
+                location: formData.location,
+                notes: formData.notes
             };
 
             setConfirmationDetails(formData);
@@ -111,6 +117,8 @@ const RecurringWeeklyModal = () => {
                 startTime: '',
                 endTime: '',
                 title: '',
+                location: '',
+                notes: ''
             });
             toggleConfirmation();
         } catch (error) {
@@ -142,9 +150,26 @@ const RecurringWeeklyModal = () => {
                                     required
                                 />
                             </FormGroup>
+
+                            <FormGroup>
+                                <Label>Attendees Allowed</Label>
+                                <Input 
+                                    type="number" 
+                                    min="1"
+                                    id="attendees"
+                                    name="attendees"
+                                    value={formData.attendees}
+                                    onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
+                                    required
+                                />
+                            </FormGroup>
+                            
                         </FormContainer>
+
                         
                         <FormContainer>
+                        
                         <FormGroup>
                             <Label>Start Time</Label>
                             <Input 
@@ -158,12 +183,6 @@ const RecurringWeeklyModal = () => {
                                 />
                         </FormGroup>
 
-                            
-                        </FormContainer>
-
-                        
-                        <FormContainer>
-
                         <FormGroup>
                             <Label>End Time</Label>
                             <Input 
@@ -176,19 +195,36 @@ const RecurringWeeklyModal = () => {
                                     required
                                 />
                         </FormGroup>
-                        <FormGroup>
-                                <Label>Attendees Allowed</Label>
-                                <Input 
-                                    type="number" 
-                                    min="1"
-                                    id="attendees"
-                                    name="attendees"
-                                    value={formData.attendees}
+                        
+                        </FormContainer>
+
+                        <FormContainer>
+                            <FormGroup>
+                                <Label>Location</Label>
+                                <Input
+                                    type="text"
+                                    name="location"
+                                    id="location"
+                                    value={formData.location}
                                     onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
-                                    required
+                                    style={{fontFamily: 'Arial, sans-serif'}}
+                                    placeholder="Optional"
                                 />
                             </FormGroup>
+
+                            <FormGroup>
+                                <Label>Additional Notes</Label>
+                                <Input
+                                    type="text"
+                                    name="notes"
+                                    id="notes"
+                                    value={formData.notes}
+                                    onChange={handleChange}
+                                    style={{fontFamily: 'Arial, sans-serif'}}
+                                    placeholder="Optional"
+                                />
+                            </FormGroup>
+                            
                         </FormContainer>
 
                         <TitleContainer>

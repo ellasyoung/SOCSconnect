@@ -60,17 +60,30 @@ router.post('/book-slot-single', async (req, res) => {
                     return res.status(404).json({ message: 'User not found' })};
         
 
+        let bookingBody = `
+        <h3>Meeting confirmed!</h3>
+        <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.startTime} until ${meeting.endTime}
+        with ${user.firstName} ${user.lastName}.    
+        `;
+
+        if (meeting.location) {
+            bookingBody += `
+            <p>The location of your meeting is ${meeting.location}.</p>`;
+        }
+
+        if (meeting.notes) {
+            bookingBody += `
+            <p>The creator of this meeting notes to "${meeting.notes}".</p>
+            `;
+        }
+
+        bookingBody += `<p>If you have any questions or need support, feel free to contact us.</p>`;
         const mailOptions = {
             from: 'socsconnect@gmail.com', 
             to: requesterEmail,                    
             subject: 'Booking Confirmation',
-            html: `
-                <h3>Meeting confirmed!</h3>
-                <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.startTime} until ${meeting.endTime}
-                with ${user.firstName} ${user.lastName}.
-                <p>If you have any questions or need support, feel free to contact us.</p>
-            `,
-        };
+            html: bookingBody
+        }
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
@@ -91,7 +104,7 @@ module.exports = router;
 
 
 router.post('/new-single-meeting', async (req, res) => {
-    const { hostEmail, title, date, startTime, endTime, maxNumParticipants } = req.body;
+    const { hostEmail, title, date, startTime, endTime, maxNumParticipants, location, notes } = req.body;
 
     try {
         const host = await Users.findOne({ email: hostEmail });
@@ -109,22 +122,37 @@ router.post('/new-single-meeting', async (req, res) => {
             endTime,
             url: uniqueUrl,
             maxNumParticipants,
+            location,
+            notes
         });
 
         const savedMeeting = await newMeeting.save();
         res.status(201).json(savedMeeting);
 
+        let emailBody = `
+        <h3>Thank you for booking with us!</h3>
+        <p>You have created a meeting for "${title}" on ${date}, from ${startTime} until ${endTime}.</p>
+        `;
+
+        if (location) {
+            emailBody += `<p>The location of your meeting is ${location}.</p>`;
+        }
+
+        if (notes) {
+            emailBody += `<p>You have included additional notes that say: "${notes}".`
+        }
+
+        emailBody += `
+        <p>To get started, you can visit our website at:</p>
+        <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
+        <p>If you have any questions or need support, feel free to contact us.</p>
+        `
+
         const mailOptions = {
             from: 'socsconnect@gmail.com', 
             to: hostEmail,                    
             subject: 'Single Meeting Confirmation',
-            html: `
-                <h3>Thank you for booking with us!</h3>
-                <p>You have created a meeting for "${title}" on ${date}, from ${startTime} until ${endTime}</p>
-                <p>To get started, you can visit our website at:</p>
-                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
-                <p>If you have any questions or need support, feel free to contact us.</p>
-            `,
+            html: emailBody
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

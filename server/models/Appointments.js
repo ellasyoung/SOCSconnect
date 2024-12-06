@@ -44,6 +44,14 @@ const AppointmentsSchema = new mongoose.Schema({
     createdAt: {
         type: Date, 
         default: Date.now
+    },
+    location: {
+        type: String,
+        default: ''
+    },
+    notes: {
+        type: String,
+        default: ''
     }
 
 });
