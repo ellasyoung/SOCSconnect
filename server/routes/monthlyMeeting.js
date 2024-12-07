@@ -65,18 +65,29 @@ router.post('/book-slot-monthly', async (req, res) => {
     const user = await Users.findById(meeting.hostId);
       if (!user) {
         return res.status(404).json({ message: 'User not found' })};
+    
+    let bookingBody = `
+    <h3>Meeting confirmed!</h3>
+        <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.schedule.startTime} until ${meeting.schedule.endTime}
+        with ${user.firstName} ${user.lastName}. 
+    `;
+
+    if(meeting.location) {
+      bookingBody += `<p>The location of your meeting is ${meeting.location}.</p>`;
+    }
+
+    if(meeting.notes) {
+      bookingBody += `<p>The creator of this meeting has noted "${meeting.notes}".</p>`
+    }
+
+    bookingBody += `<p>If you have any questions or need support, feel free to contact us.</p>`;
       
     const mailOptions = {
       from: 'socsconnect@gmail.com', 
       to: requesterEmail,                    
       subject: 'Booking Confirmation',
-      html: `
-        <h3>Meeting confirmed!</h3>
-        <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.schedule.startTime} until ${meeting.schedule.endTime}
-        with ${user.firstName} ${user.lastName}.
-        <p>If you have any questions or need support, feel free to contact us.</p>
-        `,
-      };
+      html: bookingBody
+    };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -95,7 +106,7 @@ router.post('/book-slot-monthly', async (req, res) => {
 router.post('/monthly-meeting', async (req, res) => {
     try {
         const { 
-            title, hostEmail, schedule, bookSlot, maxNumParticipants 
+            title, hostEmail, schedule, bookSlot, maxNumParticipants, location, notes 
         } = req.body;
 
         const host = await Users.findOne({ email: hostEmail });
@@ -111,46 +122,50 @@ router.post('/monthly-meeting', async (req, res) => {
             schedule,
             bookSlot,
             url: uniqueUrl,
-            maxNumParticipants
+            maxNumParticipants,
+            location,
+            notes
         });
 
         const savedMeeting = await newMeeting.save();
         res.status(201).json(savedMeeting);
 
-        let mailOptions;
+        let emailBody = `
+        <h3>Thank you for booking with us!</h3>
+        `;
 
-        if(schedule.date !== "") {
-
-          mailOptions = {
-            from: 'socsconnect@gmail.com', 
-            to: hostEmail,                    
-            subject: 'Monthly Recurring Meeting Confirmation',
-            html: `
-                <h3>Thank you for booking with us!</h3>
-                <p>You have created a monthly recurring meeting for "${title}" 
-                on the ${schedule.date} of the month beginning from ${schedule.startDate} and ending on ${schedule.endDate}
-                starting at ${schedule.startTime} until ${schedule.endTime}.</p>
-                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
-                <p>If you have any questions or need support, feel free to contact us.</p>
-            `,
-          };
+        if(schedule.date) {
+          emailBody += `<p>You have created a monthly recurring meeting for "${title}" 
+          on the ${schedule.date} of the month beginning from ${schedule.startDate} and ending on ${schedule.endDate}
+          starting at ${schedule.startTime} until ${schedule.endTime}.</p>`;
         }
 
-        else {
-          mailOptions = {
-            from: 'socsconnect@gmail.com', 
-            to: hostEmail,                    
-            subject: 'Monthly Recurring Meeting Confirmation',
-            html: `
-                <h3>Thank you for booking with us!</h3>
-                <p>You have created a monthly recurring meeting for "${title}" 
-                on each ${schedule.day} beginning from ${schedule.startDate} and ending on ${schedule.endDate}
-                starting at ${schedule.startTime} until ${schedule.endTime}.</p>
-                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
-                <p>If you have any questions or need support, feel free to contact us.</p>
-            `,
-          }
+        else if(schedule.day) {
+          emailBody += `<p>You have created a monthly recurring meeting for "${title}" 
+          on each ${schedule.day} beginning from ${schedule.startDate} and ending on ${schedule.endDate}
+          starting at ${schedule.startTime} until ${schedule.endTime}.</p>`;
         }
+
+        if(location) {
+          emailBody += `<p>The location of your meeting is ${location}.</p>`;
+        }
+
+        if(notes) {
+          emailBody += `<p>You have included notes that say "${notes}".</p>`;
+        }
+
+        emailBody += `
+        <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
+        <p>If you have any questions or need support, feel free to contact us.</p>
+        `
+
+        const mailOptions = {
+          from: 'socsconnect@gmail.com', 
+          to: hostEmail,                    
+          subject: 'Monthly Recurring Meeting Confirmation',
+          html: emailBody
+        };
+
 
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {

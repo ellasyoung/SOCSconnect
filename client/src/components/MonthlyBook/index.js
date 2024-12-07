@@ -166,6 +166,16 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
             <p>
                 <b>Spots Left:</b> {selectedDate ? `${spotsLeft} / ${meetingData.maxNumParticipants}` : "please select a date to see the number of spots available"}
             </p>
+            {meetingData.location && (
+              <p>
+                <b>Location:</b> {meetingData.location}
+              </p>
+            )}
+            {meetingData.notes && (
+              <p>
+                <b>Things to note:</b> {meetingData.notes}
+              </p>
+            )}
             {!isLoggedIn && (
               <Line>
                 <Input

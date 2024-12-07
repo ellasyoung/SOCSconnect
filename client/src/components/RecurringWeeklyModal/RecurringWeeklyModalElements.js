@@ -15,7 +15,7 @@ export const Bckgrnd = styled.div`
   align-items: center;
 
   @media screen and (max-width: 1030px) {
-    height: 135vh;
+    height: 165vh;
   }
 `;
 
@@ -54,7 +54,7 @@ export const InnerModal = styled.div`
   border: 5px solid #cd2222;
   border-bottom: none;
   @media screen and (max-width: 1030px) {
-    height: 130vh;
+    height: 160vh;
   }
 `;
 
