@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { 
     Bckgrnd,  
-    Select
+    Select,
+    ModalContainer,
+    InnerModal,
+    UpperModal
 } from './RecurringMonthlyModalElements';
 
 import {
-    InnerModal, 
-    UpperModal,
-    ModalContainer,
     Title, 
     Form,
     FormGroup,
@@ -47,6 +47,8 @@ const RecurringMonthlyModal = () => {
         dayOfWeek: '',
         weekOfMonth: '',
         dayOfMonth: '',
+        location: '',
+        notes: ''
     });
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
@@ -66,7 +68,9 @@ const RecurringMonthlyModal = () => {
         startTime: '',
         endTime: '',
         title: '',
-        dayOfWeek: ''
+        dayOfWeek: '',
+        location: '',
+        notes: ''
     });
 
     const getDaysInMonth = (year, month) => {
@@ -149,6 +153,8 @@ const RecurringMonthlyModal = () => {
                     endDate: formData.endDate,
                 },
                 maxNumParticipants: formData.attendees || 1,
+                location: formData.location,
+                notes: formData.notes
             };
     
             const response = await axios.post(`${backendUrl}/api/monthly-meeting`, requestData);
@@ -169,6 +175,8 @@ const RecurringMonthlyModal = () => {
                     dayOfWeek: '',
                     weekOfMonth: '',
                     dayOfMonth: '',
+                    location: '',
+                    notes: ''
                 });
             }
         } catch (error) {
@@ -212,6 +220,33 @@ const RecurringMonthlyModal = () => {
                                     required
                                 />
                             </FormGroup>
+                            <FormGroup>
+                            <Label>Start Time</Label>
+                            <Input 
+                                    type="time" 
+                                    id="startTime"
+                                    name="startTime"
+                                    value={formData.startTime}
+                                    onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
+                                    required
+                                />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label>End Time</Label>
+                            <Input 
+                                    type="time" 
+                                    id="endTime"
+                                    name="endTime"
+                                    value={formData.endTime}
+                                    onChange={handleChange}
+                                    style={{ fontFamily: 'Arial, sans-serif' }}
+                                    required
+                                />
+                        </FormGroup>
+
+                            
                         </FormContainer>
                         
                         <FormContainer>
@@ -294,33 +329,6 @@ const RecurringMonthlyModal = () => {
 
                         
                         <FormContainer>
-
-                        <FormGroup>
-                            <Label>Start Time</Label>
-                            <Input 
-                                    type="time" 
-                                    id="startTime"
-                                    name="startTime"
-                                    value={formData.startTime}
-                                    onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
-                                    required
-                                />
-                        </FormGroup>
-
-                        <FormGroup>
-                            <Label>End Time</Label>
-                            <Input 
-                                    type="time" 
-                                    id="endTime"
-                                    name="endTime"
-                                    value={formData.endTime}
-                                    onChange={handleChange}
-                                    style={{ fontFamily: 'Arial, sans-serif' }}
-                                    required
-                                />
-                        </FormGroup>
-
                         <FormGroup>
                                 <Label>Attendees Allowed</Label>
                                 <Input 
@@ -332,6 +340,30 @@ const RecurringMonthlyModal = () => {
                                     onChange={handleChange}
                                     style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
+                                />
+                            </FormGroup>
+                        <FormGroup>
+                                <Label>Location</Label>
+                                <Input
+                                    type="text"
+                                    id="location"
+                                    name="location"
+                                    value={formData.location}
+                                    onChange={handleChange}
+                                    style={{fontFamily: 'Arial, sans-serif'}}
+                                    placeholder="Optional"
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label>Additional Notes</Label>
+                                <Input 
+                                    type="text"
+                                    id="notes"
+                                    name="notes"
+                                    value={formData.notes}
+                                    onChange={handleChange}
+                                    style={{fontFamily: 'Arial, sans-serif'}}
+                                    placeholder="Optional"
                                 />
                             </FormGroup>
                         </FormContainer>

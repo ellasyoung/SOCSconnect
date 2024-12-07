@@ -40,7 +40,9 @@ const RecurringWeeklyModal = () => {
         attendees: '',
         startTime: '',
         endTime: '',
-        title: ''
+        title: '',
+        location: '',
+        notes: ''
     });
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
@@ -57,7 +59,9 @@ const RecurringWeeklyModal = () => {
         attendees: '',
         startTime: '',
         endTime: '',
-        title: ''
+        title: '',
+        location: '',
+        notes: ''
     });
     
 
@@ -113,6 +117,8 @@ const RecurringWeeklyModal = () => {
                 startTime: formData.startTime,
                 endTime: formData.endTime,
                 maxNumParticipants: formData.attendees,
+                location: formData.location,
+                notes: formData.notes
             };
 
             setConfirmationDetails(formData);
@@ -131,6 +137,8 @@ const RecurringWeeklyModal = () => {
                 startTime: '',
                 endTime: '',
                 title: '',
+                location: '',
+                notes: ''
             });
             toggleConfirmation();
         } catch (error) {
@@ -174,9 +182,6 @@ const RecurringWeeklyModal = () => {
                                     required
                                 />
                             </FormGroup>
-                        </FormContainer>
-                        
-                        <FormContainer>
                             <FormGroup>
                                 <Label>Day of the Week</Label>
                                 <Input 
@@ -190,7 +195,9 @@ const RecurringWeeklyModal = () => {
                                     required
                                 />
                             </FormGroup>
-
+                        </FormContainer>
+                        
+                        <FormContainer>
                             <FormGroup>
                                 <Label>Attendees Allowed</Label>
                                 <Input 
@@ -204,12 +211,7 @@ const RecurringWeeklyModal = () => {
                                     required
                                 />
                             </FormGroup>
-                        </FormContainer>
-
-                        
-                        <FormContainer>
-
-                        <FormGroup>
+                            <FormGroup>
                             <Label>Start Time</Label>
                             <Input 
                                     type="time" 
@@ -220,9 +222,9 @@ const RecurringWeeklyModal = () => {
                                     style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
-                        </FormGroup>
+                            </FormGroup>
 
-                        <FormGroup>
+                            <FormGroup>
                             <Label>End Time</Label>
                             <Input 
                                     type="time" 
@@ -233,6 +235,37 @@ const RecurringWeeklyModal = () => {
                                     style={{ fontFamily: 'Arial, sans-serif' }}
                                     required
                                 />
+                        </FormGroup>
+
+                        </FormContainer>
+
+                        
+                        <FormContainer>
+
+                        <FormGroup>
+                            <Label>Location</Label>
+                            <Input 
+                                type="text"
+                                id="location"
+                                name="location"
+                                value={formData.location}
+                                onChange={handleChange}
+                                style={{fontFamily: 'Arial, sans-serif'}}
+                                placeholder="Optional"
+                            />
+                        </FormGroup>
+
+                        <FormGroup>
+                            <Label>Additional Notes</Label>
+                            <Input
+                                type="text"
+                                id="notes"
+                                name="notes"
+                                value={formData.notes}
+                                onChange={handleChange}
+                                style={{fontFamily: 'Arial, sans-serif'}}
+                                placeholder="Optional"
+                            />
                         </FormGroup>
                         </FormContainer>
 

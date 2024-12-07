@@ -13,7 +13,7 @@ export const Bckgrnd = styled.div`
   align-items: center;
 
   @media screen and (max-width: 1030px) {
-    height: 147vh;
+    height: 185vh;
   }
 `;
 
@@ -49,4 +49,51 @@ export const Select = styled.select`
     width: 50%;
     font-size: 12px;
   }
-`
+`;
+
+export const ModalContainer = styled.div`
+  width: 90%;
+  height: 95%;
+  position: relative;
+  margin-top: 100px;
+  @media screen and (max-width: 1030px) {
+    height: 185vh;
+  }
+`;
+
+export const UpperModal = styled.div`
+  width: 300px;  
+  height: 45px;  
+  background-color: white;
+  border-radius: 15px 15px 0 0;  
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  z-index: 1;
+  border: 5px solid #cd2222;
+  
+`;
+
+export const InnerModal = styled.div`
+  width: 100%; 
+  height: 92%; 
+  background-color: white;
+  border-radius: 0 15px 15px 0;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  z-index: 0;
+  border: 5px solid #cd2222;
+  border-bottom: none;
+  @media screen and (max-width: 1030px) {
+    height: 130vh;
+  }
+  @media screen and (max-width: 1030px) {
+    height: 185vh;
+  }
+  
+`;

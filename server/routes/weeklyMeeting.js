@@ -51,17 +51,28 @@ router.post('/book-slot-weekly', async (req, res) => {
         const user = await Users.findById(meeting.hostId);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' })};
+        
+        let bookingBody = `
+        <h3>Meeting confirmed!</h3>
+        <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.schedule.startTime} until ${meeting.schedule.endTime}
+        with ${user.firstName} ${user.lastName}.
+        `;
+
+        if(meeting.location) {
+            bookingBody += `<p>The location of the meeting is ${meeting.location}.</p>`;
+        }
+
+        if(meeting.notes) {
+            bookingBody += `<p>The creator of this meeting has included notes that say "${meeting.notes}".<p>`;
+        }
+
+        bookingBody += `<p>If you have any questions or need support, feel free to contact us.</p>`;
       
         const mailOptions = {
             from: 'socsconnect@gmail.com', 
             to: requesterEmail,                    
             subject: 'Booking Confirmation',
-            html: `
-                <h3>Meeting confirmed!</h3>
-                <p>You have successfully booked a meeting slot on ${myDate} from ${meeting.schedule.startTime} until ${meeting.schedule.endTime}
-                with ${user.firstName} ${user.lastName}.
-                <p>If you have any questions or need support, feel free to contact us.</p>
-            `,
+            html: bookingBody
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -110,7 +121,7 @@ router.get('/meetings/:meetingId', async (req, res) => {
 });
 
 router.post('/new-weekly-meeting', async (req, res) => {
-    const { hostEmail, title, dayOfWeek, startTime, endTime, startDate, endDate, maxNumParticipants } = req.body;
+    const { hostEmail, title, dayOfWeek, startTime, endTime, startDate, endDate, maxNumParticipants, location, notes } = req.body;
 
     try {
         const host = await Users.findOne({ email: hostEmail });
@@ -148,23 +159,38 @@ router.post('/new-weekly-meeting', async (req, res) => {
             },
             url: uniqueUrl,
             maxNumParticipants,
+            location,
+            notes
         });
 
         const savedMeeting = await newMeeting.save();
         res.status(201).json(savedMeeting);
 
+        let emailBody = `
+        <h3>Thank you for booking with us!</h3>
+        <p>You have created a weekly recurring meeting for "${title}" 
+        on each ${dayOfWeek} beginning from ${startDate} and ending on ${endDate}
+        starting at ${startTime} until ${endTime}.</p>
+        `
+
+        if(location) {
+            emailBody += `<p>The location of your meeting is ${location}.</p>`;
+        }
+
+        if(notes) {
+            emailBody += `<p>You have included the following notes that say "${notes}".</p>`;
+        }
+
+        emailBody += `
+        <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
+        <p>If you have any questions or need support, feel free to contact us.</p>
+        `;
+
         const mailOptions = {
             from: 'socsconnect@gmail.com', 
             to: hostEmail,                    
             subject: 'Weekly Recurring Meeting Confirmation',
-            html: `
-                <h3>Thank you for booking with us!</h3>
-                <p>You have created a weekly recurring meeting for "${title}" 
-                on each ${dayOfWeek} beginning from ${startDate} and ending on ${endDate}
-                starting at ${startTime} until ${endTime}.</p>
-                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
-                <p>If you have any questions or need support, feel free to contact us.</p>
-            `,
+            html: emailBody
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
