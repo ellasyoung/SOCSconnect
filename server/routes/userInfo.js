@@ -49,5 +49,30 @@ router.get('/:userId', async (req, res) => {
     }
 });
 
+router.get('/user-email/:userId', async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const objectId = new mongoose.Types.ObjectId(userId);
+
+        const user = await Users.findById(objectId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json({
+            email: user.email,
+        });
+    } catch (error) {
+        console.error('Error fetching user details:', error);
+
+        if (error instanceof mongoose.Error.CastError) {
+            return res.status(400).json({ message: 'Invalid user ID format' });
+        }
+
+        res.status(500).json({ message: 'Internal server error', error });
+    }
+});
+
 module.exports = router;
 
