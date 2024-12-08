@@ -38,13 +38,13 @@ router.post('/', async (req, res) => {
         `;
 
         if(alternateTimes[0].title) {
-            emailBody += ` for ${alternateTimes[0].title}`;
+            emailBody += ` for "${alternateTimes[0].title}"`;
         }
 
         emailBody += `
          on ${alternateTimes[0].proposedDate} from ${alternateTimes[0].proposedStartTime} until ${alternateTimes[0].proposedEndTime}.
             </p>.
-            </P>You request is currently pending. You can view that status of your request under
+            </P>Your request is currently pending. You can view that status of your request under
              the "Requests" tab at <a href="http://localhost:3000/my-appointments">My Appointments</a>.</p>
             <p>If you have any questions or need support, feel free to contact us.</p>
         `

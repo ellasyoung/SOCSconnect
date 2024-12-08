@@ -6,6 +6,15 @@ const WeeklyRecurring = require('../models/WeeklyRecurringOH');
 const Appointments = require('../models/Appointments');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+        user: 'socsconnect@gmail.com', 
+        pass: 'tprd zosy lktd ksvi',  
+    },
+});
 
 router.get('/incoming-requests', async (req, res) => {
     const { requesterEmail } = req.query;
@@ -250,9 +259,70 @@ router.post('/accept-request', async (req, res) => {
             ],
         });
 
+        const user = await Users.findById(hostId);
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' })};
+        
+        const requester = await Users.findById(request.requesterId);
+                if(!requester) {
+                    return res.status(404).json({message: 'Requester not found'});
+        }
+
         await appointment.save();
 
         res.status(200).json({ message: 'Request accepted and appointment created', appointment });
+
+        let bookingBody = `
+        <h3>Request approved!</h3>
+        <p>Your meeting request with ${user.firstName} ${user.lastName} on ${proposedDate.toISOString().split('T')[0]} 
+        from ${proposedStartTime} until ${proposedEndTime} has been approved  
+        `;
+
+        let approvalBody = `
+            <h3>New Meeting Alert</h3>
+            <p>You recently approved a meeting request with ${requester.firstName} ${requester.lastName} on ${proposedDate.toISOString().split('T')[0]}
+             from ${proposedStartTime} until ${proposedEndTime}
+        `;
+
+        if (title) {
+            bookingBody += `
+             for "${title}"`;
+            
+            approvalBody += `
+            for "${title}"`;
+        }
+
+
+        bookingBody, approvalBody += `.</p><p>If you have any questions or need support, feel free to contact us.</p>`;
+        const mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: requesterEmail,                    
+            subject: 'Meeting Request Approved',
+            html: bookingBody
+        }
+
+        const mailOptions2 = {
+            from: 'socsconnect@gmail.com',
+            to: user.email,
+            subject: 'You Approved a Request',
+            html: approvalBody
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
+
+        transporter.sendMail(mailOptions2, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
     } catch (error) {
         console.error('Error handling request acceptance:', error);
         res.status(500).json({ message: 'Internal server error' });
@@ -270,9 +340,47 @@ router.put('/deny-request/:requestId', async (req, res) => {
         }
 
         request.requestStatus = status; 
+        const hostId = request.hostId;
         await request.save();
 
         res.status(200).json({ message: 'Request status updated successfully' });
+
+        const user = await Users.findById(hostId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' })};
+
+        const requester = await Users.findById(request.requesterId);
+        if(!requester) {
+            return res.status(404).json({message: 'Requester not found'});
+        }
+
+        let bookingBody = `
+        <h3>Request denied.</h3>
+        <p>Your meeting request with ${user.firstName} ${user.lastName} on ${(request.alternateTimes[0].proposedDate.toISOString().split('T')[0])} 
+        from ${request.alternateTimes[0].proposedStartTime} until ${request.alternateTimes[0].proposedEndTime} has been denied  
+        `;
+
+        if (request.alternateTimes[0].title) {
+            bookingBody += `
+             for "${request.alternateTimes[0].title}"`;
+        }
+
+
+        bookingBody += `.</p><p>If you have any questions or need support, feel free to contact us.</p>`;
+        const mailOptions = {
+            from: 'socsconnect@gmail.com', 
+            to: requester.email,                    
+            subject: 'Meeting Request Denied',
+            html: bookingBody
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'Meeting denied, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
     } catch (error) {
         console.error('Error updating request status:', error);
         res.status(500).json({ message: 'Internal server error' });
