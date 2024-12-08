@@ -167,14 +167,14 @@ const PrivAppointments = () => {
         setShowPopup(false);
     };
 
-    const acceptRequest = async (requestId, requesterEmail) => {
+    const acceptRequest = async (requestId, requesterEmail, title) => {
         try {
             const response = await fetch('http://localhost:5001/api/priv-appointments/accept-request', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ requestId, requesterEmail }),
+                body: JSON.stringify({ requestId, requesterEmail, title }),
             });
     
             if (!response.ok) {
@@ -430,7 +430,7 @@ const PrivAppointments = () => {
                                     style={{ width: button.width }}
                                     onClick={() => {
                                         if (button.text === 'Accept') {
-                                            acceptRequest(popupData.requestDetails._id, popupData.requestDetails.requesterEmail);
+                                            acceptRequest(popupData.requestDetails._id, popupData.requestDetails.requesterEmail, popupData.requestDetails.alternateTimes[0].title);
                                             closePopup();
                                         }
                                     }}

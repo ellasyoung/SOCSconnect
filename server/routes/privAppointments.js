@@ -219,7 +219,7 @@ router.get('/meetings', async (req, res) => {
 
 
 router.post('/accept-request', async (req, res) => {
-    const { requestId, requesterEmail } = req.body;
+    const { requestId, requesterEmail, title } = req.body;
 
     try {
         const request = await AlternateRequests.findById(requestId);
