@@ -30,6 +30,7 @@ const userInfo = require("./routes/userInfo");
 const singleMeeting = require("./routes/singleBooking");
 const monthlyMeeting = require("./routes/monthlyMeeting");
 const poll = require("./routes/newPoll");
+const privAppointments = require("./routes/privAppointments");
 
 app.use("/api/register", registerRoute); 
 app.use("/api/login", loginRoute);     
@@ -40,6 +41,8 @@ app.use("/api/user-info", userInfo);
 app.use("/api", singleMeeting);
 app.use("/api", monthlyMeeting);
 app.use("/api", poll);      
+app.use("/api/priv-appointments", privAppointments);
+
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
