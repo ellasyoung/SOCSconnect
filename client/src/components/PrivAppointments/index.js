@@ -59,52 +59,52 @@ const PrivAppointments = () => {
 
     const { email } = useContext(AuthContext)
 
-
-    const fetchUserDetails = async (userId) => {
-        if (!userId) {
-            console.error("Invalid user ID:", userId);
-            return "Unknown User";
-        }
-
-        try {
-            const response = await fetch(`${backendUrl}/api/user-info/${userId}`);
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch user details, status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (data && data.firstName && data.lastName) {
-                return `${data.firstName} ${data.lastName}`;
-            } else {
-                throw new Error('User data is incomplete');
-            }
-
-            } catch (error) {
-                console.error("Error fetching user details:", error);
-                return "Unknown User"; 
-        }
-    };
-
-    const fetchUserEmail = async (userId) => {
-        try {
-            const response = await axios.get(`${backendUrl}/api/user-info/user-email/${userId}`);
-            
-            if (response.status === 200) {
-                return response.data.email; 
-            } else {
-                console.error(`Failed to fetch email for userId ${userId}. Status: ${response.status}`);
-                return null;
-            }
-        } catch (error) {
-            console.error('Error fetching user email:', error);
-            return null; 
-        }
-    };
-
     
     useEffect(() => {
+
+        const reqfetchUserDetails = async (userId) => {
+            if (!userId) {
+                console.error("Invalid user ID:", userId);
+                return "Unknown User";
+            }
+    
+            try {
+                const response = await fetch(`${backendUrl}/api/user-info/${userId}`);
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch user details, status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+    
+                if (data && data.firstName && data.lastName) {
+                    return `${data.firstName} ${data.lastName}`;
+                } else {
+                    throw new Error('User data is incomplete');
+                }
+    
+                } catch (error) {
+                    console.error("Error fetching user details:", error);
+                    return "Unknown User"; 
+            }
+        };
+
+        const reqfetchUserEmail = async (userId) => {
+            try {
+                const response = await axios.get(`${backendUrl}/api/user-info/user-email/${userId}`);
+                
+                if (response.status === 200) {
+                    return response.data.email; 
+                } else {
+                    console.error(`Failed to fetch email for userId ${userId}. Status: ${response.status}`);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching user email:', error);
+                return null; 
+            }
+        };
+
         const fetchRequestsWithNames = async () => {
             if (email) {
                 try {
@@ -115,10 +115,10 @@ const PrivAppointments = () => {
     
                         const requestsWithNames = await Promise.all(
                             requests.map(async (request) => {
-                                const requesterName = await fetchUserDetails(request.requesterId);
-                                const requesterEmail = await fetchUserEmail(request.requesterId);
-                                const hostName = await fetchUserDetails(request.hostId);
-                                const hostEmail = await fetchUserEmail(request.requesterId);
+                                const requesterName = await reqfetchUserDetails(request.requesterId);
+                                const requesterEmail = await reqfetchUserEmail(request.requesterId);
+                                const hostName = await reqfetchUserDetails(request.hostId);
+                                const hostEmail = await reqfetchUserEmail(request.requesterId);
                                 
                                 return {
                                     ...request,
@@ -138,7 +138,7 @@ const PrivAppointments = () => {
             };
     
             fetchRequestsWithNames();
-        }, [email]);
+        }, [email, backendUrl]);
 
     useEffect(() => {
         const fetchMeetingsWithNames = async () => {
@@ -159,7 +159,7 @@ const PrivAppointments = () => {
         };
     
         fetchMeetingsWithNames();
-    }, [email])
+    }, [email, backendUrl])
     
 
     const openPopup = (data) => {
@@ -194,7 +194,7 @@ const PrivAppointments = () => {
 
     const denyRequest = async (requestId) => {
         try {
-            const response = await axios.put(`${backendUrl}api/priv-appointments/deny-request/${requestId}`, {
+            const response = await axios.put(`${backendUrl}/api/priv-appointments/deny-request/${requestId}`, {
                 status: 'Denied',
             });
     
@@ -507,12 +507,12 @@ const PrivAppointments = () => {
                                     onClick={() => {
                                         if (button.text === 'Accept') {
                                             acceptRequest(popupData.requestDetails._id, popupData.requestDetails.requesterEmail, popupData.requestDetails.alternateTimes[0].title);
-                                            alert(`Successfully accepted meeting request with ${popupData.requestDetails.requesterEmail}. View it under Upcoming Appointments.`);
                                             closePopup();
+                                            alert(`Successfully accepted meeting request with ${popupData.requestDetails.requesterEmail}. View it under Upcoming Appointments.`);
                                         } else if (button.text === 'Deny') {
                                             denyRequest(popupData.requestDetails._id);
-                                            alert(`Successfully denied meeting request with ${popupData.requestDetails.requesterEmail}.`);
                                             closePopup();
+                                            alert(`Successfully denied meeting request with ${popupData.requestDetails.requesterEmail}.`);
                                         } else if (button.text === 'Propose Different Time') {
                                             navigate('/request-time', {
                                                 state: { requestDetails: popupData.requestDetails },
