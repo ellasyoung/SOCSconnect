@@ -240,7 +240,7 @@ const PrivAppointments = () => {
                             </RequestButton>
                                 ))
                             ) : ( 
-                                <p><b>No Incoming Requests</b></p>
+                                <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Incoming Requests</b></p>
                     )}
                 </DropdownContents>
             </Dropdown>
@@ -279,7 +279,7 @@ const PrivAppointments = () => {
                                 </UpdateButton>
                             ))
                         ) : (
-                            <p><b>No Upcoming Meetings</b></p>
+                            <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Upcoming Meetings</b></p>
                         )}
                 </DropdownContents>
             </Dropdown>
@@ -318,7 +318,7 @@ const PrivAppointments = () => {
                             </HistoryButton>
                         ))
                     ) : (
-                        <p><b>No Past Meetings</b></p>
+                        <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Past Meetings</b></p>
                     )}
                 </DropdownContents>
             </Dropdown>
