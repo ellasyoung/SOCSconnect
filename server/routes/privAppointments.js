@@ -53,16 +53,30 @@ router.get('/meetings', async (req, res) => {
             return res.status(400).json({ error: "Requester email not provided" });
         }
 
+        const getUserNameByEmail = async (email) => {
+            const user = await Users.findOne({ email }).select("firstName lastName");
+            return user ? `${user.firstName} ${user.lastName}` : email;
+        };
+
         const appointments = await Appointments.find({
-            "bookings.requesterEmail": requesterEmail,
+            $or: [
+                { "bookings.requesterEmail": requesterEmail },
+                { hostId: await Users.findOne({ email: requesterEmail }).select('_id') }
+            ],
         });
 
         const monthlyApps = await MonthlyRecurring.find({
-            "bookSlot.requesterEmail": requesterEmail,
+            $or: [
+                { "bookSlot.requesterEmail": requesterEmail },
+                { hostId: await Users.findOne({ email: requesterEmail }).select('_id') }
+            ],
         });
 
         const weeklyApps = await WeeklyRecurring.find({
-            "bookSlot.requesterEmail": requesterEmail,
+            $or: [
+                { "bookSlot.requesterEmail": requesterEmail },
+                { hostId: await Users.findOne({ email: requesterEmail }).select('_id') }
+            ],
         });
 
         const upcomingMeetings = [];
@@ -74,13 +88,60 @@ router.get('/meetings', async (req, res) => {
         };
 
         for (const appointment of appointments) {
-            const meetingDate = new Date(appointment.date);
 
-            if (meetingDate >= currDate) {
-                upcomingMeetings.push(appointment);
-            } else {
-                pastMeetings.push(appointment);
+            const meetingDate = new Date(appointment.date);
+            const hostEmail = await getHostEmail(appointment.hostId);
+            const isMine = hostEmail === requesterEmail;
+            const hostName = await getUserNameByEmail(hostEmail);
+
+            if(isMine){
+                for (const booking of appointment.bookings) {
+
+                    const reqName = await getUserNameByEmail(booking.requesterEmail);
+
+                    const meetingDetails = {
+                        _id: appointment._id,
+                        title: appointment.title,
+                        date: meetingDate,
+                        startTime: appointment.startTime,
+                        endTime: appointment.endTime,
+                        hostId: appointment.hostId,
+                        hostEmail: hostEmail,
+                        hostName: hostName,
+                        requesterEmail: booking.requesterEmail,
+                        requesterName: reqName, 
+                        mine: isMine,
+                    };
+    
+                    if (meetingDate >= currDate) {
+                        upcomingMeetings.push(meetingDetails);
+                    } else {
+                        pastMeetings.push(meetingDetails);
+                    }
+                }
+            }else{
+                const reqName = getUserNameByEmail(requesterEmail);
+                const meetingDetails = {
+                    _id: appointment._id,
+                    title: appointment.title,
+                    date: meetingDate,
+                    startTime: appointment.startTime,
+                    endTime: appointment.endTime,
+                    hostId: appointment.hostId,
+                    hostEmail: hostEmail,
+                    hostName: hostName,
+                    requesterEmail: requesterEmail,
+                    requesterName: reqName, 
+                    mine: isMine,
+                };
+
+                if (meetingDate >= currDate) {
+                    upcomingMeetings.push(meetingDetails);
+                } else {
+                    pastMeetings.push(meetingDetails);
+                }
             }
+
         }
 
         for (const appointment of monthlyApps) {
@@ -88,7 +149,10 @@ router.get('/meetings', async (req, res) => {
                 const meetingDate = new Date(booking.date);
                 const hostEmail = await getHostEmail(appointment.hostId);
 
-                if (booking.requesterEmail != requesterEmail) continue;
+                const isMine = hostEmail === requesterEmail;
+
+                const hostName = await getUserNameByEmail(hostEmail);
+                const reqName = await getUserNameByEmail(booking.requesterEmail);
 
                 const meetingDetails = {
                     _id: appointment._id,
@@ -98,7 +162,10 @@ router.get('/meetings', async (req, res) => {
                     endTime: appointment.schedule.endTime,
                     hostId: appointment.hostId,
                     hostEmail: hostEmail,
+                    hostName: hostName,
                     requesterEmail: booking.requesterEmail,
+                    requesterName: reqName,
+                    mine: isMine,
                 };
 
                 if (meetingDate >= currDate) {
@@ -114,7 +181,10 @@ router.get('/meetings', async (req, res) => {
                 const meetingDate = new Date(booking.date);
                 const hostEmail = await getHostEmail(appointment.hostId);
 
-                if (booking.requesterEmail != requesterEmail) continue;
+                const isMine = hostEmail === requesterEmail;
+
+                const hostName = await getUserNameByEmail(hostEmail);
+                const reqName = await getUserNameByEmail(booking.requesterEmail);
 
                 const meetingDetails = {
                     _id: appointment._id,
@@ -124,7 +194,10 @@ router.get('/meetings', async (req, res) => {
                     endTime: appointment.schedule.endTime,
                     hostId: appointment.hostId,
                     hostEmail: hostEmail,
+                    hostName: hostName,
                     requesterEmail: booking.requesterEmail,
+                    requesterName: reqName,
+                    mine: isMine,
                 };
 
                 if (meetingDate >= currDate) {
@@ -144,8 +217,6 @@ router.get('/meetings', async (req, res) => {
         res.status(500).json({ message: "Internal server error", error });
     }
 });
-
-module.exports = router;
 
 
 module.exports = router;
