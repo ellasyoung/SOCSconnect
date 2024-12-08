@@ -24,6 +24,14 @@ import {
 import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight } from 'react-icons/fa';
 import { AuthContext } from '../../auth/AuthProvider';
 
+
+const formatTime = (time) => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12; 
+    return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
+};
+
 const PrivAppointments = () => {
     
     const [RequestsDropdownOpen, setRequestsDropdownOpen] = useState(false);
@@ -40,97 +48,137 @@ const PrivAppointments = () => {
     const toggleHistoryDropdown = () => setHistoryDropdownOpen(!HistoryDropdownOpen);
 
 
-    //current user's email 
     const { email } = useContext(AuthContext)
 
-    
+
     const fetchUserDetails = async (userId) => {
         if (!userId) {
             console.error("Invalid user ID:", userId);
-            return "Unknown User"; // Return fallback if userId is invalid
+            return "Unknown User";
         }
-    
+
         try {
-            const response = await fetch(`http://localhost:5001/api/users/${userId}`);
-            
+            const response = await fetch(`http://localhost:5001/api/user-info/${userId}`);
+
             if (!response.ok) {
                 throw new Error(`Failed to fetch user details, status: ${response.status}`);
             }
-    
+
             const data = await response.json();
-            console.log('User details:', data);
-    
+
             if (data && data.firstName && data.lastName) {
                 return `${data.firstName} ${data.lastName}`;
             } else {
                 throw new Error('User data is incomplete');
             }
-    
-        } catch (error) {
-            console.error("Error fetching user details:", error);
-            return "Unknown User"; // Return fallback if any error occurs
+
+            } catch (error) {
+                console.error("Error fetching user details:", error);
+                return "Unknown User"; 
         }
     };
 
-    // fetching incoming requests from the backend 
-    useEffect(() => {
-        
-        if (email){
-            fetch(`http://localhost:5001/api/priv-appointments/incoming-requests?requesterEmail=${encodeURIComponent(email)}`, {
-                method: "GET",
-            })
-                .then((response) => response.json())
-                .then((data) => setIncomingRequests(data))
-                .catch((error) => console.error("Error fetching requests:", error));
+    const getUserEmailInfo = async (email) => {
+        try {
+            const response = await fetch(`http://localhost:5001/api/user-info?email=${encodeURIComponent(email)}`);
+    
+            if (!response.ok) {
+                throw new Error('Failed to fetch user info');
+            }
+    
+            const data = await response.json();
+            return data; 
+        } catch (error) {
+            console.error('Error fetching user info:', error.message);
+            throw error;
         }
-    }, [email]); //re-runs every time user logged in changes 
+    };
 
- /*useEffect(() => {
+    
+    useEffect(() => {
         const fetchRequestsWithNames = async () => {
             if (email) {
                 try {
-                    const response = await fetch(`http://localhost:5001/api/incoming-requests?requesterEmail=${encodeURIComponent(email)}`);
-                    const requests = await response.json();
+                    const response = await fetch(
+                            `http://localhost:5001/api/priv-appointments/incoming-requests?requesterEmail=${encodeURIComponent(email)}`
+                        );
+                        const requests = await response.json();
     
-                    const requestsWithNames = await Promise.all(
-                        requests.map(async (request) => {
-                          
-                            //console.log("requester: ", request.requesterId)
-                            //console.log("host: ", request.hostId)
-                            const requesterName = await fetchUserDetails(request.requesterId);
-                            const hostName = await fetchUserDetails(request.hostId);
-                            return {
-                                ...request,
-                                requesterName,
-                                hostName,
-                            };
-                        })
+                        const requestsWithNames = await Promise.all(
+                            requests.map(async (request) => {
+                                const requesterName = await fetchUserDetails(request.requesterId);
+                              
+                                const hostName = await fetchUserDetails(request.hostId);
+                                
+                                return {
+                                    ...request,
+                                    requesterName,
+                                    hostName,
+                                };
+                           })
+                        );
+
+                        setIncomingRequests(requestsWithNames);
+                    } catch (error) {
+                        console.error("Error fetching requests:", error);
+                    }
+                }
+            };
+    
+            fetchRequestsWithNames();
+        }, [email]);
+
+    useEffect(() => {
+        const fetchMeetingsWithNames = async () => {
+            if (email) {
+                try {
+                   
+                    const response = await fetch(
+                        `http://localhost:5001/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`
+                    );
+                    const { upcomingMeetings, pastMeetings } = await response.json();
+    
+                    const processMeeting = async (meeting) => {
+                        let requesterName = null;
+                        let hostName = null;
+    
+                        if (meeting.bookings) {
+                            requesterName = await getUserEmailInfo(meeting.bookings[0].requesterEmail);
+                            hostName = await fetchUserDetails(meeting.hostId);
+                        }
+    
+                        if(meeting.requesterEmail) {
+                        
+                            requesterName = await getUserEmailInfo(meeting.requesterEmail); 
+                            hostName = await fetchUserDetails(meeting.hostId);
+                        }
+    
+                        return {
+                            ...meeting,
+                            requesterName,
+                            hostName,
+                        };
+                    };
+    
+                    const processedUpcomingMeetings = await Promise.all(
+                        upcomingMeetings.map(processMeeting)
                     );
     
-                    setIncomingRequests(requestsWithNames);
+                    const processedPastMeetings = await Promise.all(
+                        pastMeetings.map(processMeeting)
+                    );
+    
+                    setUpcomingMeetings(processedUpcomingMeetings);
+                    setPastMeetings(processedPastMeetings);
                 } catch (error) {
-                    console.error("Error fetching requests:", error);
+                    console.error("Error fetching meetings:", error);
                 }
             }
         };
     
-        fetchRequestsWithNames();
-    }, [email]);*/
-
-
-    //fetch meetings from backend 
-    useEffect(() => {
-        fetch(`http://localhost:5001/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`)
-            .then(response => response.json())
-            .then(data => {
-                setUpcomingMeetings(data.upcomingMeetings);
-                setPastMeetings(data.pastMeetings);
-            })
-            .catch(error => {
-                console.error('Error fetching meetings:', error);
-            });
+        fetchMeetingsWithNames();
     }, [email]);
-
+    
 
     const openPopup = (data) => {
         setPopupData(data)
@@ -141,7 +189,7 @@ const PrivAppointments = () => {
         setShowPopup(false);
     };
 
-
+    
     return (
         <>
         <Bckgrnd>
@@ -168,15 +216,15 @@ const PrivAppointments = () => {
                                             {text: "Deny", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"},
                                             {text: "Propose Different Time", icon: FaArrowRight, width: "300px", bgColor: "#620707", hoverColor: "#cd2222"},
                                         ],
-                                        requestDetails: request //passes indiv request details 
+                                        requestDetails: request 
                                     })
                                 }
                             >
             
                             <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
-                            <span>
+                            <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
                                 <FaBell size={22} style={{ marginRight: "30px" }}/>
-                                {`New Request from ${request.requesterId} for ${new Date(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
+                                {`New Request from ${request.requesterName} for ${new Date(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
                                     year: "numeric", 
                                     month: "long", 
                                     day: "numeric"
@@ -200,36 +248,36 @@ const PrivAppointments = () => {
                     {UpcomingDropdownOpen ? <UpArrow /> : <DownArrow />}
                     </DropdownTitle>
                     <DropdownContents show={UpcomingDropdownOpen}>
-                    {upcomingMeetings && upcomingMeetings.length > 0 ? (
-                        upcomingMeetings.map((meeting, index) => (
-                            <UpdateButton
-                                key={meeting._id || index}
-                                onClick={() =>
-                                    openPopup({
-                                        title: "Upcoming Meeting",
-                                        height: "auto",
-                                        buttons: [
-                                            {text: "Cancel", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"}
-                                        ],
-                                        requestDetails: meeting // Pass the meeting details for the popup
-                                    })
-                                }
-                            >
-                                <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                                    <span>
-                                        <FaCalendarAlt size={22} style={{ marginRight: "30px" }} />
-                                        {`Meeting with ${meeting.requesterId} on ${new Date(meeting.date).toLocaleDateString("en-US", {
-                                            year: "numeric",
-                                            month: "long",
-                                            day: "numeric"
-                                        })}`}
-                                    </span>
-                                </div>
-                            </UpdateButton>
-                        ))
-                    ) : (
-                        <p><b>No Upcoming Meetings</b></p>
-                    )}
+                        {upcomingMeetings.length > 0 ? (
+                            upcomingMeetings.map((meeting, index) => (
+                                <UpdateButton
+                                    key={meeting._id || index}
+                                    onClick={() =>
+                                        openPopup({
+                                            title: "Upcoming Meeting",
+                                            height: "auto",
+                                            buttons: [
+                                                {text: "Cancel", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"}
+                                            ],
+                                            requestDetails: meeting 
+                                        })
+                                    }
+                                >
+                                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
+                                        <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                                            <FaCalendarAlt size={22} style={{ marginRight: "30px" }} />
+                                            {`Meeting with ${meeting.hostName} on ${new Date(meeting.date).toLocaleDateString("en-US", {
+                                                year: "numeric",
+                                                month: "long",
+                                                day: "numeric"
+                                            })}`}
+                                        </span>
+                                    </div>
+                                </UpdateButton>
+                            ))
+                        ) : (
+                            <p><b>No Upcoming Meetings</b></p>
+                        )}
                 </DropdownContents>
             </Dropdown>
 
@@ -239,16 +287,36 @@ const PrivAppointments = () => {
                     {HistoryDropdownOpen ? <UpArrow /> : <DownArrow />}
                 </DropdownTitle>
                 <DropdownContents show={HistoryDropdownOpen}>
-                   <HistoryButton onClick={() => 
-                        openPopup({
-                            title: "Past Meeting",
-                            height: "275px",
-                            buttons: [],
-                    
-                   })}>
-                   <FaClock size={22} style={{ marginRight: "30px" }} />
-                        Past Appointment
-                   </HistoryButton>
+                    {pastMeetings.length > 0 ? (
+                        pastMeetings.map((meeting, index) => (
+                            <HistoryButton
+                                key={meeting._id || index}
+                                onClick={() =>
+                                    openPopup({
+                                        title: "Past Meeting",
+                                        height: "275px",
+                                        buttons: [],
+                                        requestDetails: meeting,
+                                    })
+                                }
+                            >
+                                <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center",}}>
+                                    <span style={{display: "flex", justifyContent: "center", alignItems: "center", }}>
+                                        <FaClock size={22} style={{ marginRight: "30px" }} />
+                                        {`Past Appointment with ${meeting.hostName} on ${new Date(
+                                            meeting.date
+                                        ).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                        })}`}
+                                    </span>
+                                </div>
+                            </HistoryButton>
+                        ))
+                    ) : (
+                        <p><b>No Past Meetings</b></p>
+                    )}
                 </DropdownContents>
             </Dropdown>
 
@@ -256,37 +324,66 @@ const PrivAppointments = () => {
                 <PopupBackground onClick={closePopup}>
                     <PopupContainer
                         height={popupData.height}
-                        onClick={(e) => e.stopPropagation()}>   
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <PopupHeader>
-                            <PopupTitle>{popupData.title}</PopupTitle>
-                            <CloseButton onClick={closePopup}></CloseButton>
-                       </PopupHeader>
-                       {popupData.requestDetails && (
-                        <>
-                            <b>From:</b> {popupData.requestDetails.requesterName}<br></br><br></br>
-                            <b>For:</b> {popupData.requestDetails.hostName}<br></br><br></br>
-                            <b>Date:</b> {new Date(popupData.requestDetails.alternateTimes[0]?.proposedDate).toLocaleDateString()}<br></br><br></br>
-                            <b>Start Time:</b> {popupData.requestDetails.alternateTimes[0]?.proposedStartTime}<br /><br />
-                            <b>End Time:</b> {popupData.requestDetails.alternateTimes[0]?.proposedEndTime}<br /><br />
-                        </>
+                                <PopupTitle>{popupData.requestDetails?.date ? popupData.requestDetails.title: "Meeting Request"}</PopupTitle>
+                                <CloseButton onClick={closePopup}></CloseButton>
+                            </PopupHeader>
+
+                        {popupData.requestDetails && (
+                            <>
+                                {popupData.requestDetails.date ? (
+                                    
+                                    <>
+                                        <b>From:</b> {popupData.requestDetails.requesterName.firstName} {popupData.requestDetails.requesterName.lastName} <br /><br />
+                                        <b>For:</b> {popupData.requestDetails.hostName}<br /><br />
+                                        <b>Date:</b> {new Date(popupData.requestDetails.date).toLocaleDateString("en-US", {
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric"
+                                        })}<br /><br />
+                                        <b>Start Time:</b> {formatTime(popupData.requestDetails.startTime)}<br /><br />
+                                        <b>End Time:</b> {formatTime(popupData.requestDetails.endTime)}<br /><br />
+                                    </>
+                                ) : (
+                                    // incoming request so use 'alternateTimes'
+                                    <>
+                                        {popupData.requestDetails.alternateTimes && popupData.requestDetails.alternateTimes.length > 0 && (
+                                            <>
+                                                <b>From:</b> {popupData.requestDetails.requesterName}<br /><br />
+                                                <b>For:</b> {popupData.requestDetails.hostName}<br /><br />
+                                                <b>Date:</b> {new Date(popupData.requestDetails.alternateTimes[0].proposedDate).toLocaleDateString("en-US", {
+                                                    year: "numeric",
+                                                    month: "long",
+                                                    day: "numeric"
+                                                })}<br /><br />
+                                                <b>Start Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedStartTime)}<br /><br />
+                                                <b>End Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedEndTime)}<br /><br />
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                            </>
                         )}
 
                         <PopupFooter>
-                           {popupData.buttons.map((button, index) => (
-                                <ControlButton 
-                                key={index}
-                                bgColor={button.bgColor}
-                                hoverColor={button.hoverColor}
-                                style={{width: button.width}}
-                            >
-
-                            {button.text}
-                            <button.icon size={15}/>
-                            </ControlButton>
-                        ))}
+                            {popupData.buttons.map((button, index) => (
+                                <ControlButton
+                                    key={index}
+                                    bgColor={button.bgColor}
+                                    hoverColor={button.hoverColor}
+                                    style={{ width: button.width }}
+                                >
+                                    {button.text}
+                                    <button.icon size={15} />
+                                </ControlButton>
+                            ))}
                         </PopupFooter>
                     </PopupContainer>
-            </PopupBackground>)} 
+                </PopupBackground>
+            )}
+
 
         </Container>
         </Bckgrnd>

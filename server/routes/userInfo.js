@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const Users = require('../models/Users'); 
 const router = express.Router();
@@ -26,7 +27,10 @@ router.get('/:userId', async (req, res) => {
     const { userId } = req.params;
 
     try {
-        const user = await Users.findById(userId);
+        // Convert userId to ObjectId
+        const objectId = new mongoose.Types.ObjectId(userId);
+
+        const user = await Users.findById(objectId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -37,8 +41,15 @@ router.get('/:userId', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching user details:', error);
+
+        // Handle invalid ObjectId error
+        if (error instanceof mongoose.Error.CastError) {
+            return res.status(400).json({ message: 'Invalid user ID format' });
+        }
+
         res.status(500).json({ message: 'Internal server error', error });
     }
 });
 
 module.exports = router;
+
