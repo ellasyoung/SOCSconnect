@@ -208,36 +208,66 @@ const PrivAppointments = () => {
                 <DropdownContents show={RequestsDropdownOpen}>
                     {incomingRequests.length > 0 ? (
                         incomingRequests.map((request, index) => (
-                            <RequestButton 
-                                key={request._id} 
-                                onClick={() =>
-                                    openPopup({
-                                        title: "Meeting Request", 
-                                        height: "auto",
-                                        buttons: [
-                                            {text: "Accept", icon: FaCheckCircle},
-                                            {text: "Deny", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"},
-                                            {text: "Propose Different Time", icon: FaArrowRight, width: "300px", bgColor: "#620707", hoverColor: "#cd2222"},
-                                        ],
-                                        requestDetails: request 
-                                    })
-                                }
-                            >
+                            request.mine ? ( 
+                                <RequestButton 
+                                    className="mine"
+                                    key={request._id} 
+                                    onClick={() =>
+                                        openPopup({
+                                            title: "Meeting Request Made", 
+                                            height: "auto",
+                                            buttons: [],
+                                            requestDetails: request 
+                                        })
+                                    }
+                                >
             
-                            <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
-                            <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                                <FaBell size={22} style={{ marginRight: "30px" }}/>
-                                {`New Request from ${request.requesterName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
-                                    year: "numeric", 
-                                    month: "long", 
-                                    day: "numeric"
-                                })}`}
-                            </span>
-                            <span style={{fontWeight: "normal"}}>
-                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                            </span>
-                        </div>
-                            </RequestButton>
+                                    <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
+                                        <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                                            <FaArrowRight size={22} style={{ marginRight: "30px" }}/>
+                                            {`Request made with ${request.hostName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
+                                                year: "numeric", 
+                                                month: "long", 
+                                                day: "numeric"
+                                            })}`}
+                                        </span>
+                                        <span style={{fontWeight: "normal"}}>
+                                            Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </RequestButton>
+                             ) : (
+                                <RequestButton 
+                                    key={request._id} 
+                                    onClick={() =>
+                                        openPopup({
+                                            title: "Meeting Request", 
+                                            height: "auto",
+                                            buttons: [
+                                                {text: "Accept", icon: FaCheckCircle},
+                                                {text: "Deny", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"},
+                                                {text: "Propose Different Time", icon: FaArrowRight, width: "300px", bgColor: "#620707", hoverColor: "#cd2222"},
+                                            ],
+                                            requestDetails: request 
+                                        })
+                                    }
+                                >
+            
+                                    <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
+                                        <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                                            <FaBell size={22} style={{ marginRight: "30px" }}/>
+                                            {`New Request from ${request.requesterName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
+                                                year: "numeric", 
+                                                month: "long", 
+                                                day: "numeric"
+                                            })}`}
+                                        </span>
+                                        <span style={{fontWeight: "normal"}}>
+                                            Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </RequestButton>
+                            )    
                                 ))
                             ) : ( 
                                 <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Incoming Requests</b></p>
@@ -361,6 +391,7 @@ const PrivAppointments = () => {
                                                 })}<br /><br />
                                                 <b>Start Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedStartTime)}<br /><br />
                                                 <b>End Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedEndTime)}<br /><br />
+                                                <b>Status:</b> {popupData.requestDetails.requestStatus}<br /><br />
                                             </>
                                         )}
                                     </>

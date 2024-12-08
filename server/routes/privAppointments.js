@@ -7,28 +7,41 @@ const Appointments = require('../models/Appointments');
 const router = express.Router();
 
 router.get('/incoming-requests', async (req, res) => {
-    const {requesterEmail} = req.query; 
+    const { requesterEmail } = req.query;
 
-    try{
+    try {
         const requester = await Users.findOne({ email: requesterEmail });
 
-        if(!requester){
-            return res.status(404).json({error: "Requester not found."});
+        if (!requester) {
+            return res.status(404).json({ error: "Requester not found." });
         }
-        
-        const incomingRequests = await AlternateRequests.find({
-            hostId: requester._id,
-            requestStatus: 'Pending'
 
+        const hostedRequests = await AlternateRequests.find({
+            hostId: requester._id,
+            requestStatus: 'Pending',
         });
+
+        const myRequests = await AlternateRequests.find({
+            requesterId: requester._id,
+            requestStatus: 'Pending',
+        });
+
+        const myRequestsWithFlag = myRequests.map(request => ({
+            ...request.toObject(),
+            mine: true, 
+        }));
+
+        const incomingRequests = [...hostedRequests, ...myRequestsWithFlag];
+
+        incomingRequests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
         res.status(200).json(incomingRequests);
-    }catch (error){
+    } catch (error) {
         console.error("Error fetching incoming requests", error);
-        res.status(500).json({error: "Failed to fetch incoming requests"});
+        res.status(500).json({ error: "Failed to fetch incoming requests" });
     }
 });
 
-module.exports = router;
 
 router.get('/meetings', async (req, res) => {
     const { requesterEmail } = req.query;
