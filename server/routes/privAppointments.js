@@ -219,7 +219,7 @@ router.get('/meetings', async (req, res) => {
 
 
 router.post('/accept-request', async (req, res) => {
-    const { requestId, requesterEmail } = req.body;
+    const { requestId, requesterEmail, title } = req.body;
 
     try {
         const request = await AlternateRequests.findById(requestId);
@@ -259,7 +259,25 @@ router.post('/accept-request', async (req, res) => {
     }
 });
 
-module.exports = router;
+router.put('/deny-request/:requestId', async (req, res) => {
+    const { requestId } = req.params;
+    const { status } = req.body;
+
+    try {
+        const request = await AlternateRequests.findById(requestId);
+        if (!request) {
+            return res.status(404).json({ message: 'Request not found' });
+        }
+
+        request.requestStatus = status; 
+        await request.save();
+
+        res.status(200).json({ message: 'Request status updated successfully' });
+    } catch (error) {
+        console.error('Error updating request status:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
 
 
