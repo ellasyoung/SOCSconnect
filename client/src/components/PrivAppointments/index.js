@@ -392,6 +392,12 @@ const PrivAppointments = () => {
                                                 <b>Start Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedStartTime)}<br /><br />
                                                 <b>End Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedEndTime)}<br /><br />
                                                 <b>Status:</b> {popupData.requestDetails.requestStatus}<br /><br />
+
+                                                {popupData.requestDetails.alternateTimes[0].title && (
+                                                <>
+                                                    <b>Title:</b> {popupData.requestDetails.alternateTimes[0].title}<br /><br />
+                                                </>
+                                                )}
                                             </>
                                         )}
                                     </>
