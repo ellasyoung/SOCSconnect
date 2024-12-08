@@ -20,9 +20,10 @@ import {
     CloseButton,
   
 } from './PrivAppointments';
-
 import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight } from 'react-icons/fa';
 import { AuthContext } from '../../auth/AuthProvider';
+import axios from 'axios';
+
 
 const formatTime = (time) => {
     const [hours, minutes] = time.split(':').map(Number);
@@ -82,19 +83,19 @@ const PrivAppointments = () => {
         }
     };
 
-    const getUserEmailInfo = async (email) => {
+    const fetchUserEmail = async (userId) => {
         try {
-            const response = await fetch(`http://localhost:5001/api/user-info?email=${encodeURIComponent(email)}`);
-    
-            if (!response.ok) {
-                throw new Error('Failed to fetch user info');
+            const response = await axios.get(`http://localhost:5001/api/user-info/user-email/${userId}`);
+            
+            if (response.status === 200) {
+                return response.data.email; 
+            } else {
+                console.error(`Failed to fetch email for userId ${userId}. Status: ${response.status}`);
+                return null;
             }
-    
-            const data = await response.json();
-            return data; 
         } catch (error) {
-            console.error('Error fetching user info:', error.message);
-            throw error;
+            console.error('Error fetching user email:', error);
+            return null; 
         }
     };
 
@@ -111,13 +112,16 @@ const PrivAppointments = () => {
                         const requestsWithNames = await Promise.all(
                             requests.map(async (request) => {
                                 const requesterName = await fetchUserDetails(request.requesterId);
-                              
+                                const requesterEmail = await fetchUserEmail(request.requesterId);
                                 const hostName = await fetchUserDetails(request.hostId);
+                                const hostEmail = await fetchUserEmail(request.requesterId);
                                 
                                 return {
                                     ...request,
                                     requesterName,
                                     hostName,
+                                    requesterEmail,
+                                    hostEmail
                                 };
                            })
                         );
@@ -163,6 +167,27 @@ const PrivAppointments = () => {
         setShowPopup(false);
     };
 
+    const acceptRequest = async (requestId, requesterEmail) => {
+        try {
+            const response = await fetch('http://localhost:5001/api/priv-appointments/accept-request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ requestId, requesterEmail }),
+            });
+    
+            if (!response.ok) {
+                throw new Error('Failed to accept request');
+            }
+    
+            const data = await response.json();
+            console.log('Appointment created:', data.appointment);
+        } catch (error) {
+            console.error('Error accepting request:', error);
+        }
+    };
+    
     
     return (
         <>
@@ -373,12 +398,12 @@ const PrivAppointments = () => {
                                     <>
                                         {popupData.requestDetails.alternateTimes && popupData.requestDetails.alternateTimes.length > 0 && (
                                             <>
-                                                <b>From:</b> {popupData.requestDetails.requesterEmail}<br /><br />
+                                                <b>From:</b> {popupData.requestDetails.requesterName}<br /><br />
                                                 <b>For:</b> {popupData.requestDetails.hostName}<br /><br />
                                                 <b>Date:</b> {normalizeDate(popupData.requestDetails.alternateTimes[0].proposedDate).toLocaleDateString("en-US", {
                                                     year: "numeric",
                                                     month: "long",
-                                                    day: "numeric"
+                                                    day: "numeric" 
                                                 })}<br /><br />
                                                 <b>Start Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedStartTime)}<br /><br />
                                                 <b>End Time:</b> {formatTime(popupData.requestDetails.alternateTimes[0].proposedEndTime)}<br /><br />
@@ -403,6 +428,12 @@ const PrivAppointments = () => {
                                     bgColor={button.bgColor}
                                     hoverColor={button.hoverColor}
                                     style={{ width: button.width }}
+                                    onClick={() => {
+                                        if (button.text === 'Accept') {
+                                            acceptRequest(popupData.requestDetails._id, popupData.requestDetails.requesterEmail);
+                                            closePopup();
+                                        }
+                                    }}
                                 >
                                     {button.text}
                                     <button.icon size={15} />

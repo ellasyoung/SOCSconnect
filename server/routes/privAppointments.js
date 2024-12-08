@@ -4,6 +4,7 @@ const AlternateRequests = require('../models/AlternateRequests');
 const MonthlyRecurring = require('../models/MonthlyRecurringOH');
 const WeeklyRecurring = require('../models/WeeklyRecurringOH');
 const Appointments = require('../models/Appointments');
+const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 router.get('/incoming-requests', async (req, res) => {
@@ -18,12 +19,10 @@ router.get('/incoming-requests', async (req, res) => {
 
         const hostedRequests = await AlternateRequests.find({
             hostId: requester._id,
-            requestStatus: 'Pending',
         });
 
         const myRequests = await AlternateRequests.find({
             requesterId: requester._id,
-            requestStatus: 'Pending',
         });
 
         const myRequestsWithFlag = myRequests.map(request => ({
@@ -219,4 +218,50 @@ router.get('/meetings', async (req, res) => {
 });
 
 
+router.post('/accept-request', async (req, res) => {
+    const { requestId, requesterEmail } = req.body;
+
+    try {
+        const request = await AlternateRequests.findById(requestId);
+        if (!request) {
+            return res.status(404).json({ message: 'Request not found' });
+        }
+
+        request.requestStatus = 'Approved';
+        await request.save();
+
+        const { hostId, alternateTimes } = request;
+        const { proposedDate, proposedStartTime, proposedEndTime, title } = alternateTimes[0];
+
+        const uniqueUrl = `meeting/${uuidv4()}`;
+
+        const appointment = new Appointments({
+            hostId,
+            title,
+            date: proposedDate,
+            startTime: proposedStartTime,
+            endTime: proposedEndTime,
+            url: uniqueUrl,
+            maxNumParticipants: 1,
+            bookings: [
+                {
+                    requesterEmail,
+                },
+            ],
+        });
+
+        await appointment.save();
+
+        res.status(200).json({ message: 'Request accepted and appointment created', appointment });
+    } catch (error) {
+        console.error('Error handling request acceptance:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 module.exports = router;
+
+
+
+module.exports = router;
+
