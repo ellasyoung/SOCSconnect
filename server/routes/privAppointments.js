@@ -53,7 +53,11 @@ router.get('/meetings', async (req, res) => {
             return res.status(400).json({ error: "Requester email not provided" });
         }
 
-        // Fetch all appointments for the user
+        const getUserNameByEmail = async (email) => {
+            const user = await Users.findOne({ email }).select("firstName lastName");
+            return user ? `${user.firstName} ${user.lastName}` : email;
+        };
+
         const appointments = await Appointments.find({
             $or: [
                 { "bookings.requesterEmail": requesterEmail },
@@ -78,49 +82,57 @@ router.get('/meetings', async (req, res) => {
         const upcomingMeetings = [];
         const pastMeetings = [];
 
-        // Helper function to fetch the host's email
         const getHostEmail = async (hostId) => {
             const host = await Users.findById(hostId).select("email");
             return host?.email || null;
         };
 
-        // Process single appointments
         for (const appointment of appointments) {
+
             const meetingDate = new Date(appointment.date);
             const hostEmail = await getHostEmail(appointment.hostId);
-
             const isMine = hostEmail === requesterEmail;
+            const hostName = await getUserNameByEmail(hostEmail);
 
-            const meetingDetails = {
-                ...appointment.toObject(),
-                mine: isMine, // Add the "mine" flag
-            };
+            if(isMine){
+                for (const booking of appointment.bookings) {
 
-            if (meetingDate >= currDate) {
-                upcomingMeetings.push(meetingDetails);
-            } else {
-                pastMeetings.push(meetingDetails);
-            }
-        }
+                    const reqName = await getUserNameByEmail(booking.requesterEmail);
 
-        // Process monthly recurring appointments
-        for (const appointment of monthlyApps) {
-            for (const booking of appointment.bookSlot) {
-                const meetingDate = new Date(booking.date);
-                const hostEmail = await getHostEmail(appointment.hostId);
-
-                const isMine = hostEmail === requesterEmail;
-
+                    const meetingDetails = {
+                        _id: appointment._id,
+                        title: appointment.title,
+                        date: meetingDate,
+                        startTime: appointment.startTime,
+                        endTime: appointment.endTime,
+                        hostId: appointment.hostId,
+                        hostEmail: hostEmail,
+                        hostName: hostName,
+                        requesterEmail: booking.requesterEmail,
+                        requesterName: reqName, 
+                        mine: isMine,
+                    };
+    
+                    if (meetingDate >= currDate) {
+                        upcomingMeetings.push(meetingDetails);
+                    } else {
+                        pastMeetings.push(meetingDetails);
+                    }
+                }
+            }else{
+                const reqName = getUserNameByEmail(requesterEmail);
                 const meetingDetails = {
                     _id: appointment._id,
                     title: appointment.title,
                     date: meetingDate,
-                    startTime: appointment.schedule.startTime,
-                    endTime: appointment.schedule.endTime,
+                    startTime: appointment.startTime,
+                    endTime: appointment.endTime,
                     hostId: appointment.hostId,
                     hostEmail: hostEmail,
-                    requesterEmail: booking.requesterEmail,
-                    mine: isMine, // Add the "mine" flag
+                    hostName: hostName,
+                    requesterEmail: requesterEmail,
+                    requesterName: reqName, 
+                    mine: isMine,
                 };
 
                 if (meetingDate >= currDate) {
@@ -129,12 +141,18 @@ router.get('/meetings', async (req, res) => {
                     pastMeetings.push(meetingDetails);
                 }
             }
+
         }
 
-        // Process weekly recurring appointments
-        for (const appointment of weeklyApps) {
+        for (const appointment of monthlyApps) {
             for (const booking of appointment.bookSlot) {
                 const meetingDate = new Date(booking.date);
+                const hostEmail = await getHostEmail(appointment.hostId);
+
+                const isMine = hostEmail === requesterEmail;
+
+                const hostName = await getUserNameByEmail(hostEmail);
+                const reqName = await getUserNameByEmail(booking.requesterEmail);
 
                 const meetingDetails = {
                     _id: appointment._id,
@@ -144,7 +162,9 @@ router.get('/meetings', async (req, res) => {
                     endTime: appointment.schedule.endTime,
                     hostId: appointment.hostId,
                     hostEmail: hostEmail,
+                    hostName: hostName,
                     requesterEmail: booking.requesterEmail,
+                    requesterName: reqName,
                     mine: isMine,
                 };
 
@@ -156,11 +176,41 @@ router.get('/meetings', async (req, res) => {
             }
         }
 
-        // Sort meeting lists by date
+        for (const appointment of weeklyApps) {
+            for (const booking of appointment.bookSlot) {
+                const meetingDate = new Date(booking.date);
+                const hostEmail = await getHostEmail(appointment.hostId);
+
+                const isMine = hostEmail === requesterEmail;
+
+                const hostName = await getUserNameByEmail(hostEmail);
+                const reqName = await getUserNameByEmail(booking.requesterEmail);
+
+                const meetingDetails = {
+                    _id: appointment._id,
+                    title: appointment.title,
+                    date: meetingDate,
+                    startTime: appointment.schedule.startTime,
+                    endTime: appointment.schedule.endTime,
+                    hostId: appointment.hostId,
+                    hostEmail: hostEmail,
+                    hostName: hostName,
+                    requesterEmail: booking.requesterEmail,
+                    requesterName: reqName,
+                    mine: isMine,
+                };
+
+                if (meetingDate >= currDate) {
+                    upcomingMeetings.push(meetingDetails);
+                } else {
+                    pastMeetings.push(meetingDetails);
+                }
+            }
+        }
+
         upcomingMeetings.sort((a, b) => new Date(a.date) - new Date(b.date));
         pastMeetings.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // Send the response
         res.status(200).json({ upcomingMeetings, pastMeetings });
     } catch (error) {
         console.error("Error fetching meetings:", error);
