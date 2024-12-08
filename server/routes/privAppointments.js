@@ -280,6 +280,59 @@ router.put('/deny-request/:requestId', async (req, res) => {
 });
 
 
+router.delete('/cancel-booking', async (req, res) => {
+    const { meetingId, requesterEmail } = req.body;
+
+    try {
+        const models = [Appointments, WeeklyRecurring, MonthlyRecurring];
+        let foundMeeting = null;
+        let meetingType = '';
+
+        for (const model of models) {
+            foundMeeting = await model.findById(meetingId);
+            if (foundMeeting) {
+                meetingType = model.modelName; 
+                break;
+            }
+        }
+
+        if (!foundMeeting) {
+            return res.status(404).json({ message: 'Meeting not found' });
+        }
+
+        const initialLength = foundMeeting.bookings?.length || foundMeeting.bookSlot?.length;
+        if (foundMeeting.bookings) {
+            foundMeeting.bookings = foundMeeting.bookings.filter(
+                (booking) => booking.requesterEmail !== requesterEmail
+            );
+        } else if (foundMeeting.bookSlot) {
+            foundMeeting.bookSlot = foundMeeting.bookSlot.filter(
+                (slot) => slot.requesterEmail !== requesterEmail
+            );
+        }
+
+        const updatedLength = foundMeeting.bookings?.length || foundMeeting.bookSlot?.length;
+        if (initialLength === updatedLength) {
+            return res.status(404).json({ message: 'Booking not found for the given requesterEmail' });
+        }
+
+        await foundMeeting.save();
+
+        res.status(200).json({
+            message: 'Booking cancelled successfully',
+            meetingType,
+            meeting: foundMeeting,
+        });
+    } catch (error) {
+        console.error('Error cancelling booking:', error);
+        res.status(500).json({ message: 'Internal server error', error });
+    }
+});
+
+module.exports = router;
+
+
+
 
 module.exports = router;
 

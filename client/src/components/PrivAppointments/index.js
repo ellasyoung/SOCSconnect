@@ -208,6 +208,27 @@ const PrivAppointments = () => {
         }
     };
     
+    const cancelBooking = async (meetingId, requesterEmail) => {
+        try {
+            const response = await axios.delete(`${backendUrl}/api/priv-appointments/cancel-booking`, {
+                data: { meetingId, requesterEmail },
+            });
+    
+            if (response.status === 200) {
+                console.log('Booking cancelled successfully');
+                alert(
+                    `The booking was cancelled successfully in ${response.data.meetingType}.`
+                );
+            } else {
+                console.error('Failed to cancel booking:', response.status);
+                alert('Failed to cancel the booking.');
+            }
+        } catch (error) {
+            console.error('Error cancelling booking:', error);
+            alert('An error occurred while cancelling the booking.');
+        }
+    };
+    
     
     
     return (
@@ -517,6 +538,12 @@ const PrivAppointments = () => {
                                             navigate('/request-time', {
                                                 state: { requestDetails: popupData.requestDetails },
                                             });
+                                        } else if (button.text === 'Cancel') {
+                                            cancelBooking(
+                                                popupData.requestDetails._id, 
+                                                popupData.requestDetails.requesterEmail 
+                                            );
+                                            closePopup();
                                         }
                                     }}
                                 >
