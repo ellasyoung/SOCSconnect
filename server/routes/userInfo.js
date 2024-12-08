@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
         const user = await Users.findOne({ email }, 'firstName lastName');
 
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(200).json({ firstName: "Unregistered User", lastName: email });
         }
 
         res.status(200).json({ firstName: user.firstName, lastName: user.lastName });
@@ -27,7 +27,6 @@ router.get('/:userId', async (req, res) => {
     const { userId } = req.params;
 
     try {
-        // Convert userId to ObjectId
         const objectId = new mongoose.Types.ObjectId(userId);
 
         const user = await Users.findById(objectId);
@@ -42,7 +41,6 @@ router.get('/:userId', async (req, res) => {
     } catch (error) {
         console.error('Error fetching user details:', error);
 
-        // Handle invalid ObjectId error
         if (error instanceof mongoose.Error.CastError) {
             return res.status(400).json({ message: 'Invalid user ID format' });
         }

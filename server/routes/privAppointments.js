@@ -21,7 +21,7 @@ router.get('/incoming-requests', async (req, res) => {
             requestStatus: 'Pending'
 
         });
-        res.status(200).json(incomingRequests); //returns to front end
+        res.status(200).json(incomingRequests);
     }catch (error){
         console.error("Error fetching incoming requests", error);
         res.status(500).json({error: "Failed to fetch incoming requests"});
@@ -31,51 +31,52 @@ router.get('/incoming-requests', async (req, res) => {
 module.exports = router;
 
 router.get('/meetings', async (req, res) => {
-    const {requesterEmail} = req.query; 
+    const { requesterEmail } = req.query;
 
-    try{
+    try {
         const currDate = new Date();
-        
-        if (!requesterEmail){
-            return res.status(400).json({ error: "Requester email not provided" })
+
+        if (!requesterEmail) {
+            return res.status(400).json({ error: "Requester email not provided" });
         }
 
-        // fetch all single appointments for the user
         const appointments = await Appointments.find({
             "bookings.requesterEmail": requesterEmail,
         });
 
-        //fetch all monthly appts for the user 
         const monthlyApps = await MonthlyRecurring.find({
             "bookSlot.requesterEmail": requesterEmail,
-        })
+        });
 
-        //fetch all weekly appts for the user 
         const weeklyApps = await WeeklyRecurring.find({
             "bookSlot.requesterEmail": requesterEmail,
-        })
+        });
 
-
-        // Separate the appointments into upcoming and past based on the date
         const upcomingMeetings = [];
         const pastMeetings = [];
 
-        //process single appts collection 
-        appointments.forEach((appointment) => {
+        const getHostEmail = async (hostId) => {
+            const host = await Users.findById(hostId).select("email");
+            return host?.email || null;
+        };
+
+        for (const appointment of appointments) {
             const meetingDate = new Date(appointment.date);
 
             if (meetingDate >= currDate) {
-                upcomingMeetings.push(appointment); // Meeting is upcoming
+                upcomingMeetings.push(appointment);
             } else {
-                pastMeetings.push(appointment); // Meeting is in the past
+                pastMeetings.push(appointment);
             }
-        });
+        }
 
-        
-        //process monthly OH collection
-        monthlyApps.forEach((appointment) =>{
-            appointment.bookSlot.forEach((booking) => {
+        for (const appointment of monthlyApps) {
+            for (const booking of appointment.bookSlot) {
                 const meetingDate = new Date(booking.date);
+                const hostEmail = await getHostEmail(appointment.hostId);
+
+                if (booking.requesterEmail != requesterEmail) continue;
+
                 const meetingDetails = {
                     _id: appointment._id,
                     title: appointment.title,
@@ -83,22 +84,25 @@ router.get('/meetings', async (req, res) => {
                     startTime: appointment.schedule.startTime,
                     endTime: appointment.schedule.endTime,
                     hostId: appointment.hostId,
+                    hostEmail: hostEmail,
                     requesterEmail: booking.requesterEmail,
                 };
 
-                if (meetingDate >= currDate){
+                if (meetingDate >= currDate) {
                     upcomingMeetings.push(meetingDetails);
                 } else {
                     pastMeetings.push(meetingDetails);
                 }
+            }
+        }
 
-            });
-        });
-        
-        //process weekly collection 
-        weeklyApps.forEach((appointment) =>{
-            appointment.bookSlot.forEach((booking) => {
+        for (const appointment of weeklyApps) {
+            for (const booking of appointment.bookSlot) {
                 const meetingDate = new Date(booking.date);
+                const hostEmail = await getHostEmail(appointment.hostId);
+
+                if (booking.requesterEmail != requesterEmail) continue;
+
                 const meetingDetails = {
                     _id: appointment._id,
                     title: appointment.title,
@@ -106,30 +110,29 @@ router.get('/meetings', async (req, res) => {
                     startTime: appointment.schedule.startTime,
                     endTime: appointment.schedule.endTime,
                     hostId: appointment.hostId,
+                    hostEmail: hostEmail,
                     requesterEmail: booking.requesterEmail,
                 };
 
-                if (meetingDate >= currDate){
+                if (meetingDate >= currDate) {
                     upcomingMeetings.push(meetingDetails);
                 } else {
                     pastMeetings.push(meetingDetails);
                 }
-                
-            });
-        });
-        
+            }
+        }
 
-        // sort meeting lists by date
         upcomingMeetings.sort((a, b) => new Date(a.date) - new Date(b.date));
         pastMeetings.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // send both lists to front end 
         res.status(200).json({ upcomingMeetings, pastMeetings });
-
     } catch (error) {
-        console.error('Error fetching meetings:', error);
-        res.status(500).json({ message: 'Internal server error', error });
+        console.error("Error fetching meetings:", error);
+        res.status(500).json({ message: "Internal server error", error });
     }
 });
+
+module.exports = router;
+
 
 module.exports = router;

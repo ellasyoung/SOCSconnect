@@ -24,13 +24,17 @@ import {
 import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight } from 'react-icons/fa';
 import { AuthContext } from '../../auth/AuthProvider';
 
-
 const formatTime = (time) => {
     const [hours, minutes] = time.split(':').map(Number);
     const period = hours >= 12 ? 'PM' : 'AM';
     const formattedHours = hours % 12 || 12; 
     return `${formattedHours}:${minutes.toString().padStart(2, '0')} ${period}`;
 };
+
+const normalizeDate = (dateString) => {
+    const [year, month, day] = dateString.split(/[-T]/);
+    return new Date(Number(year), Number(month) - 1, Number(day));
+  };
 
 const PrivAppointments = () => {
     
@@ -147,8 +151,7 @@ const PrivAppointments = () => {
                             hostName = await fetchUserDetails(meeting.hostId);
                         }
     
-                        if(meeting.requesterEmail) {
-                        
+                        if(meeting.requesterEmail) {             
                             requesterName = await getUserEmailInfo(meeting.requesterEmail); 
                             hostName = await fetchUserDetails(meeting.hostId);
                         }
@@ -206,7 +209,7 @@ const PrivAppointments = () => {
                     {incomingRequests.length > 0 ? (
                         incomingRequests.map((request, index) => (
                             <RequestButton 
-                                key={request._id || index} 
+                                key={request._id} 
                                 onClick={() =>
                                     openPopup({
                                         title: "Meeting Request", 
@@ -224,14 +227,14 @@ const PrivAppointments = () => {
                             <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
                             <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
                                 <FaBell size={22} style={{ marginRight: "30px" }}/>
-                                {`New Request from ${request.requesterName} for ${new Date(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
+                                {`New Request from ${request.requesterName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
                                     year: "numeric", 
                                     month: "long", 
                                     day: "numeric"
                                 })}`}
                             </span>
                             <span style={{fontWeight: "normal"}}>
-                                Request Made: {new Date (request.createdAt).toLocaleDateString()}
+                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
                             </span>
                         </div>
                             </RequestButton>
@@ -251,7 +254,7 @@ const PrivAppointments = () => {
                         {upcomingMeetings.length > 0 ? (
                             upcomingMeetings.map((meeting, index) => (
                                 <UpdateButton
-                                    key={meeting._id || index}
+                                    key={meeting._id}
                                     onClick={() =>
                                         openPopup({
                                             title: "Upcoming Meeting",
@@ -266,7 +269,7 @@ const PrivAppointments = () => {
                                     <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
                                         <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
                                             <FaCalendarAlt size={22} style={{ marginRight: "30px" }} />
-                                            {`Meeting with ${meeting.hostName} on ${new Date(meeting.date).toLocaleDateString("en-US", {
+                                            {`Meeting with ${meeting.hostName} on ${normalizeDate(meeting.date).toLocaleDateString("en-US", {
                                                 year: "numeric",
                                                 month: "long",
                                                 day: "numeric"
@@ -290,7 +293,7 @@ const PrivAppointments = () => {
                     {pastMeetings.length > 0 ? (
                         pastMeetings.map((meeting, index) => (
                             <HistoryButton
-                                key={meeting._id || index}
+                                key={meeting._id}
                                 onClick={() =>
                                     openPopup({
                                         title: "Past Meeting",
@@ -303,7 +306,7 @@ const PrivAppointments = () => {
                                 <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center",}}>
                                     <span style={{display: "flex", justifyContent: "center", alignItems: "center", }}>
                                         <FaClock size={22} style={{ marginRight: "30px" }} />
-                                        {`Past Appointment with ${meeting.hostName} on ${new Date(
+                                        {`Past Appointment with ${meeting.hostName} on ${normalizeDate(
                                             meeting.date
                                         ).toLocaleDateString("en-US", {
                                             year: "numeric",
@@ -336,9 +339,8 @@ const PrivAppointments = () => {
                                 {popupData.requestDetails.date ? (
                                     
                                     <>
-                                        <b>From:</b> {popupData.requestDetails.requesterName.firstName} {popupData.requestDetails.requesterName.lastName} <br /><br />
-                                        <b>For:</b> {popupData.requestDetails.hostName}<br /><br />
-                                        <b>Date:</b> {new Date(popupData.requestDetails.date).toLocaleDateString("en-US", {
+                                        <b>With:</b> {popupData.requestDetails.hostName}<br /><br />
+                                        <b>Date:</b> {normalizeDate(popupData.requestDetails.date).toLocaleDateString("en-US", {
                                             year: "numeric",
                                             month: "long",
                                             day: "numeric"
@@ -347,13 +349,12 @@ const PrivAppointments = () => {
                                         <b>End Time:</b> {formatTime(popupData.requestDetails.endTime)}<br /><br />
                                     </>
                                 ) : (
-                                    // incoming request so use 'alternateTimes'
                                     <>
                                         {popupData.requestDetails.alternateTimes && popupData.requestDetails.alternateTimes.length > 0 && (
                                             <>
                                                 <b>From:</b> {popupData.requestDetails.requesterName}<br /><br />
                                                 <b>For:</b> {popupData.requestDetails.hostName}<br /><br />
-                                                <b>Date:</b> {new Date(popupData.requestDetails.alternateTimes[0].proposedDate).toLocaleDateString("en-US", {
+                                                <b>Date:</b> {normalizeDate(popupData.requestDetails.alternateTimes[0].proposedDate).toLocaleDateString("en-US", {
                                                     year: "numeric",
                                                     month: "long",
                                                     day: "numeric"
