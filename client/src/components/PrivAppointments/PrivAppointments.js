@@ -104,7 +104,6 @@ export const RequestButton = styled.button`
   align-items: center;
   text-align: left;
   padding: 30px;
-  transition: background-color 0.1s ease;
   box-shadow: 1px 1px 5px rgba(98, 7, 7, 0.2);
 
   &:hover{
@@ -130,7 +129,6 @@ export const UpdateButton = styled.button`
   align-items: center;
   text-align: left;
   padding: 30px;
-  transition: background-color 0.1s ease;
   box-shadow: 1px 1px 5px rgba(98, 7, 7, 0.2);
 
   &:hover{
@@ -158,8 +156,6 @@ export const HistoryButton = styled.button`
   align-items: center; 
   text-align: left;
   padding: 30px;
-  transition: background-color 0.1s ease;
-  transition: border 0.1s ease;
   box-shadow: 1px 1px 5px rgba(98, 7, 7, 0.2);
 
   &:hover{
