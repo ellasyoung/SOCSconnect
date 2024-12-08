@@ -293,7 +293,13 @@ router.post('/accept-request', async (req, res) => {
         }
 
 
-        bookingBody, approvalBody += `.</p><p>If you have any questions or need support, feel free to contact us.</p>`;
+        bookingBody += `.</p>
+        <p>You can view the approved meeting under the "Upcoming" tab at <a href="http://localhost:3000/my-appointments">My Appointments</a>.</p>
+        <p>If you have any questions or need support, feel free to contact us.</p>`;
+
+        approvalBody += `.</p>
+        <p>You can view the approved meeting under the "Upcoming" tab at <a href="http://localhost:3000/my-appointments">My Appointments</a>.</p>
+        <p>If you have any questions or need support, feel free to contact us.</p>`;
         const mailOptions = {
             from: 'socsconnect@gmail.com', 
             to: requesterEmail,                    
