@@ -34,7 +34,15 @@ router.get('/meetings', async (req, res) => {
     const { requesterEmail } = req.query;
 
     try {
-        const currDate = new Date();
+
+        function getCurrentESTTime() {
+            const currDate = new Date();  
+            const estOffset = -5 * 60 * 60 * 1000; //manually adjust to est time 
+            const estTime = new Date(currDate.getTime() + estOffset);
+        
+            return estTime;
+
+        }
 
         if (!requesterEmail) {
             return res.status(400).json({ error: "Requester email not provided" });
@@ -60,10 +68,42 @@ router.get('/meetings', async (req, res) => {
             return host?.email || null;
         };
 
-        for (const appointment of appointments) {
-            const meetingDate = new Date(appointment.date);
+        function combineDateTime(date, timeString) {
+            const is24HourFormat = timeString.includes(":");
+            let adjustedHours, minutes;
 
-            if (meetingDate >= currDate) {
+            if (is24HourFormat) {
+                const [hours, minutesPart] = timeString.split(":");
+                minutes = parseInt(minutesPart, 10);
+                adjustedHours = parseInt(hours, 10);
+            } else {
+                const [hours, minutesPart] = timeString.split(":");
+                minutes = parseInt(minutesPart.match(/\d+/)[0], 10);
+                const isPM = timeString.toLowerCase().includes("pm");
+                adjustedHours = parseInt(hours, 10);
+
+                if (isPM && adjustedHours < 12) {
+                    adjustedHours += 12;
+                } else if (!isPM && adjustedHours === 12) {
+                    adjustedHours = 0;
+                }
+            }
+
+            date.setUTCHours(adjustedHours, minutes, 0, 0);
+
+            return date;
+        }
+
+
+        for (const appointment of appointments) {
+    
+            let meetingDate = new Date(appointment.date);
+            meetingDate = combineDateTime(meetingDate, appointment.startTime);
+
+            let currentEST = getCurrentESTTime();
+          
+
+            if ( meetingDate >= currentEST ) {
                 upcomingMeetings.push(appointment);
             } else {
                 pastMeetings.push(appointment);
@@ -116,6 +156,7 @@ router.get('/meetings', async (req, res) => {
 
                 if (meetingDate >= currDate) {
                     upcomingMeetings.push(meetingDetails);
+                    
                 } else {
                     pastMeetings.push(meetingDetails);
                 }
