@@ -135,6 +135,12 @@ export const UpdateButton = styled.button`
     background-color: #620707;
   }
 
+  &.polls{
+    text-decoration: none;
+    height: 5px;
+    width: 96%;
+  }
+
   @media screen and (max-width: 600px){
     font-size: 14px;
   }
