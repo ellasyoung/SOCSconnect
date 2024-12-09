@@ -197,6 +197,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
                 const error = await response.json();
                 alert(`Error: ${error.message}`);
             }
+            window.location.reload();
         } catch (error) {
             console.error('Error submitting votes:', error);
             alert('An error occurred while submitting your votes.');

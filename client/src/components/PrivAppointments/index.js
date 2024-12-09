@@ -208,6 +208,7 @@ const PrivAppointments = () => {
     
             const data = await response.json();
             console.log('Appointment created:', data.appointment);
+            window.location.reload();
         } catch (error) {
             console.error('Error accepting request:', error);
         }
@@ -224,6 +225,7 @@ const PrivAppointments = () => {
             } else {
                 console.error('Failed to deny request:', response.status);
             }
+            window.location.reload();
         } catch (error) {
             console.error('Error denying request:', error);
         }
@@ -244,6 +246,8 @@ const PrivAppointments = () => {
                 console.error('Failed to cancel booking:', response.status);
                 alert('Failed to cancel the booking.');
             }
+
+            window.location.reload();
         } catch (error) {
             console.error('Error cancelling booking:', error);
             alert('An error occurred while cancelling the booking.');
