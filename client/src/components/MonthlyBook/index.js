@@ -8,6 +8,7 @@ import { Bckgrnd, Container, Title, TextCol, CalendarCol, CalContainer, Button, 
 import { FaAngleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
+
 const calculateRecurringDates = (startDate, endDate, schedule) => {
   const recurringDates = [];
   const start = new Date(startDate);
@@ -69,6 +70,8 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   //const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
+
+  const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
 
   const [isConfirmed, setIsConfirmed] = useState(false);
   const toggleConfirmation = () => {
@@ -187,7 +190,10 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
                 <Submit><FaAngleRight/></Submit>
               </Line>
             )}
-            <Button onClick={handleBook} disabled={!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))}>
+            <Button onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || isDatePassed}
+            style={{backgroundColor: spotsLeft === 0 || isDatePassed ? '#c3c4c3' : '#cd2222',
+              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.5)',}}
+            >
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>

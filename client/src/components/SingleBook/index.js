@@ -47,6 +47,8 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
     setIsConfirmed(!isConfirmed);
   };
 
+  const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
+
   const handleBook = async () => {
     const email = isLoggedIn ? loggedInEmail : requesterEmail;
 
@@ -125,7 +127,10 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
                 <Submit><FaAngleRight/></Submit>
               </Line>
             )}
-            <Button onClick={handleBook} disabled={spotsLeft === 0}>
+            <Button onClick={handleBook} disabled={spotsLeft === 0 || isDatePassed}
+            style={{backgroundColor: spotsLeft === 0 || isDatePassed ? '#c3c4c3' : '#cd2222',
+            boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.5)', }}
+            >
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>
