@@ -4,6 +4,8 @@ const MonthlyOfficeHours = require('../models/MonthlyRecurringOH');
 const { v4: uuidv4 } = require('uuid');
 const Users = require('../models/Users');
 const nodemailer = require('nodemailer');
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
 const transporter = nodemailer.createTransport({
   service: 'gmail', 
@@ -155,7 +157,7 @@ router.post('/monthly-meeting', async (req, res) => {
         }
 
         emailBody += `
-        <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique booking!</a></p>
+        <p><a href="${frontendUrl}/${uniqueUrl}">Copy this link to your unique booking!</a></p>
         <p>If you have any questions or need support, feel free to contact us.</p>
         `
 

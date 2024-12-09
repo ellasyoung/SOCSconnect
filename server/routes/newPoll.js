@@ -5,6 +5,8 @@ const Users = require('../models/Users');
 const Polls = require('../models/Polls');
 const mongoose = require('mongoose');
 const nodemailer = require('nodemailer');
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail', 
@@ -139,7 +141,7 @@ router.post('/new-poll', async (req, res) => {
             html: `
                 <h3>Thank you for booking with us!</h3>
                 <p>You have created a poll for "${title}". 
-                <p><a href="http://localhost:3000/${uniqueUrl}">Copy this link to your unique meeting poll!</a></p>
+                <p><a href="${frontendUrl}/${uniqueUrl}">Copy this link to your unique meeting poll!</a></p>
                 <p>If you have any questions or need support, feel free to contact us.</p>
             `,
         };

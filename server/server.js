@@ -8,7 +8,7 @@ const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: frontendUrl,
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, 
 }));

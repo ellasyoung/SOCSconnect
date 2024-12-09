@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const Users = require('../models/Users'); 
 const router = express.Router();
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail', 
@@ -39,7 +41,7 @@ router.post('/', async (req, res) => {
                 <p>Thank you for registering on our platform.</p>
                 <p>Your account has been successfully created!</p>
                 <p>To get started, you can visit our website at:</p>
-                <p><a href="http://localhost:3000">Click here to visit our site</a></p>
+                <p><a href="${frontendUrl}">Click here to visit our site</a></p>
                 <p>If you have any questions or need support, feel free to contact us.</p>
             `,
         };

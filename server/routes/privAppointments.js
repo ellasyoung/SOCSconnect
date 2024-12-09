@@ -7,6 +7,8 @@ const Appointments = require('../models/Appointments');
 const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 const nodemailer = require('nodemailer');
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail', 
@@ -346,11 +348,11 @@ router.post('/accept-request', async (req, res) => {
 
 
         bookingBody += `.</p>
-        <p>You can view the approved meeting under the "Upcoming" tab at <a href="http://localhost:3000/my-appointments">My Appointments</a>.</p>
+        <p>You can view the approved meeting under the "Upcoming" tab at <a href="${frontendUrl}/my-appointments">My Appointments</a>.</p>
         <p>If you have any questions or need support, feel free to contact us.</p>`;
 
         approvalBody += `.</p>
-        <p>You can view the approved meeting under the "Upcoming" tab at <a href="http://localhost:3000/my-appointments">My Appointments</a>.</p>
+        <p>You can view the approved meeting under the "Upcoming" tab at <a href="${frontendUrl}/my-appointments">My Appointments</a>.</p>
         <p>If you have any questions or need support, feel free to contact us.</p>`;
         const mailOptions = {
             from: 'socsconnect@gmail.com', 
