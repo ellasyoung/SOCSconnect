@@ -109,18 +109,9 @@ export const RequestButton = styled.button`
   &:hover{
     background-color: #620707;
   }
-  @media screen and (max-width: 1100px){
-    font-size: 12px;
+  @media screen and (max-width: 600px){
+    font-size: 14px;
   }
-
-  @media screen and (max-width: 900px){
-    font-size: 11px;
-  }
-
-  @media screen and (max-width: 800px){
-    font-size: 10px;
-  }
-  
 `;
 
 export const UpdateButton = styled.button`
@@ -150,16 +141,8 @@ export const UpdateButton = styled.button`
     width: 96%;
   }
 
-  @media screen and (max-width: 1100px){
-    font-size: 12px;
-  }
-
-  @media screen and (max-width: 900px){
-    font-size: 11px;
-  }
-
-  @media screen and (max-width: 800px){
-    font-size: 10px;
+  @media screen and (max-width: 600px){
+    font-size: 14px;
   }
 `;
 
@@ -187,16 +170,8 @@ export const HistoryButton = styled.button`
     border: 3px solid #620707;
   }
 
-  @media screen and (max-width: 1100px){
-    font-size: 12px;
-  }
-
-  @media screen and (max-width: 900px){
-    font-size: 11px;
-  }
-
-  @media screen and (max-width: 800px){
-    font-size: 10px;
+  @media screen and (max-width: 600px){
+    font-size: 14px;
   }
 `;
 
