@@ -89,6 +89,12 @@ export const Button = styled.button`
     background-color:  #620707;
     box-shadow: 4px 4px 5px rgba(98, 7, 7, 0.7);
   }
+  
+  &:disabled { 
+    background-color: #c3c4c3; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+  
+  }
 
   &.seeApts{
     width: 250px;

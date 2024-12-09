@@ -190,10 +190,7 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
                 <Submit><FaAngleRight/></Submit>
               </Line>
             )}
-            <Button onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || isDatePassed}
-            style={{backgroundColor: spotsLeft === 0 || isDatePassed ? '#c3c4c3' : '#cd2222',
-              boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.5)',}}
-            >
+            <Button onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || isDatePassed}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>
