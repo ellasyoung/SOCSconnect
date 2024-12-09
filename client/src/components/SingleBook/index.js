@@ -47,6 +47,8 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
     setIsConfirmed(!isConfirmed);
   };
 
+  const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
+
   const handleBook = async () => {
     const email = isLoggedIn ? loggedInEmail : requesterEmail;
 
@@ -125,7 +127,7 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
                 <Submit><FaAngleRight/></Submit>
               </Line>
             )}
-            <Button onClick={handleBook} disabled={spotsLeft === 0}>
+            <Button onClick={handleBook} disabled={spotsLeft === 0 || isDatePassed}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>

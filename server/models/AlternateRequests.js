@@ -24,6 +24,10 @@ const AlternateRequestsSchema = new mongoose.Schema({
             proposedEndTime: {
                 type: String, 
                 required: true
+            },
+            title: {
+                type: String,
+                default: ''
             }
                 
         }

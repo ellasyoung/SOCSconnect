@@ -39,6 +39,8 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
     setIsConfirmed(!isConfirmed);
   };
 
+  const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
+
   const getAvailableSpots = (date) => {
     const bookingsForDate = meetingData.bookSlot.filter(
       (slot) => new Date(slot.date).toDateString() === new Date(date).toDateString()
@@ -149,7 +151,8 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
                 <Submit><FaAngleRight/></Submit>
               </Line>
             )}
-            <Button onClick={handleBook} disabled={!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))}>
+            <Button 
+              onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || isDatePassed}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>

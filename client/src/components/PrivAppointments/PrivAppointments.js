@@ -104,15 +104,23 @@ export const RequestButton = styled.button`
   align-items: center;
   text-align: left;
   padding: 30px;
-  transition: background-color 0.1s ease;
   box-shadow: 1px 1px 5px rgba(98, 7, 7, 0.2);
 
   &:hover{
     background-color: #620707;
   }
-  @media screen and (max-width: 600px){
-    font-size: 14px;
+  @media screen and (max-width: 1100px){
+    font-size: 12px;
   }
+
+  @media screen and (max-width: 900px){
+    font-size: 11px;
+  }
+
+  @media screen and (max-width: 800px){
+    font-size: 10px;
+  }
+  
 `;
 
 export const UpdateButton = styled.button`
@@ -130,15 +138,28 @@ export const UpdateButton = styled.button`
   align-items: center;
   text-align: left;
   padding: 30px;
-  transition: background-color 0.1s ease;
   box-shadow: 1px 1px 5px rgba(98, 7, 7, 0.2);
 
   &:hover{
     background-color: #620707;
   }
 
-  @media screen and (max-width: 600px){
-    font-size: 14px;
+  &.polls{
+    text-decoration: none;
+    height: 5px;
+    width: 96%;
+  }
+
+  @media screen and (max-width: 1100px){
+    font-size: 12px;
+  }
+
+  @media screen and (max-width: 900px){
+    font-size: 11px;
+  }
+
+  @media screen and (max-width: 800px){
+    font-size: 10px;
   }
 `;
 
@@ -158,8 +179,6 @@ export const HistoryButton = styled.button`
   align-items: center; 
   text-align: left;
   padding: 30px;
-  transition: background-color 0.1s ease;
-  transition: border 0.1s ease;
   box-shadow: 1px 1px 5px rgba(98, 7, 7, 0.2);
 
   &:hover{
@@ -168,8 +187,16 @@ export const HistoryButton = styled.button`
     border: 3px solid #620707;
   }
 
-  @media screen and (max-width: 600px){
-    font-size: 14px;
+  @media screen and (max-width: 1100px){
+    font-size: 12px;
+  }
+
+  @media screen and (max-width: 900px){
+    font-size: 11px;
+  }
+
+  @media screen and (max-width: 800px){
+    font-size: 10px;
   }
 `;
 

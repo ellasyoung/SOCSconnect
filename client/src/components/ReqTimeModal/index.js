@@ -98,6 +98,7 @@ const ReqTimeModal = () => {
                         proposedDate: formData.date,
                         proposedStartTime: formData.startTime,
                         proposedEndTime: formData.endTime,
+                        title: formData.title
                     }
                 ],
                 requestStatus: 'Pending',
