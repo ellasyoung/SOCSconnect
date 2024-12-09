@@ -55,7 +55,15 @@ router.get('/meetings', async (req, res) => {
     const { requesterEmail } = req.query;
 
     try {
-        const currDate = new Date();
+
+        function getCurrentESTTime() {
+            const currDate = new Date();  
+            const estOffset = -5 * 60 * 60 * 1000; //manually adjust to est time 
+            const estTime = new Date(currDate.getTime() + estOffset);
+        
+            return estTime;
+
+        }
 
         if (!requesterEmail) {
             return res.status(400).json({ error: "Requester email not provided" });
@@ -95,10 +103,42 @@ router.get('/meetings', async (req, res) => {
             return host?.email || null;
         };
 
-        for (const appointment of appointments) {
+        function combineDateTime(date, timeString) {
+            const is24HourFormat = timeString.includes(":");
+            let adjustedHours, minutes;
 
-            const meetingDate = new Date(appointment.date);
+            if (is24HourFormat) {
+                const [hours, minutesPart] = timeString.split(":");
+                minutes = parseInt(minutesPart, 10);
+                adjustedHours = parseInt(hours, 10);
+            } else {
+                const [hours, minutesPart] = timeString.split(":");
+                minutes = parseInt(minutesPart.match(/\d+/)[0], 10);
+                const isPM = timeString.toLowerCase().includes("pm");
+                adjustedHours = parseInt(hours, 10);
+
+                if (isPM && adjustedHours < 12) {
+                    adjustedHours += 12;
+                } else if (!isPM && adjustedHours === 12) {
+                    adjustedHours = 0;
+                }
+            }
+
+            date.setUTCHours(adjustedHours, minutes, 0, 0);
+
+            return date;
+        }
+
+
+        for (const appointment of appointments) {
+    
+            let meetingDate = new Date(appointment.date);
+            meetingDate = combineDateTime(meetingDate, appointment.startTime);
+
+            let currentEST = getCurrentESTTime();
+
             const hostEmail = await getHostEmail(appointment.hostId);
+            const mDate = new Date(appointment.date);
             const isMine = hostEmail === requesterEmail;
             const hostName = await getUserNameByEmail(hostEmail);
 
@@ -110,7 +150,7 @@ router.get('/meetings', async (req, res) => {
                     const meetingDetails = {
                         _id: appointment._id,
                         title: appointment.title,
-                        date: meetingDate,
+                        date: mDate,
                         startTime: appointment.startTime,
                         endTime: appointment.endTime,
                         hostId: appointment.hostId,
@@ -121,7 +161,7 @@ router.get('/meetings', async (req, res) => {
                         mine: isMine,
                     };
     
-                    if (meetingDate >= currDate) {
+                    if (meetingDate >= currentEST) {
                         upcomingMeetings.push(meetingDetails);
                     } else {
                         pastMeetings.push(meetingDetails);
@@ -132,7 +172,7 @@ router.get('/meetings', async (req, res) => {
                 const meetingDetails = {
                     _id: appointment._id,
                     title: appointment.title,
-                    date: meetingDate,
+                    date: mDate,
                     startTime: appointment.startTime,
                     endTime: appointment.endTime,
                     hostId: appointment.hostId,
@@ -143,7 +183,7 @@ router.get('/meetings', async (req, res) => {
                     mine: isMine,
                 };
 
-                if (meetingDate >= currDate) {
+                if (meetingDate >= currentEST) {
                     upcomingMeetings.push(meetingDetails);
                 } else {
                     pastMeetings.push(meetingDetails);
@@ -154,7 +194,13 @@ router.get('/meetings', async (req, res) => {
 
         for (const appointment of monthlyApps) {
             for (const booking of appointment.bookSlot) {
-                const meetingDate = new Date(booking.date);
+              
+                let meetingDate = new Date(booking.date);
+                meetingDate = combineDateTime(meetingDate, appointment.schedule.startTime);
+
+                let currentEST = getCurrentESTTime();
+              
+                const mDate = new Date(booking.date);
                 const hostEmail = await getHostEmail(appointment.hostId);
 
                 const isMine = hostEmail === requesterEmail;
@@ -165,7 +211,7 @@ router.get('/meetings', async (req, res) => {
                 const meetingDetails = {
                     _id: appointment._id,
                     title: appointment.title,
-                    date: meetingDate,
+                    date: mDate,
                     startTime: appointment.schedule.startTime,
                     endTime: appointment.schedule.endTime,
                     hostId: appointment.hostId,
@@ -176,7 +222,7 @@ router.get('/meetings', async (req, res) => {
                     mine: isMine,
                 };
 
-                if (meetingDate >= currDate) {
+                if (meetingDate >= currentEST) {
                     upcomingMeetings.push(meetingDetails);
                 } else {
                     pastMeetings.push(meetingDetails);
@@ -186,7 +232,12 @@ router.get('/meetings', async (req, res) => {
 
         for (const appointment of weeklyApps) {
             for (const booking of appointment.bookSlot) {
-                const meetingDate = new Date(booking.date);
+                let meetingDate = new Date(booking.date);
+                meetingDate = combineDateTime(meetingDate, appointment.schedule.startTime);
+
+                let currentEST = getCurrentESTTime();
+              
+                const mDate = new Date(booking.date);
                 const hostEmail = await getHostEmail(appointment.hostId);
 
                 const isMine = hostEmail === requesterEmail;
@@ -197,7 +248,7 @@ router.get('/meetings', async (req, res) => {
                 const meetingDetails = {
                     _id: appointment._id,
                     title: appointment.title,
-                    date: meetingDate,
+                    date: mDate,
                     startTime: appointment.schedule.startTime,
                     endTime: appointment.schedule.endTime,
                     hostId: appointment.hostId,
@@ -208,8 +259,9 @@ router.get('/meetings', async (req, res) => {
                     mine: isMine,
                 };
 
-                if (meetingDate >= currDate) {
+                if (meetingDate >= currentEST) {
                     upcomingMeetings.push(meetingDetails);
+                    
                 } else {
                     pastMeetings.push(meetingDetails);
                 }
@@ -487,10 +539,6 @@ router.delete('/cancel-booking', async (req, res) => {
     }
 });
 
-module.exports = router;
-
-
 
 
 module.exports = router;
-
