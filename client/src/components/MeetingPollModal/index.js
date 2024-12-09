@@ -68,13 +68,37 @@ const MeetingPollModal = () => {
         setIsConfirmed(!isConfirmed);
     };
 
+    const isTimeValid = (startTime, endTime) => {
+        const [startHour, startMinute] = startTime.split(':').map(Number);
+        const [endHour, endMinute] = endTime.split(':').map(Number);
+        
+        if (startHour < endHour) {
+            return true;
+        } else if (startHour === endHour && startMinute < endMinute) {
+            return true;
+        }
+        return false;
+    };
+    
+
     const handleAddDate = (pollOption) => {
-        //console.log("Received Poll Option: ", pollOption); 
         const dateExists = pollOptions.some(option => option.date === pollOption.date);
-        if (dateExists) {
-            alert("This date already exists in the poll options. Please edit the existing date. Instead");
+    
+        
+        const isValid = pollOption.timeOptions.every(option => 
+            isTimeValid(option.startTime, option.endTime)
+        );
+        
+        if (!isValid) {
+            alert("Start time cannot be after end time. Please correct the time range.");
             return;
         }
+    
+        if (dateExists) {
+            alert("This date already exists in the poll options. Please edit the existing date.");
+            return;
+        }
+    
         if (pollOption) {
             setPollOptions([...pollOptions, pollOption]);
         }
@@ -84,9 +108,18 @@ const MeetingPollModal = () => {
     const handleDeleteDate = (index) => {
         const updatedOptions = pollOptions.filter((_, i) => i !== index); 
         setPollOptions(updatedOptions);
-    };    
+    };
 
     const handleEditDate = (updatedOption) => {
+        const isValid = updatedOption.timeOptions.every(option =>
+            isTimeValid(option.startTime, option.endTime)
+        );
+    
+        if (!isValid) {
+            alert("Start time cannot be after end time. Please correct the time range.");
+            return;
+        }
+    
         const updatedOptions = [...pollOptions];
         if (editIndex !== null) {
             updatedOptions[editIndex] = updatedOption;
@@ -95,6 +128,10 @@ const MeetingPollModal = () => {
         setEditIndex(null);
         toggleAddDate();
     };
+    
+    
+    
+    
 
     const handleSubmit = async (e) => {
 
