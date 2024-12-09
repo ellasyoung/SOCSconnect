@@ -256,7 +256,7 @@ const RecurringWeeklyModal = () => {
                     <FormGroup className='conf'>
                         <Label className='label'>Booking Link: </Label>
                         <ModalLink href={`${frontendUrl}/${url}`} target='_blank'>                
-                            {`${frontendUrl}/${url}`}
+                            {`${url}`}
                         </ModalLink>
                     </FormGroup>
                     <SendIcon link={`${frontendUrl}/${url}`}/>

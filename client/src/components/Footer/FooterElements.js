@@ -14,7 +14,7 @@ export const FooterCont = styled.div`
     align-items: center;
     font-family: Arial, sans-serif;
 
-    @media screen and (max-width: 900px){
+    @media screen and (max-width: 1100px){
         justify-content: space-between; 
         padding: 20px;
         flex-direction: column; 
@@ -29,7 +29,7 @@ export const FooterLinksCont = styled.div`
     align-itms: flex-start;
     justify-content: space-between;
     margin-right: 10%;
-    @media screen and (max-width: 900px){
+    @media screen and (max-width: 1100px){
         width: 50%;
         justify-content: space-between; 
         padding: 20px;
@@ -45,7 +45,7 @@ export const FooterLogo = styled.img `
     height: 125px;
     margin-left: 10%;
 
-    @media screen and (max-width: 900px){
+    @media screen and (max-width: 1100px){
         display: none;
     }
     `
@@ -54,7 +54,7 @@ export const LinksContainer = styled.div`
     display: flex;
     flex-direction: column;
 
-    @media screen and (max-width: 900px){
+    @media screen and (max-width: 1100px){
         align-items: center;
     }
 
@@ -65,7 +65,7 @@ export const LinksSection = styled.div`
     width: 50%;
     margin-left: 50px;
 
-    @media screen and (max-width: 768px){
+    @media screen and (max-width: 900px){
         flex-direction: column; 
         width: 100%;
         font-size: 10px;
@@ -97,7 +97,7 @@ export const Column = styled.div`
         
     }
 
-    @media screen and (max-width: 768px){
+    @media screen and (max-width: 900px){
         width: 100%;
         align-items: center; 
         text-align: center;

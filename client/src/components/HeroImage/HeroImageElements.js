@@ -22,8 +22,8 @@ export const BirdComputer = styled.img`
     height: auto;
     padding-right: 5%;
     margin-top: -30px;
-    @media screen and (max-width: 900px) {
-        width: 50%;
+    @media screen and (max-width: 1200px) {
+        width: 40%;
     }
 `;
 
