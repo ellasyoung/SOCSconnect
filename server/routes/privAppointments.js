@@ -437,6 +437,50 @@ router.delete('/cancel-booking', async (req, res) => {
             meetingType,
             meeting: foundMeeting,
         });
+
+        const user = await Users.findById(foundMeeting.hostId);
+                if (!user) {
+                    return res.status(404).json({ message: 'User not found' })};
+        
+       
+
+        const mailOptions = {
+            from: 'socsconnect@gmail.com',
+            to: requesterEmail,
+            subject: 'Cancellation Confirmation',
+            html: 
+            `<h3>Meeting cancelled!</h3>
+            <p>You have cancelled a meeting with ${user.firstName} ${user.lastName}.</p>
+            <p>If you have any questions or need support, feel free to contact us.</p>
+            `
+        }
+
+        const mailOptions2 = {
+            from: 'socsconnect@gmail.com',
+            to: user.email,
+            subject: 'Cancellation Confirmation',
+            html: 
+            `<h3>Meeting cancelled!</h3>
+            <p>Your meeting with ${requesterEmail} has been cancelled.</p>
+            <p>If you have any questions or need support, feel free to contact us.</p>
+            `
+        }
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'Meeting cancelled, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
+
+        transporter.sendMail(mailOptions2, (error, info) => {
+            if (error) {
+                console.log('Error sending email:', error);
+                return res.status(500).json({ message: 'Meeting cancelled, but failed to send confirmation email.' });
+            }
+            console.log('Confirmation email sent: ' + info.response);
+        });
     } catch (error) {
         console.error('Error cancelling booking:', error);
         res.status(500).json({ message: 'Internal server error', error });
