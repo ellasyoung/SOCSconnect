@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Bckgrnd,
     OuterModal,  
@@ -12,8 +12,29 @@ import {
 
 import { FaSearch } from 'react-icons/fa'; 
 
+
+
 const BookingModal = () => {
     const [url, setUrl] = useState("");
+    const [searchIconSize, setSearchIconSize] = useState(20);
+
+    useEffect(()=>{
+        const handleResize = () => {
+        if(window.innerWidth < 720){
+            setSearchIconSize(15);
+        }else if(window.innerWidth < 550){
+            setSearchIconSize(0.25);
+        }else{
+            setSearchIconSize(20);
+        }
+    };
+
+    handleResize(); 
+
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
     //to handle search icon click 
     const handleSearchClick = () => {
@@ -44,7 +65,7 @@ const BookingModal = () => {
                                             background:"transparent", 
                                             border:"none", 
                                             position:"absolute",
-                                            right:"10px", 
+                                            right:"7px", 
                                             top:"50%", 
                                             transform:"translateY(-50%)", 
                                             cursor:"pointer",
@@ -56,7 +77,7 @@ const BookingModal = () => {
                                         aria-label="Search"
                                         >
                                 
-                                        <FaSearch size={20} color="#cd2222" />        
+                                        <FaSearch size={searchIconSize} color="#cd2222" />        
                                 
                                     </button>
 
