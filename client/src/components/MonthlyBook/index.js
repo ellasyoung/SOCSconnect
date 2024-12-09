@@ -76,6 +76,9 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const toggleConfirmation = () => {
     setIsConfirmed(!isConfirmed);
+    if (isConfirmed) {
+      window.location.reload(); 
+    }
   };
 
   const getAvailableSpots = (date) => {

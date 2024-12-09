@@ -37,6 +37,10 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
   const [isConfirmed, setIsConfirmed] = useState(false);
   const toggleConfirmation = () => {
     setIsConfirmed(!isConfirmed);
+    if (isConfirmed) {
+      window.location.reload(); 
+    }
+    
   };
 
   const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
@@ -98,6 +102,7 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
         //alert('Booking successful!');
         setSpotsLeft((prev) => (prev > 0 ? prev - 1 : 0));
         toggleConfirmation();
+       
       } else {
         const errorData = await response.json();
         alert(`Booking failed: ${errorData.message}`);

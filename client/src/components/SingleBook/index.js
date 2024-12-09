@@ -45,6 +45,9 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
 
   const toggleConfirmation = () => {
     setIsConfirmed(!isConfirmed);
+    if (isConfirmed) {
+      window.location.reload(); 
+    }
   };
 
   const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
@@ -73,6 +76,7 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
       if (response.ok) {
         setSpotsLeft((prev) => (prev > 0 ? prev - 1 : 0));
         toggleConfirmation();
+        
       } else {
         const errorData = await response.json();
         alert(`Booking failed: ${errorData.message}`);
