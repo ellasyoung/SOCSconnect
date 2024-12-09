@@ -110,6 +110,7 @@ export const Input = styled.input`
 
   @media screen and (max-width 550px){
     font-size: 7px;
+    
   }
 `;
 
