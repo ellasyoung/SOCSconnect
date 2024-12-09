@@ -20,10 +20,11 @@ import {
     CloseButton,
   
 } from './PrivAppointments';
-import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight } from 'react-icons/fa';
+import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight, FaVoteYea } from 'react-icons/fa';
 import { AuthContext } from '../../auth/AuthProvider';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const formatTime = (time) => {
     const [hours, minutes] = time.split(':').map(Number);
@@ -42,22 +43,42 @@ const PrivAppointments = () => {
     const [RequestsDropdownOpen, setRequestsDropdownOpen] = useState(false);
     const [UpcomingDropdownOpen, setUpcomingDropdownOpen] = useState(false);
     const [HistoryDropdownOpen, setHistoryDropdownOpen] = useState(false);
+    const [pollDropdownOpen, setPollDropdownOpen] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [popupData, setPopupData] = useState({title: "", height: "", buttons:[]});
     const [incomingRequests, setIncomingRequests] = useState([]);
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [pastMeetings, setPastMeetings] = useState([]);
+    const [polls, setPolls] = useState([]);
     const navigate = useNavigate();
 
     const toggleRequestsDropdown = () => setRequestsDropdownOpen(!RequestsDropdownOpen); 
     const toggleUpcomingDropdown = () => setUpcomingDropdownOpen(!UpcomingDropdownOpen);
     const toggleHistoryDropdown = () => setHistoryDropdownOpen(!HistoryDropdownOpen);
+    const togglePollDropdown = () => setPollDropdownOpen(!pollDropdownOpen); 
+
 
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
 
     const { email } = useContext(AuthContext)
+
+
+    useEffect(() => {
+        const fetchPollsByEmail = async () => {
+            try {
+                const response = await axios.get(`${backendUrl}/api/polls-by-email/${encodeURIComponent(email)}`);
+                setPolls(response.data.polls); 
+            } catch (err) {
+                console.error("Error fetching polls:", err);
+                alert("Failed to fetch polls. Please try again later.");
+            }
+        };
+        if (email) {
+            fetchPollsByEmail();
+        }
+    }, [email, backendUrl]);
 
     
     useEffect(() => {
@@ -467,6 +488,30 @@ const PrivAppointments = () => {
                     )}
                 </DropdownContents>
             </Dropdown>
+            
+            <Dropdown>
+                <DropdownTitle onClick={togglePollDropdown}>
+                    My Polls
+                    {pollDropdownOpen ? <UpArrow /> : <DownArrow />}
+                </DropdownTitle>
+                <DropdownContents show={pollDropdownOpen}>
+                    {polls.length > 0 ? (
+                        polls.map((poll, index) => (
+                            <UpdateButton as={Link} to={`/${poll.url}`} className="polls">
+                                <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center",}}>
+                                    <span style={{display: "flex", justifyContent: "center", alignItems: "center", }}>
+                                        <FaVoteYea size={22} style={{ marginRight: "30px" }} />
+                                        {`${poll.title}`}
+                                    </span>
+                                </div>
+                            </UpdateButton>
+                        ))
+                    ) : (
+                        <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Polls Created</b></p>
+                    )}
+                </DropdownContents>
+            </Dropdown>
+
 
             {showPopup && (
                 <PopupBackground onClick={closePopup}>
