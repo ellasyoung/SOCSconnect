@@ -80,12 +80,30 @@ const ReqTimeModal = () => {
         });
     };
 
+    const isTimeValid = (startTime, endTime) => {
+        const [startHour, startMinute] = startTime.split(':').map(Number);
+        const [endHour, endMinute] = endTime.split(':').map(Number);
+        
+        if (startHour < endHour) {
+            return true;
+        } else if (startHour === endHour && startMinute < endMinute) {
+            return true;
+        }
+        return false;
+    };
+    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
     
         const emailRegex = /@(mail\.mcgill\.ca|mcgill\.ca)$/;
         if (!emailRegex.test(formData.recEmail)) {
             alert("Please enter a valid McGill email ending with @mail.mcgill.ca or @mcgill.ca.");
+            return;
+        }
+
+        if (!isTimeValid(formData.startTime, formData.endTime)) {
+            alert("Start time cannot be later than end time. Please correct the times.");
             return;
         }
     
