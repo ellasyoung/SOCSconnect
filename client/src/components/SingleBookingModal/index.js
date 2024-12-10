@@ -85,6 +85,7 @@ const RecurringWeeklyModal = () => {
         const startDate = new Date(formData.startDate);
         const [startHours, startMinutes] = formData.startTime.split(':').map(num => parseInt(num, 10));
         startDate.setHours(startHours, startMinutes, 0, 0);
+        startDate.setDate(startDate.getDate() + 1);
     
         if (startDate < now) {
             alert('The date and time cannot be in the past. Please select a future date and time.');
