@@ -71,7 +71,6 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
   //const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
-  const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
 
   const [isConfirmed, setIsConfirmed] = useState(false);
   const toggleConfirmation = () => {
@@ -79,6 +78,19 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
     if (isConfirmed) {
       window.location.reload(); 
     }
+  };
+
+  const isDateTimePassed = (selectedDateString, selectedTimeString) => {
+
+    const selectedDateTimeObj = new Date(selectedDateString);
+    const [hour, minute] = selectedTimeString.split(/:/);
+    selectedDateTimeObj.setHours(Number(hour));
+    selectedDateTimeObj.setMinutes(Number(minute));
+    
+    const currentDateTimeObj = new Date();
+   
+    return currentDateTimeObj > selectedDateTimeObj;
+   
   };
 
   const getAvailableSpots = (date) => {
@@ -193,7 +205,8 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
                 <Submit><FaAngleRight/></Submit>
               </Line>
             )}
-            <Button onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || isDatePassed}>
+            <Button onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || 
+              isDateTimePassed(selectedDate, meetingData.schedule.startTime)}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>
