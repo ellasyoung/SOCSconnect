@@ -206,7 +206,7 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
               </Line>
             )}
             <Button onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || 
-              isDateTimePassed(selectedDate, meetingData.schedule.startTime)}>
+              isDateTimePassed(selectedDate, meetingData.schedule.startTime) || spotsLeft === 0}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>
