@@ -106,6 +106,18 @@ const ReqTimeModal = () => {
             alert("Start time cannot be later than end time. Please correct the times.");
             return;
         }
+
+        const now = new Date();
+    
+        const date = new Date(formData.date);
+        const [startHours, startMinutes] = formData.startTime.split(':').map(num => parseInt(num, 10));
+        date.setHours(startHours, startMinutes, 0, 0);
+        date.setDate(date.getDate() + 1);
+    
+        if (date < now) {
+            alert('The date and time cannot be in the past. Please select a future date and time.');
+            return;
+        }
     
         try {
             const data = {
