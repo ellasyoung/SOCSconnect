@@ -32,13 +32,14 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-  const normalizeDate = (dateString) => {
+  const normalizeDate = (dateString, timeString) => {
     const [year, month, day] = dateString.split(/[-T]/);
-    return new Date(Number(year), Number(month) - 1, Number(day));
+    const [hour, minute] = timeString.split(/:/);
+    return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute));
   };
 
   useEffect(() => {
-    setSelectedDate(normalizeDate(meetingData.date));
+    setSelectedDate(normalizeDate(meetingData.date, meetingData.startTime));
     const bookingsForDate = meetingData.bookings.length;
     setSpotsLeft(Math.max(meetingData.maxNumParticipants - bookingsForDate, 0));
   }, [meetingData]);
@@ -50,8 +51,17 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
     }
   };
 
-  const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
 
+  const isDateTimePassed = (selectedDateTime) => {
+    if (!selectedDateTime) return false;
+  
+    const currentDateTimeObj = new Date();
+    const selectedDateTimeObj = new Date(selectedDateTime);
+    
+    return currentDateTimeObj > selectedDateTimeObj;
+   
+  };
+  
   const handleBook = async () => {
     const email = isLoggedIn ? loggedInEmail : requesterEmail;
 
@@ -131,7 +141,7 @@ const SingleDayBook = ({ meetingData, hostInfo }) => {
                 <Submit><FaAngleRight/></Submit>
               </Line>
             )}
-            <Button onClick={handleBook} disabled={spotsLeft === 0 || isDatePassed}>
+            <Button onClick={handleBook} disabled={spotsLeft === 0 || isDateTimePassed(selectedDate)}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>

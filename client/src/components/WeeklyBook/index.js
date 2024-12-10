@@ -43,7 +43,17 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
     
   };
 
-  const isDatePassed = selectedDate ? new Date() > new Date(selectedDate) : false;
+  const isDateTimePassed = (selectedDateString, selectedTimeString) => {
+
+    const selectedDateTimeObj = new Date(selectedDateString);
+    const [hour, minute] = selectedTimeString.split(/:/);
+    selectedDateTimeObj.setHours(Number(hour));
+    selectedDateTimeObj.setMinutes(Number(minute));
+
+    const currentDateTimeObj = new Date();
+   
+    return currentDateTimeObj > selectedDateTimeObj;
+  };
 
   const getAvailableSpots = (date) => {
     const bookingsForDate = meetingData.bookSlot.filter(
@@ -157,7 +167,8 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
               </Line>
             )}
             <Button 
-              onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || isDatePassed}>
+              onClick={handleBook} disabled={(!isLoggedIn && (!requesterEmail || !/\S+@\S+\.\S+/.test(requesterEmail))) || 
+              isDateTimePassed(selectedDate, meetingData.schedule.startTime)}>
               Book
               <FaAngleRight size="1em" style={{ marginLeft: "8px" }}/>
             </Button>
