@@ -149,7 +149,6 @@ const MeetingPollModal = () => {
             hostEmail: email
         };
 
-        console.log(pollData);
 
         try {
             const response = await fetch(`${backendUrl}/api/new-poll`, {
@@ -164,7 +163,6 @@ const MeetingPollModal = () => {
             toggleConfirmation();
             setPollOptions([]);
             setTitle('');
-            //console.log('Poll created:', result);
         } catch (error) {
             console.error('Error creating poll:', error);
         }

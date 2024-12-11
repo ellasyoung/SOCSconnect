@@ -93,7 +93,6 @@ const PrivAppointments = () => {
             }
     
             const data = await response.json();
-            console.log('Appointment created:', data.appointment);
             window.location.reload();
         } catch (error) {
             console.error('Error accepting request:', error);
@@ -225,9 +224,7 @@ const PrivAppointments = () => {
                             `${backendUrl}/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`
                         );
                         const { upcomingMeetings, pastMeetings } = await response.json();
-        
-                        console.log(upcomingMeetings);
-                        console.log(pastMeetings);
+       
         
                         setUpcomingMeetings(upcomingMeetings);
                         setPastMeetings(pastMeetings);

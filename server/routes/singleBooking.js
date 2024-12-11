@@ -90,10 +90,8 @@ router.post('/book-slot-single', async (req, res) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log('Error sending email:', error);
                 return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
             }
-            console.log('Confirmation email sent: ' + info.response);
         });
 
 
@@ -160,10 +158,8 @@ router.post('/new-single-meeting', async (req, res) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log('Error sending email:', error);
                 return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
             }
-            console.log('Confirmation email sent: ' + info.response);
         });
     } catch (error) {
         console.error('Error creating single booking:', error);
