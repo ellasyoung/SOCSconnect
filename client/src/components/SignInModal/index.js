@@ -37,6 +37,9 @@ const SignInModal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log(`${backendUrl}/api/login`);
+        console.log(formData);
     
         try {
             const response = await axios.post(`${backendUrl}/api/login`, formData, {
