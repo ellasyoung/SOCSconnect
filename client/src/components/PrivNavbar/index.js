@@ -1,3 +1,4 @@
+//Natalie Doehla
 import React, { useState, useEffect, useContext } from "react";
 import { 
   Nav, NavLogo, NavLinks, NavLink, ProfLogo, NavItems, Hamburger, Dropdown, ButtonContainer, LogoutBtn, ProfileDropdown , Dim, CloseButton

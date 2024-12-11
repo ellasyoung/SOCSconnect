@@ -1,3 +1,4 @@
+//Cienna Gin-Naccarato
 import React, { useContext } from "react";
 import { FooterCont, FooterLogo, LinksContainer, ExternalLink, FooterLinksCont} from "./FooterElements";
 import SOCSLogo from "../../assets/images/footer-logo.svg"; 

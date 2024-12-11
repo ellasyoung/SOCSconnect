@@ -1,3 +1,4 @@
+//Natalie Doehla
 import styled from "styled-components";
 import HeroBackground from "../../assets/images/hero-background.svg"; 
 

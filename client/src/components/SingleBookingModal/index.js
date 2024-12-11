@@ -1,3 +1,4 @@
+//Natalie Doehla
 import React, { useState, useContext } from 'react';
 import { 
     Bckgrnd,  
