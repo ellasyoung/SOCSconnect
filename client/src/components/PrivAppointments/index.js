@@ -51,6 +51,8 @@ const PrivAppointments = () => {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [pastMeetings, setPastMeetings] = useState([]);
     const [polls, setPolls] = useState([]);
+    const [myHover, setMyHover] = useState(false);
+    const [hover, setHover] = useState(false);
     const navigate = useNavigate();
 
     const toggleRequestsDropdown = () => setRequestsDropdownOpen(!RequestsDropdownOpen); 
@@ -273,129 +275,176 @@ const PrivAppointments = () => {
                 <DropdownContents show={RequestsDropdownOpen}>
                     {incomingRequests.length > 0 ? (
                         incomingRequests.map((request, index) => (
-                            request.mine ? ( 
-                                <RequestButton 
-                                    className="mine"
-                                    onClick={() =>
-                                        openPopup({
-                                            title: "Meeting Request Made", 
-                                            height: "auto",
-                                            buttons: [],
-                                            requestDetails: request 
-                                        })
-                                    }
-                                >
-            
-                                    <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
-                                        <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                                            <FaArrowRight size={22} style={{ marginRight: "30px" }}/>
-                                            {`Request made with ${request.hostName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
-                                                year: "numeric", 
-                                                month: "long", 
-                                                day: "numeric"
-                                            })}`}
-                                        </span>
-                                        <span style={{padding: "20px"}}></span>
-                                        <span style={{fontWeight: "normal"}}>
-                                            Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                </RequestButton>
-                             ) : (
-                                request.requestStatus === 'Pending' ? (
-                                    <RequestButton 
-                                            onClick={() =>
-                                                openPopup({
-                                                    title: "Meeting Request", 
-                                                    height: "auto",
-                                                    buttons: [
-                                                        {text: "Accept", icon: FaCheckCircle},
-                                                        {text: "Deny", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"},
-                                                        {text: "Propose Different Time", icon: FaArrowRight, width: "300px", bgColor: "#620707", hoverColor: "#cd2222"},
-                                                    ],
-                                                    requestDetails: request 
-                                                })
-                                            }
-                                        >
-                                            <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
-                                                <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                                                    <FaBell size={22} style={{ marginRight: "30px" }}/>
-                                                    {`New Request from ${request.requesterName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
-                                                        year: "numeric", 
-                                                        month: "long", 
-                                                        day: "numeric"
-                                                    })}`}
-                                                </span>
-                                                <span style={{padding: "20px"}}></span>
-                                                <span style={{fontWeight: "normal"}}>
-                                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                                                </span>
-                                            </div>
-                                        </RequestButton>
-                                ) : (
-                                    request.requestStatus === 'Approved' ? (
-                                        <RequestButton 
-                                            onClick={() =>
-                                                openPopup({
-                                                    title: "Meeting Request", 
-                                                    height: "auto",
-                                                    buttons: [],
-                                                    requestDetails: request 
-                                                })
-                                            }
-                                            style={{backgroundColor: '#c3c4c3'}}
-                                        >
-                                            <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
-                                                <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                                                    <FaBell size={22} style={{ marginRight: "30px" }}/>
-                                                    {`Request from ${request.requesterName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
-                                                        year: "numeric", 
-                                                        month: "long", 
-                                                        day: "numeric"
-                                                    })} has been approved`}
-                                                </span>
-                                                <span style={{padding: "20px"}}></span>
-                                                <span style={{fontWeight: "normal"}}>
-                                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                                                </span>
-                                            </div>
-                                        </RequestButton>
-                                    ) : (
-                                        <RequestButton 
-                                            onClick={() =>
-                                                openPopup({
-                                                    title: "Meeting Request", 
-                                                    height: "auto",
-                                                    buttons: [],
-                                                    requestDetails: request 
-                                                })
-                                            }
-                                            style={{backgroundColor: '#c3c4c3'}}
-                                        >
-                                            <div style={{display: "flex", justifyContent:"space-between", width:"100%", alignItems: "center" }}>
-                                                <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                                                    <FaBell size={22} style={{ marginRight: "30px" }}/>
-                                                    {`Request from ${request.requesterName} for ${normalizeDate(request.alternateTimes[0]?.proposedDate).toLocaleDateString("en-US", {
-                                                        year: "numeric", 
-                                                        month: "long", 
-                                                        day: "numeric"
-                                                    })} has been denied`}
-                                                </span>
-                                                <span style={{padding: "20px"}}></span>
-                                                <span style={{fontWeight: "normal"}}>
-                                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                                                </span>
-                                            </div>
-                                        </RequestButton>
-                                    )
-                                )
-                            )    
-                                ))
-                            ) : ( 
-                                <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Incoming Requests</b></p>
-                    )}
+                        request.mine ? (
+                            request.requestStatus === "Denied" ? (
+                            <RequestButton
+                                key={index}
+                                className="mine"
+                                onMouseEnter={() => setMyHover(true)}
+                                onMouseLeave={() => setMyHover(false)}
+                                onClick={() =>
+                                openPopup({
+                                    title: "Meeting Request Denied",
+                                    height: "auto",
+                                    buttons: [],
+                                    requestDetails: request,
+                                })
+                                }
+                                style={{ backgroundColor: myHover ? '#919191' : "#c3c4c3"}}
+                            >
+                                <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                                    <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                        <FaArrowRight size={22} style={{ marginRight: "30px" }} />
+                                        {`Request made with ${request.hostName} for ${normalizeDate(
+                                        request.alternateTimes[0]?.proposedDate
+                                        ).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                        })} has been denied`}
+                                    </span>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
+                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                </span>
+                                </div>
+                            </RequestButton>
+                            ) : (
+                            <RequestButton
+                                key={index}
+                                className="mine"
+                                onClick={() =>
+                                openPopup({
+                                    title: "Meeting Request Made",
+                                    height: "auto",
+                                    buttons: [],
+                                    requestDetails: request,
+                                })
+                                }
+                            >
+                                <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                                <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                    <FaArrowRight size={22} style={{ marginRight: "30px" }} />
+                                    {`Request made with ${request.hostName} for ${normalizeDate(
+                                    request.alternateTimes[0]?.proposedDate
+                                    ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                    })}`}
+                                </span>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
+                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                </span>
+                                </div>
+                            </RequestButton>
+                            )
+                        ) : request.requestStatus === "Pending" ? (
+                            <RequestButton
+                            key={index}
+                            onClick={() =>
+                                openPopup({
+                                title: "Meeting Request",
+                                height: "auto",
+                                buttons: [
+                                    { text: "Accept", icon: FaCheckCircle },
+                                    {text: "Deny",icon: FaTimesCircle,bgColor: "black",hoverColor: "#cd2222"},
+                                    {text: "Propose Different Time", icon: FaArrowRight,width: "300px", bgColor: "#620707", hoverColor: "#cd2222"},
+                                ],
+                                requestDetails: request,
+                                })
+                            }
+                            >
+                            <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                            <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                <FaBell size={22} style={{ marginRight: "30px" }} />
+                                {`New Request from ${request.requesterName} for ${normalizeDate(
+                                    request.alternateTimes[0]?.proposedDate
+                                ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })}`}
+                                </span>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
+                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                            </RequestButton>
+                        ) : request.requestStatus === "Approved" ? (
+                            <RequestButton
+                            key={index}
+                            onClick={() =>
+                                openPopup({
+                                title: "Meeting Request",
+                                height: "auto",
+                                buttons: [],
+                                requestDetails: request,
+                                })
+                            }
+                            style={{ backgroundColor: "#c3c4c3" }}
+                            >
+                            <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                            <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                <FaBell size={22} style={{ marginRight: "30px" }} />
+                                {`Request from ${request.requesterName} for ${normalizeDate(
+                                    request.alternateTimes[0]?.proposedDate
+                                ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })} has been approved`}
+                                </span>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
+                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                            </RequestButton>
+                        ) : (
+                            <RequestButton
+                            key={index}
+                            onMouseEnter={() => setHover(true)}
+                            onMouseLeave={() => setHover(false)}
+                            onClick={() =>
+                                openPopup({
+                                title: "Meeting Request",
+                                height: "auto",
+                                buttons: [],
+                                requestDetails: request,
+                                })
+                            }
+                            style={{ backgroundColor: hover ? "#919191" : "#c3c4c3" }}
+                            >
+                            <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                            <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                <FaBell size={22} style={{ marginRight: "30px" }} />
+                                {`Request from ${request.requesterName} for ${normalizeDate(
+                                    request.alternateTimes[0]?.proposedDate
+                                ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })} has been denied`}
+                                </span>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
+                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                            </RequestButton>
+                        )
+                        ))
+                ) : (
+                    <p style={{ marginLeft: "20px", marginTop: "0px" }}>
+                    <b>No Incoming Requests</b>
+                    </p>
+                )}
                 </DropdownContents>
             </Dropdown>
+
 
             <Dropdown>
                 <DropdownTitle onClick={toggleUpcomingDropdown}>
