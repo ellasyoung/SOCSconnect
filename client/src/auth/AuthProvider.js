@@ -12,11 +12,26 @@ const AuthProvider = ({ children }) => {
         const storedEmail = localStorage.getItem("email");
         if (token) setIsLoggedIn(true);
         if (storedEmail) setEmail(storedEmail);
+
+        const interval = setInterval(() => {
+            const loginTimestamp = localStorage.getItem("loginTimestamp");
+            if (loginTimestamp) {
+                const elapsedTime = Date.now() - parseInt(loginTimestamp, 10);
+                if (elapsedTime > 1 * 60 * 60 * 1000) {
+                    logout();
+                    alert("You have been automatically logged out due to inactivity.");
+                }
+            }
+        }, 60000); 
+
+        return () => clearInterval(interval); 
     }, []);
 
     const login = (token, email) => {
+        const timestamp = Date.now();
         localStorage.setItem("token", token);
         localStorage.setItem("email", email);
+        localStorage.setItem("loginTimestamp", timestamp); 
         setIsLoggedIn(true);
         setEmail(email);
     };
@@ -24,6 +39,7 @@ const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("email");
+        localStorage.removeItem("loginTimestamp");
         setIsLoggedIn(false);
         setEmail(null);
     };
@@ -36,4 +52,3 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
-
