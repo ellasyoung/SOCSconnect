@@ -1,3 +1,4 @@
+//Cienna Gin-Naccarato
 const mongoose = require('mongoose');
 
 const SessionsSchema = new mongoose.Schema({

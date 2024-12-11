@@ -1,3 +1,4 @@
+//Cienna Gin-Naccarato
 import styled from "styled-components";
 import HeroBackground from "../../assets/images/hero-background.svg";
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';

@@ -1,3 +1,4 @@
+//Ella Young
 import React, { useContext } from "react";
 import { Bckgrnd, BirdComputer, HeroDescription, Title, Title2, Blurb, Button } from './HeroImageElements';
 import HeroImg from '../../assets/images/hero-img.svg';

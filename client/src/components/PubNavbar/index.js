@@ -1,3 +1,4 @@
+//Natalie Doehla
 import React, { useState, useEffect } from "react";
 import { Nav, NavLogo, NavLinks, NavLink, Button, ButtonContainer, NavItems, Hamburger, Dropdown} from "./PubNavbarElements"; 
 import SOCSLogo from "../../assets/images/navbar-logo.svg"; 
