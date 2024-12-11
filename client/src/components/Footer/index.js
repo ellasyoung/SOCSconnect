@@ -2,7 +2,8 @@
 import React, { useContext } from "react";
 import { FooterCont, FooterLogo, LinksContainer, ExternalLink, FooterLinksCont} from "./FooterElements";
 import SOCSLogo from "../../assets/images/footer-logo.svg"; 
-import { AuthContext } from "../../auth/AuthProvider"; 
+import { AuthContext } from "../../auth/AuthProvider";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
     const { isLoggedIn } = useContext(AuthContext); 
@@ -15,17 +16,17 @@ const Footer = () => {
                         <h3 style={{fontSize: "16px"}}>SOCS Connect</h3>
                         <LinksContainer>
                             <ExternalLink href="/">Home</ExternalLink>
-                            <ExternalLink href={`${frontendUrl}/booking`}>Booking</ExternalLink>
+                            <ExternalLink as={Link} to="/booking">Booking</ExternalLink>
 
                             {isLoggedIn ? 
                                 (<>
-                                    <ExternalLink href={`${frontendUrl}/my-appointments`}>My Appointments</ExternalLink>
-                                    <ExternalLink href={`${frontendUrl}/request-time`}>Request Time</ExternalLink>
+                                    <ExternalLink as={Link} to="/my-appointments">My Appointments</ExternalLink>
+                                    <ExternalLink as={Link} to="/request-time">Request Time</ExternalLink>
                                 </>)
                             : 
                                 (<>
-                                    <ExternalLink href={`${frontendUrl}/register`}>Register</ExternalLink>
-                                    <ExternalLink href={`${frontendUrl}/sign-in`}>Sign In</ExternalLink>
+                                    <ExternalLink as={Link} to="/register">Register</ExternalLink>
+                                    <ExternalLink as={Link} to="/sign-in">Sign In</ExternalLink>
                                 </>)
                             }
                         </LinksContainer>   
