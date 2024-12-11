@@ -121,7 +121,6 @@ const WeeklyBook = ({ meetingData, hostInfo }) => {
     }
   };
 
-  // Determine the first booking's month
   const firstBookingDate = recurringDates.length > 0 ? recurringDates[0] : new Date();
 
   const handleBook = async () => {

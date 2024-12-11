@@ -87,9 +87,6 @@ const RecurringWeeklyModal = () => {
         const [startHours, startMinutes] = formData.startTime.split(':').map(num => parseInt(num, 10));
         date.setHours(startHours, startMinutes, 0, 0);
         date.setDate(date.getDate()+1);
-
-        console.log(now);
-        console.log(date);
     
         if (date < now) {
             alert('The date and time cannot be in the past. Please select a future date and time.');
@@ -111,7 +108,6 @@ const RecurringWeeklyModal = () => {
             setConfirmationDetails(formData);
 
             const response = await axios.post(`${backendUrl}/api/new-single-meeting`, requestData);
-            console.log('Meeting created successfully:', response.data);
             setURL(response.data.url);
             
 

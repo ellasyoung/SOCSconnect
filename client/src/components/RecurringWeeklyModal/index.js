@@ -128,9 +128,7 @@ const RecurringWeeklyModal = () => {
             setConfirmationDetails(formData);
 
             const response = await axios.post(`${backendUrl}/api/new-weekly-meeting`, requestData);
-            //console.log('Meeting created successfully:', response.data);
             setURL(response.data.url);
-            //alert('Recurring weekly meeting created successfully!');
 
             setFormData({
                 hostEmail: '',

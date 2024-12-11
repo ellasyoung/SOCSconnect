@@ -82,18 +82,14 @@ router.post('/', async (req, res) => {
 
          transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log('Error sending email:', error);
                 return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
             }
-            console.log('Confirmation email sent: ' + info.response);
         });
 
         transporter.sendMail(mailOptions2, (error, info) => {
             if (error) {
-                console.log('Error sending email:', error);
                 return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
             }
-            console.log('Confirmation email sent: ' + info.response);
         });
 
     } catch (error) {

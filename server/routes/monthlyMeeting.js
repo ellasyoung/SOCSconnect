@@ -1,4 +1,4 @@
-//Natalie Doehla 
+//Natalie Doehla
 const express = require('express');
 const router = express.Router();
 const MonthlyOfficeHours = require('../models/MonthlyRecurringOH');
@@ -94,10 +94,8 @@ router.post('/book-slot-monthly', async (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log('Error sending email:', error);
         return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
       }
-      console.log('Confirmation email sent: ' + info.response);
     });
   } catch (error) {
     console.error('Error booking slot:', error.message);
@@ -172,10 +170,8 @@ router.post('/monthly-meeting', async (req, res) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
-              console.log('Error sending email:', error);
               return res.status(500).json({ message: 'User registered, but failed to send confirmation email.' });
           }
-          console.log('Confirmation email sent: ' + info.response);
       });
     } catch (error) {
         console.error('Error creating monthly meeting:', error.message);

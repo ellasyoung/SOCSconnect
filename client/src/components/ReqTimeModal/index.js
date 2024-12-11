@@ -27,7 +27,6 @@ const ReqTimeModal = () => {
             setError(null); 
         } catch (err) {
             setError(err.message);
-            console.log(error);
             setRecInfo(null); 
         }
     };
@@ -41,7 +40,6 @@ const ReqTimeModal = () => {
             }
     
             const data = await response.json();
-            console.log('User Info:', data);
             return data; 
         } catch (error) {
             console.error('Error fetching user info:', error.message);
@@ -136,7 +134,6 @@ const ReqTimeModal = () => {
             };
     
             const response = await axios.post(`${backendUrl}/api/alternate-request`, data);
-            console.log("Request submitted successfully:", response.data);
 
             setConfirmationDetails(formData);
             handleFetchUserInfo();
@@ -149,7 +146,6 @@ const ReqTimeModal = () => {
                 title: ''
             });
             toggleConfirmation();
-            //alert("Meeting request submitted successfully!");
         } catch (error) {
             console.error("Error submitting request:", error);
             alert("There was an error submitting your request. Please try again.");

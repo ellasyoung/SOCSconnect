@@ -49,7 +49,6 @@ const SignInModal = () => {
             const { token, email } = response.data;
     
             if (token && email) {
-                console.log("Login successful:", { token, email });
                 login(token, email); 
                 navigate("/dashboard");
             } else {

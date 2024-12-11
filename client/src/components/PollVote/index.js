@@ -133,9 +133,7 @@ const PollVote = ({ meetingData, hostInfo }) => {
     
             const counts = {};
             for (const option of selectedPoll.timeOptions) {
-                console.log(value.toISOString(), option.startTime, option.endTime);
                 const count = await fetchVoteCount(value.toISOString(), option.startTime, option.endTime);
-                //console.log(count);
                 counts[`${option.startTime}-${option.endTime}`] = count || 0;
             }
             setVoteCounts(counts);
@@ -170,7 +168,6 @@ const PollVote = ({ meetingData, hostInfo }) => {
         );
         const groupedVotes = groupVotesByDate(allVotes); 
         setConfirmVotes(groupedVotes);
-        //console.log(groupedVotes); 
         toggleCheckVotes();
     };
 
