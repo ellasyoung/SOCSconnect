@@ -61,7 +61,7 @@ router.get('/meetings', async (req, res) => {
 
         function getCurrentESTTime() {
             const currDate = new Date();  
-            const estOffset = -5 * 60 * 60 * 1000; //manually adjust to est time 
+            const estOffset = -5 * 60 * 60 * 1000; 
             const estTime = new Date(currDate.getTime() + estOffset);
         
             return estTime;
@@ -208,6 +208,10 @@ router.get('/meetings', async (req, res) => {
 
                 const isMine = hostEmail === requesterEmail;
 
+                if(!isMine && booking.requesterEmail != requesterEmail){
+                    continue;
+                }
+
                 const hostName = await getUserNameByEmail(hostEmail);
                 const reqName = await getUserNameByEmail(booking.requesterEmail);
 
@@ -244,6 +248,10 @@ router.get('/meetings', async (req, res) => {
                 const hostEmail = await getHostEmail(appointment.hostId);
 
                 const isMine = hostEmail === requesterEmail;
+
+                if(!isMine && booking.requesterEmail != requesterEmail){
+                    continue;
+                }
 
                 const hostName = await getUserNameByEmail(hostEmail);
                 const reqName = await getUserNameByEmail(booking.requesterEmail);
