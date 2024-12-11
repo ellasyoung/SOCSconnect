@@ -22,6 +22,7 @@ import {
   
 } from './PrivAppointments';
 import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight, FaVoteYea } from 'react-icons/fa';
+import Loading from "../Loading";
 import { AuthContext } from '../../auth/AuthProvider';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -52,6 +53,7 @@ const PrivAppointments = () => {
     const [pastMeetings, setPastMeetings] = useState([]);
     const [polls, setPolls] = useState([]);
     const [myHover, setMyHover] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [hover, setHover] = useState(false);
     const navigate = useNavigate();
 
@@ -66,128 +68,6 @@ const PrivAppointments = () => {
 
 
     const { email } = useContext(AuthContext)
-
-
-    useEffect(() => {
-        const fetchPollsByEmail = async () => {
-            try {
-                const response = await axios.get(`${backendUrl}/api/polls-by-email/${encodeURIComponent(email)}`);
-                setPolls(response.data.polls); 
-            } catch (err) {
-                console.error("Error fetching polls:", err);
-                alert("Failed to fetch polls. Please try again later.");
-            }
-        };
-        if (email) {
-            fetchPollsByEmail();
-        }
-    }, [email, backendUrl]);
-
-    
-    useEffect(() => {
-
-        const reqfetchUserDetails = async (userId) => {
-            if (!userId) {
-                console.error("Invalid user ID:", userId);
-                return "Unknown User";
-            }
-    
-            try {
-                const response = await fetch(`${backendUrl}/api/user-info/${userId}`);
-    
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch user details, status: ${response.status}`);
-                }
-    
-                const data = await response.json();
-    
-                if (data && data.firstName && data.lastName) {
-                    return `${data.firstName} ${data.lastName}`;
-                } else {
-                    throw new Error('User data is incomplete');
-                }
-    
-                } catch (error) {
-                    console.error("Error fetching user details:", error);
-                    return "Unknown User"; 
-            }
-        };
-
-        const reqfetchUserEmail = async (userId) => {
-            try {
-                const response = await axios.get(`${backendUrl}/api/user-info/user-email/${userId}`);
-                
-                if (response.status === 200) {
-                    return response.data.email; 
-                } else {
-                    console.error(`Failed to fetch email for userId ${userId}. Status: ${response.status}`);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error fetching user email:', error);
-                return null; 
-            }
-        };
-
-        const fetchRequestsWithNames = async () => {
-            if (email) {
-                try {
-                    const response = await fetch(
-                            `${backendUrl}/api/priv-appointments/incoming-requests?requesterEmail=${encodeURIComponent(email)}`
-                        );
-                        const requests = await response.json();
-    
-                        const requestsWithNames = await Promise.all(
-                            requests.map(async (request) => {
-                                const requesterName = await reqfetchUserDetails(request.requesterId);
-                                const requesterEmail = await reqfetchUserEmail(request.requesterId);
-                                const hostName = await reqfetchUserDetails(request.hostId);
-                                const hostEmail = await reqfetchUserEmail(request.requesterId);
-                                
-                                return {
-                                    ...request,
-                                    requesterName,
-                                    hostName,
-                                    requesterEmail,
-                                    hostEmail
-                                };
-                           })
-                        );
-
-                        setIncomingRequests(requestsWithNames);
-                    } catch (error) {
-                        console.error("Error fetching requests:", error);
-                    }
-                }
-            };
-    
-            fetchRequestsWithNames();
-        }, [email, backendUrl]);
-
-    useEffect(() => {
-        const fetchMeetingsWithNames = async () => {
-            if (email) {
-                try {
-                   
-                    const response = await fetch(
-                        `${backendUrl}/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`
-                    );
-                    const { upcomingMeetings, pastMeetings } = await response.json();
-
-                    console.log(upcomingMeetings);
-                    console.log(pastMeetings);
-    
-                    setUpcomingMeetings(upcomingMeetings);
-                    setPastMeetings(pastMeetings);
-                } catch (error) {
-                    console.error("Error fetching meetings:", error);
-                }
-            }
-        };
-    
-        fetchMeetingsWithNames();
-    }, [email, backendUrl])
-    
 
     const openPopup = (data) => {
         setPopupData(data)
@@ -259,6 +139,125 @@ const PrivAppointments = () => {
             alert('An error occurred while cancelling the booking.');
         }
     };
+
+    useEffect(() => {
+
+        const reqfetchUserDetails = async (userId) => {
+            if (!userId) {
+                console.error("Invalid user ID:", userId);
+                return "Unknown User";
+            }
+    
+            try {
+                const response = await fetch(`${backendUrl}/api/user-info/${userId}`);
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch user details, status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+    
+                if (data && data.firstName && data.lastName) {
+                    return `${data.firstName} ${data.lastName}`;
+                } else {
+                    throw new Error('User data is incomplete');
+                }
+    
+                } catch (error) {
+                    console.error("Error fetching user details:", error);
+                    return "Unknown User"; 
+            }
+        };
+    
+        const reqfetchUserEmail = async (userId) => {
+            try {
+                const response = await axios.get(`${backendUrl}/api/user-info/user-email/${userId}`);
+                
+                if (response.status === 200) {
+                    return response.data.email; 
+                } else {
+                    console.error(`Failed to fetch email for userId ${userId}. Status: ${response.status}`);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching user email:', error);
+                return null; 
+            }
+        };
+    
+        const fetchRequestsWithNames = async () => {
+            if (email) {
+                try {
+                    const response = await fetch(
+                            `${backendUrl}/api/priv-appointments/incoming-requests?requesterEmail=${encodeURIComponent(email)}`
+                        );
+                        const requests = await response.json();
+    
+                        const requestsWithNames = await Promise.all(
+                            requests.map(async (request) => {
+                                const requesterName = await reqfetchUserDetails(request.requesterId);
+                                const requesterEmail = await reqfetchUserEmail(request.requesterId);
+                                const hostName = await reqfetchUserDetails(request.hostId);
+                                const hostEmail = await reqfetchUserEmail(request.requesterId);
+                                
+                                return {
+                                    ...request,
+                                    requesterName,
+                                    hostName,
+                                    requesterEmail,
+                                    hostEmail
+                                };
+                           })
+                        );
+    
+                        setIncomingRequests(requestsWithNames);
+                    } catch (error) {
+                        console.error("Error fetching requests:", error);
+                    }
+                }
+            };
+    
+            const fetchMeetingsWithNames = async () => {
+                if (email) {
+                    try {
+                       
+                        const response = await fetch(
+                            `${backendUrl}/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`
+                        );
+                        const { upcomingMeetings, pastMeetings } = await response.json();
+        
+                        console.log(upcomingMeetings);
+                        console.log(pastMeetings);
+        
+                        setUpcomingMeetings(upcomingMeetings);
+                        setPastMeetings(pastMeetings);
+                    } catch (error) {
+                        console.error("Error fetching meetings:", error);
+                    }
+                }
+            };
+    
+            const fetchPollsByEmail = async () => {
+                try {
+                    const response = await axios.get(`${backendUrl}/api/polls-by-email/${encodeURIComponent(email)}`);
+                    setPolls(response.data.polls); 
+                } catch (err) {
+                    console.error("Error fetching polls:", err);
+                    alert("Failed to fetch polls. Please try again later.");
+                }
+            };
+    
+            fetchRequestsWithNames();
+            fetchMeetingsWithNames();
+            setLoading(false); 
+            if (email) {
+                fetchPollsByEmail();
+            }
+        }, [email, backendUrl]);
+
+    if (loading) {
+        return <Loading />; 
+    }
     
     return (
         <>
