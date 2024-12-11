@@ -37,22 +37,30 @@ const SignInModal = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         try {
             const response = await axios.post(`${backendUrl}/api/login`, formData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
-            const { token, email } = response.data; 
-            console.log({token, email});
-            login(token, email);
-            navigate("/dashboard");
+    
+            const { token, email } = response.data;
+    
+            if (token && email) {
+                console.log("Login successful:", { token, email });
+                login(token, email); 
+                navigate("/dashboard");
+            } else {
+                console.error("Invalid response data:", response.data);
+                alert("Login failed. Please check your credentials and try again.");
+            }
         } catch (error) {
-            console.error('Error:', error.response?.data || error.message);
-            alert(error.response?.data?.message || "Registration failed. Please try again.");
+            console.error("Error:", error.response?.data || error.message);
+            alert(error.response?.data?.message || "Login failed. Please try again.");
         }
     };
+    
 
     const togglePasswordVisibility = () => {
         setShowPassword((prevState) => !prevState);
