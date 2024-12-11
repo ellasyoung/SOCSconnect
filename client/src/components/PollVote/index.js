@@ -145,6 +145,11 @@ const PollVote = ({ meetingData, hostInfo }) => {
     
 
     const handleCheck = () =>{
+        if(!selectedDate){
+            alert("Error: Please make sure to select the date you want to poll for.");
+            return;
+        }
+        
         const updatedVotesByDate = {
             ...votesByDate,
             [selectedDate.toDateString()]: selectedOptions,
