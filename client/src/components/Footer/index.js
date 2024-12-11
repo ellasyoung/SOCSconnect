@@ -5,6 +5,7 @@ import { AuthContext } from "../../auth/AuthProvider";
 
 const Footer = () => {
     const { isLoggedIn } = useContext(AuthContext); 
+    const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
     return (
         <FooterCont>
             <FooterLogo src={SOCSLogo} alt="SOCS Logo"/>
@@ -13,17 +14,17 @@ const Footer = () => {
                         <h3 style={{fontSize: "16px"}}>SOCS Connect</h3>
                         <LinksContainer>
                             <ExternalLink href="/">Home</ExternalLink>
-                            <ExternalLink href="/booking">Booking</ExternalLink>
+                            <ExternalLink href={`${frontendUrl}/booking`}>Booking</ExternalLink>
 
                             {isLoggedIn ? 
                                 (<>
-                                    <ExternalLink href="/my-appointments">My Appointments</ExternalLink>
-                                    <ExternalLink href="/request-time">Request Time</ExternalLink>
+                                    <ExternalLink href={`${frontendUrl}/my-appointments`}>My Appointments</ExternalLink>
+                                    <ExternalLink href={`${frontendUrl}/request-time`}>Request Time</ExternalLink>
                                 </>)
                             : 
                                 (<>
-                                    <ExternalLink href="/register">Register</ExternalLink>
-                                    <ExternalLink href="/sign-in">Sign In</ExternalLink>
+                                    <ExternalLink href={`${frontendUrl}/register`}>Register</ExternalLink>
+                                    <ExternalLink href={`${frontendUrl}/sign-in`}>Sign In</ExternalLink>
                                 </>)
                             }
                         </LinksContainer>   

@@ -170,6 +170,9 @@ const PrivAppointments = () => {
                         `${backendUrl}/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`
                     );
                     const { upcomingMeetings, pastMeetings } = await response.json();
+
+                    console.log(upcomingMeetings);
+                    console.log(pastMeetings);
     
                     setUpcomingMeetings(upcomingMeetings);
                     setPastMeetings(pastMeetings);
