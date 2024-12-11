@@ -3,14 +3,14 @@ import React, { createContext, useState, useEffect } from "react";
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
-    const [email, setEmail] = useState(localStorage.getItem("email") || null);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem("token"));
+    const [email, setEmail] = useState(() => localStorage.getItem("email") || null);
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-        const storedEmail= localStorage.getItem("email");
-        setIsLoggedIn(!!token);
-        setEmail(storedEmail || null);
+        const storedEmail = localStorage.getItem("email");
+        if (token) setIsLoggedIn(true);
+        if (storedEmail) setEmail(storedEmail);
     }, []);
 
     const login = (token, email) => {
@@ -35,3 +35,4 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
+
