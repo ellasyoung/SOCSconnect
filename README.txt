@@ -17,11 +17,10 @@ COMP 307 FINAL PROJECT -- TEAM ECN!
 | weeklyMeetings.js backend route        |                                        | RequestTime.js page                   |
 | singleBookings.js backend route        |                                        | Home.js page                          |
 | alternaterequest.js backend route      |                                        | signin.js backend route               |
-| newPoll.js backend route               | 			                              | login.js backend route                |
+| newPoll.js backend route               | 			                                  | login.js backend route                |
 | SigninModal component                  |                                        | logout.js backend route               |
 |                                        |                                        | userInfo.js backend route             |
-|                                        |                                        | auth folder (all encryption files)    |
-|					                     |					                      |					                      |
+|                                        |                                        | auth folder (all encryption files)    |		      
 +----------------------------------------+----------------------------------------+---------------------------------------+
 
 Additional Features Implemented:
