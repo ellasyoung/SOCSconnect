@@ -110,6 +110,16 @@ export const RequestButton = styled.button`
   &:hover{
     background-color: #620707;
   }
+
+  &.greyed{
+    background-color: #c3c4c3;
+  }
+
+  &.greyed:hover{
+    background-color: #919191;
+  }
+
+
   @media screen and (max-width: 1100px){
     font-size: 12px;
   }

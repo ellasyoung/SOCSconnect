@@ -52,9 +52,7 @@ const PrivAppointments = () => {
     const [upcomingMeetings, setUpcomingMeetings] = useState([]);
     const [pastMeetings, setPastMeetings] = useState([]);
     const [polls, setPolls] = useState([]);
-    const [myHover, setMyHover] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [hover, setHover] = useState(false);
     const navigate = useNavigate();
 
     const toggleRequestsDropdown = () => setRequestsDropdownOpen(!RequestsDropdownOpen); 
@@ -275,9 +273,7 @@ const PrivAppointments = () => {
                             request.requestStatus === "Denied" ? (
                             <RequestButton
                                 key={index}
-                                className="mine"
-                                onMouseEnter={() => setMyHover(true)}
-                                onMouseLeave={() => setMyHover(false)}
+                                className="mine greyed"
                                 onClick={() =>
                                 openPopup({
                                     title: "Meeting Request Denied",
@@ -286,7 +282,6 @@ const PrivAppointments = () => {
                                     requestDetails: request,
                                 })
                                 }
-                                style={{ backgroundColor: myHover ? '#919191' : "#c3c4c3"}}
                             >
                                 <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
                                     <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
@@ -372,6 +367,7 @@ const PrivAppointments = () => {
                         ) : request.requestStatus === "Approved" ? (
                             <RequestButton
                             key={index}
+                            className="greyed"
                             onClick={() =>
                                 openPopup({
                                 title: "Meeting Request",
@@ -380,7 +376,6 @@ const PrivAppointments = () => {
                                 requestDetails: request,
                                 })
                             }
-                            style={{ backgroundColor: "#c3c4c3" }}
                             >
                             <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
                             <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
@@ -402,8 +397,7 @@ const PrivAppointments = () => {
                         ) : (
                             <RequestButton
                             key={index}
-                            onMouseEnter={() => setHover(true)}
-                            onMouseLeave={() => setHover(false)}
+                            className="greyed"
                             onClick={() =>
                                 openPopup({
                                 title: "Meeting Request",
@@ -412,7 +406,6 @@ const PrivAppointments = () => {
                                 requestDetails: request,
                                 })
                             }
-                            style={{ backgroundColor: hover ? "#919191" : "#c3c4c3" }}
                             >
                             <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
                             <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
