@@ -45,6 +45,7 @@ const SignInModal = () => {
                 },
             });
             const { token, email } = response.data; 
+            console.log({token, email});
             login(token, email);
             navigate("/dashboard");
         } catch (error) {
