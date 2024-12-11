@@ -50,7 +50,7 @@ export const Dropdown = styled.div`
   flex-direction: column;
   position: absolute;
   top: 80px;
-  height: 250px;
+  height: 270px;
   right: 0;
   background-color: white;
   width: 100%;

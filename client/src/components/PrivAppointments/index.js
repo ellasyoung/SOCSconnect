@@ -21,7 +21,8 @@ import {
     CloseButton,
   
 } from './PrivAppointments';
-import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight, FaVoteYea, FaSpinner } from 'react-icons/fa';
+import { FaBell, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaArrowRight, FaVoteYea } from 'react-icons/fa';
+import Loading from "../Loading";
 import { AuthContext } from '../../auth/AuthProvider';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -52,8 +53,8 @@ const PrivAppointments = () => {
     const [pastMeetings, setPastMeetings] = useState([]);
     const [polls, setPolls] = useState([]);
     const [myHover, setMyHover] = useState(false);
-    const [hover, setHover] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [hover, setHover] = useState(false);
     const navigate = useNavigate();
 
     const toggleRequestsDropdown = () => setRequestsDropdownOpen(!RequestsDropdownOpen); 
@@ -67,143 +68,6 @@ const PrivAppointments = () => {
 
 
     const { email } = useContext(AuthContext)
-
-
-    useEffect(() => {
-        const fetchPollsByEmail = async () => {
-            setLoading(true);
-            
-            try {
-                await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second delay
-                const response = await axios.get(`${backendUrl}/api/polls-by-email/${encodeURIComponent(email)}`);
-                setPolls(response.data.polls); 
-            } catch (err) {
-                console.error("Error fetching polls:", err);
-                alert("Failed to fetch polls. Please try again later.");
-            }finally{
-                setLoading(false);
-            }
-         
-        };
-        if (email) {
-            fetchPollsByEmail();
-        }
-    }, [email, backendUrl]);
-
-    
-    useEffect(() => {
-
-        const reqfetchUserDetails = async (userId) => {
-            if (!userId) {
-                console.error("Invalid user ID:", userId);
-                return "Unknown User";
-            }
-
-            setLoading(true);
-            try {
-                const response = await fetch(`${backendUrl}/api/user-info/${userId}`);
-    
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch user details, status: ${response.status}`);
-                }
-    
-                const data = await response.json();
-    
-                if (data && data.firstName && data.lastName) {
-                    return `${data.firstName} ${data.lastName}`;
-                } else {
-                    throw new Error('User data is incomplete');
-                }
-    
-            } catch (error) {
-                console.error("Error fetching user details:", error);
-                return "Unknown User"; 
-            }finally{
-                setLoading(false);
-            }
-        };
-
-        const reqfetchUserEmail = async (userId) => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`${backendUrl}/api/user-info/user-email/${userId}`);
-                
-                if (response.status === 200) {
-                    return response.data.email; 
-                } else {
-                    console.error(`Failed to fetch email for userId ${userId}. Status: ${response.status}`);
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error fetching user email:', error);
-                return null; 
-            }finally{
-                setLoading(false);
-            }
-        };
-
-        const fetchRequestsWithNames = async () => {
-            if (email) {
-                setLoading(true);
-                try {
-                    const response = await fetch(
-                            `${backendUrl}/api/priv-appointments/incoming-requests?requesterEmail=${encodeURIComponent(email)}`
-                        );
-                        const requests = await response.json();
-    
-                        const requestsWithNames = await Promise.all(
-                            requests.map(async (request) => {
-                                const requesterName = await reqfetchUserDetails(request.requesterId);
-                                const requesterEmail = await reqfetchUserEmail(request.requesterId);
-                                const hostName = await reqfetchUserDetails(request.hostId);
-                                const hostEmail = await reqfetchUserEmail(request.requesterId);
-                                
-                                return {
-                                    ...request,
-                                    requesterName,
-                                    hostName,
-                                    requesterEmail,
-                                    hostEmail
-                                };
-                           })
-                        );
-
-                        setIncomingRequests(requestsWithNames);
-                    } catch (error) {
-                        console.error("Error fetching requests:", error);
-                    }finally{
-                        setLoading(false);
-                    }
-                }
-            };
-    
-            fetchRequestsWithNames();
-        }, [email, backendUrl]);
-
-    useEffect(() => {
-        const fetchMeetingsWithNames = async () => {
-            if (email) {
-                setLoading(true);
-                    try {
-                    
-                        const response = await fetch(
-                            `${backendUrl}/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`
-                        );
-                        const { upcomingMeetings, pastMeetings } = await response.json();
-        
-                        setUpcomingMeetings(upcomingMeetings);
-                        setPastMeetings(pastMeetings);
-                    } catch (error) {
-                        console.error("Error fetching meetings:", error);
-                    }finally{
-                        setLoading(false);
-                    }
-            }
-        };
-    
-        fetchMeetingsWithNames();
-    }, [email, backendUrl])
-    
 
     const openPopup = (data) => {
         setPopupData(data)
@@ -259,6 +123,7 @@ const PrivAppointments = () => {
             });
 
             if (response.status === 200) {
+                console.log('Booking cancelled successfully');
                 alert(
                     `The booking was cancelled successfully in ${response.data.meetingType}.`
                 );
@@ -273,6 +138,123 @@ const PrivAppointments = () => {
             alert('An error occurred while cancelling the booking.');
         }
     };
+
+    useEffect(() => {
+
+        const reqfetchUserDetails = async (userId) => {
+            if (!userId) {
+                console.error("Invalid user ID:", userId);
+                return "Unknown User";
+            }
+    
+            try {
+                const response = await fetch(`${backendUrl}/api/user-info/${userId}`);
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch user details, status: ${response.status}`);
+                }
+    
+                const data = await response.json();
+    
+                if (data && data.firstName && data.lastName) {
+                    return `${data.firstName} ${data.lastName}`;
+                } else {
+                    throw new Error('User data is incomplete');
+                }
+    
+                } catch (error) {
+                    console.error("Error fetching user details:", error);
+                    return "Unknown User"; 
+            }
+        };
+    
+        const reqfetchUserEmail = async (userId) => {
+            try {
+                const response = await axios.get(`${backendUrl}/api/user-info/user-email/${userId}`);
+                
+                if (response.status === 200) {
+                    return response.data.email; 
+                } else {
+                    console.error(`Failed to fetch email for userId ${userId}. Status: ${response.status}`);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error fetching user email:', error);
+                return null; 
+            }
+        };
+    
+        const fetchRequestsWithNames = async () => {
+            if (email) {
+                try {
+                    const response = await fetch(
+                            `${backendUrl}/api/priv-appointments/incoming-requests?requesterEmail=${encodeURIComponent(email)}`
+                        );
+                        const requests = await response.json();
+    
+                        const requestsWithNames = await Promise.all(
+                            requests.map(async (request) => {
+                                const requesterName = await reqfetchUserDetails(request.requesterId);
+                                const requesterEmail = await reqfetchUserEmail(request.requesterId);
+                                const hostName = await reqfetchUserDetails(request.hostId);
+                                const hostEmail = await reqfetchUserEmail(request.requesterId);
+                                
+                                return {
+                                    ...request,
+                                    requesterName,
+                                    hostName,
+                                    requesterEmail,
+                                    hostEmail
+                                };
+                           })
+                        );
+    
+                        setIncomingRequests(requestsWithNames);
+                    } catch (error) {
+                        console.error("Error fetching requests:", error);
+                    }
+                }
+            };
+    
+            const fetchMeetingsWithNames = async () => {
+                if (email) {
+                    try {
+                       
+                        const response = await fetch(
+                            `${backendUrl}/api/priv-appointments/meetings?requesterEmail=${encodeURIComponent(email)}`
+                        );
+                        const { upcomingMeetings, pastMeetings } = await response.json();
+       
+        
+                        setUpcomingMeetings(upcomingMeetings);
+                        setPastMeetings(pastMeetings);
+                    } catch (error) {
+                        console.error("Error fetching meetings:", error);
+                    }
+                }
+            };
+    
+            const fetchPollsByEmail = async () => {
+                try {
+                    const response = await axios.get(`${backendUrl}/api/polls-by-email/${encodeURIComponent(email)}`);
+                    setPolls(response.data.polls); 
+                } catch (err) {
+                    console.error("Error fetching polls:", err);
+                    alert("Failed to fetch polls. Please try again later.");
+                }
+            };
+    
+            fetchRequestsWithNames();
+            fetchMeetingsWithNames();
+            setLoading(false); 
+            if (email) {
+                fetchPollsByEmail();
+            }
+        }, [email, backendUrl]);
+
+    if (loading) {
+        return <Loading />; 
+    }
     
     return (
         <>
@@ -287,183 +269,176 @@ const PrivAppointments = () => {
                 </DropdownTitle>
 
                 <DropdownContents show={RequestsDropdownOpen}>
-                    {loading ? (
-                        <div style={{ textAlign: "center", padding: "20px" }}>
-                        <span><FaSpinner size={20} className="spin" /></span>
-                        </div>
-                    ) : (
-                        incomingRequests.length > 0 ? (
+                    {incomingRequests.length > 0 ? (
                         incomingRequests.map((request, index) => (
-                            request.mine ? (
+                        request.mine ? (
                             request.requestStatus === "Denied" ? (
-                                <RequestButton
+                            <RequestButton
                                 key={index}
                                 className="mine"
                                 onMouseEnter={() => setMyHover(true)}
                                 onMouseLeave={() => setMyHover(false)}
                                 onClick={() =>
-                                    openPopup({
+                                openPopup({
                                     title: "Meeting Request Denied",
                                     height: "auto",
                                     buttons: [],
                                     requestDetails: request,
-                                    })
+                                })
                                 }
-                                style={{ backgroundColor: myHover ? '#919191' : "#c3c4c3" }}
-                                >
-                                <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                                    <span style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                    <FaArrowRight size={22} style={{ marginRight: "30px" }} />
-                                    {`Request made with ${request.hostName} for ${normalizeDate(
+                                style={{ backgroundColor: myHover ? '#919191' : "#c3c4c3"}}
+                            >
+                                <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                                    <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                        <FaArrowRight size={22} style={{ marginRight: "30px" }} />
+                                        {`Request made with ${request.hostName} for ${normalizeDate(
                                         request.alternateTimes[0]?.proposedDate
-                                    ).toLocaleDateString("en-US", {
+                                        ).toLocaleDateString("en-US", {
                                         year: "numeric",
                                         month: "long",
                                         day: "numeric",
-                                    })} has been denied`}
+                                        })} has been denied`}
                                     </span>
-                                    <span style={{ padding: "20px" }}></span>
-                                    <span style={{ fontWeight: "normal" }}>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
                                     Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                                    </span>
+                                </span>
                                 </div>
-                                </RequestButton>
+                            </RequestButton>
                             ) : (
-                                <RequestButton
+                            <RequestButton
                                 key={index}
                                 className="mine"
                                 onClick={() =>
-                                    openPopup({
+                                openPopup({
                                     title: "Meeting Request Made",
                                     height: "auto",
                                     buttons: [],
                                     requestDetails: request,
-                                    })
+                                })
                                 }
-                                >
-                                <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                                    <span style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                            >
+                                <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                                <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
                                     <FaArrowRight size={22} style={{ marginRight: "30px" }} />
                                     {`Request made with ${request.hostName} for ${normalizeDate(
-                                        request.alternateTimes[0]?.proposedDate
+                                    request.alternateTimes[0]?.proposedDate
                                     ).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
                                     })}`}
-                                    </span>
-                                    <span style={{ padding: "20px" }}></span>
-                                    <span style={{ fontWeight: "normal" }}>
+                                </span>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
                                     Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                                    </span>
+                                </span>
                                 </div>
-                                </RequestButton>
+                            </RequestButton>
                             )
-                            ) : request.requestStatus === "Pending" ? (
+                        ) : request.requestStatus === "Pending" ? (
                             <RequestButton
-                                key={index}
-                                onClick={() =>
+                            key={index}
+                            onClick={() =>
                                 openPopup({
-                                    title: "Meeting Request",
-                                    height: "auto",
-                                    buttons: [
+                                title: "Meeting Request",
+                                height: "auto",
+                                buttons: [
                                     { text: "Accept", icon: FaCheckCircle },
-                                    { text: "Deny", icon: FaTimesCircle, bgColor: "black", hovercolor: "#cd2222" },
-                                    { text: "Propose Different Time", icon: FaArrowRight, width: "300px", bgColor: "#620707", hoverColor: "#cd2222" },
-                                    ],
-                                    requestDetails: request,
+                                    {text: "Deny",icon: FaTimesCircle,bgColor: "black",hoverColor: "#cd2222"},
+                                    {text: "Propose Different Time", icon: FaArrowRight,width: "300px", bgColor: "#620707", hoverColor: "#cd2222"},
+                                ],
+                                requestDetails: request,
                                 })
-                                }
+                            }
                             >
-                                <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                                <span style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                    <FaBell size={22} style={{ marginRight: "30px" }} />
-                                    {`New Request from ${request.requesterName} for ${normalizeDate(
+                            <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                            <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                <FaBell size={22} style={{ marginRight: "30px" }} />
+                                {`New Request from ${request.requesterName} for ${normalizeDate(
                                     request.alternateTimes[0]?.proposedDate
-                                    ).toLocaleDateString("en-US", {
+                                ).toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "long",
                                     day: "numeric",
-                                    })}`}
+                                })}`}
                                 </span>
                                 <span style={{ padding: "20px" }}></span>
                                 <span style={{ fontWeight: "normal" }}>
-                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
                                 </span>
-                                </div>
+                            </div>
                             </RequestButton>
-                            ) : request.requestStatus === "Approved" ? (
+                        ) : request.requestStatus === "Approved" ? (
                             <RequestButton
-                                key={index}
-                                onClick={() =>
+                            key={index}
+                            onClick={() =>
                                 openPopup({
-                                    title: "Meeting Request",
-                                    height: "auto",
-                                    buttons: [],
-                                    requestDetails: request,
+                                title: "Meeting Request",
+                                height: "auto",
+                                buttons: [],
+                                requestDetails: request,
                                 })
-                                }
-                                style={{ backgroundColor: "#c3c4c3" }}
+                            }
+                            style={{ backgroundColor: "#c3c4c3" }}
                             >
-                                <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                                <span style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                    <FaBell size={22} style={{ marginRight: "30px" }} />
-                                    {`Request from ${request.requesterName} for ${normalizeDate(
+                            <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                            <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                <FaBell size={22} style={{ marginRight: "30px" }} />
+                                {`Request from ${request.requesterName} for ${normalizeDate(
                                     request.alternateTimes[0]?.proposedDate
-                                    ).toLocaleDateString("en-US", {
+                                ).toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "long",
                                     day: "numeric",
-                                    })} has been approved`}
+                                })} has been approved`}
                                 </span>
                                 <span style={{ padding: "20px" }}></span>
                                 <span style={{ fontWeight: "normal" }}>
-                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
                                 </span>
-                                </div>
+                            </div>
                             </RequestButton>
-                            ) : (
-                            <RequestButton
-                                key={index}
-                                onMouseEnter={() => setHover(true)}
-                                onMouseLeave={() => setHover(false)}
-                                onClick={() =>
-                                openPopup({
-                                    title: "Meeting Request",
-                                    height: "auto",
-                                    buttons: [],
-                                    requestDetails: request,
-                                })
-                                }
-                                style={{ backgroundColor: hover ? "#919191" : "#c3c4c3" }}
-                            >
-                                <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                                <span style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                    <FaBell size={22} style={{ marginRight: "30px" }} />
-                                    {`Request from ${request.requesterName} for ${normalizeDate(
-                                    request.alternateTimes[0]?.proposedDate
-                                    ).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                    })} has been denied`}
-                                </span>
-                                <span style={{ padding: "20px" }}></span>
-                                <span style={{ fontWeight: "normal" }}>
-                                    Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
-                                </span>
-                                </div>
-                            </RequestButton>
-                            )
-                        ))
                         ) : (
-                        <p style={{ marginLeft: "20px", marginTop: "0px" }}>
-                            <b>No Incoming Requests</b>
-                        </p>
+                            <RequestButton
+                            key={index}
+                            onMouseEnter={() => setHover(true)}
+                            onMouseLeave={() => setHover(false)}
+                            onClick={() =>
+                                openPopup({
+                                title: "Meeting Request",
+                                height: "auto",
+                                buttons: [],
+                                requestDetails: request,
+                                })
+                            }
+                            style={{ backgroundColor: hover ? "#919191" : "#c3c4c3" }}
+                            >
+                            <div style={{display: "flex",justifyContent: "space-between",width: "100%",alignItems: "center",}}>
+                            <span  style={{display: "flex",justifyContent: "center",alignItems: "center"}}>
+                                <FaBell size={22} style={{ marginRight: "30px" }} />
+                                {`Request from ${request.requesterName} for ${normalizeDate(
+                                    request.alternateTimes[0]?.proposedDate
+                                ).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })} has been denied`}
+                                </span>
+                                <span style={{ padding: "20px" }}></span>
+                                <span style={{ fontWeight: "normal" }}>
+                                Request Made: {normalizeDate(request.createdAt).toLocaleDateString()}
+                                </span>
+                            </div>
+                            </RequestButton>
                         )
-                    )}
-                    </DropdownContents>
-
+                        ))
+                ) : (
+                    <p style={{ marginLeft: "20px", marginTop: "0px" }}>
+                    <b>No Incoming Requests</b>
+                    </p>
+                )}
+                </DropdownContents>
             </Dropdown>
 
 
@@ -471,20 +446,12 @@ const PrivAppointments = () => {
                 <DropdownTitle onClick={toggleUpcomingDropdown}>
                     Upcoming
                     {UpcomingDropdownOpen ? <UpArrow /> : <DownArrow />}
-                </DropdownTitle>
-
-                <DropdownContents show={UpcomingDropdownOpen}>
-                    {loading ? (
-                        <div style={{ textAlign: "center", padding: "20px" }}>
-                            <span>
-                                <FaSpinner size={20} className="spin" />
-                            </span> 
-                        </div>
-                    ) : upcomingMeetings.length > 0 ? (
-                        upcomingMeetings.map((meeting, index) => (
-                            meeting.mine ? (
-                                <UpdateButton
-                                    key={index}
+                    </DropdownTitle>
+                    <DropdownContents show={UpcomingDropdownOpen}>
+                        {upcomingMeetings.length > 0 ? (
+                            upcomingMeetings.map((meeting, index) => (
+                                meeting.mine ? (
+                                    <UpdateButton
                                     onClick={() =>
                                         openPopup({
                                             title: "Upcoming Meeting",
@@ -505,36 +472,35 @@ const PrivAppointments = () => {
                                         </span>
                                     </div>
                                 </UpdateButton>
-                            ) : (
-                                <UpdateButton
-                                    key={index}
-                                    onClick={() =>
-                                        openPopup({
-                                            title: "Upcoming Meeting",
-                                            height: "auto",
-                                            buttons: [
-                                                {text: "Cancel", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"}
-                                            ],
-                                            requestDetails: meeting 
-                                        })
-                                    }
-                                >
-                                    <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
-                                        <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
-                                            <FaCalendarAlt size={22} style={{ marginRight: "30px" }} />
-                                            {`Meeting with ${meeting.hostName} on ${normalizeDate(meeting.date).toLocaleDateString("en-US", {
-                                                year: "numeric",
-                                                month: "long",
-                                                day: "numeric"
-                                            })}`}
-                                        </span>
-                                    </div>
-                                </UpdateButton>
-                            )
-                        ))
-                    ) : (
-                        <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Upcoming Meetings</b></p>
-                    )}
+                                ) : (
+                                    <UpdateButton
+                                        onClick={() =>
+                                            openPopup({
+                                                title: "Upcoming Meeting",
+                                                height: "auto",
+                                                buttons: [
+                                                    {text: "Cancel", icon: FaTimesCircle, bgColor: "black", hoverColor: "#cd2222"}
+                                                ],
+                                                requestDetails: meeting 
+                                            })
+                                        }
+                                    >
+                                        <div style={{ display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center" }}>
+                                            <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                                                <FaCalendarAlt size={22} style={{ marginRight: "30px" }} />
+                                                {`Meeting with ${meeting.hostName} on ${normalizeDate(meeting.date).toLocaleDateString("en-US", {
+                                                    year: "numeric",
+                                                    month: "long",
+                                                    day: "numeric"
+                                                })}`}
+                                            </span>
+                                        </div>
+                                    </UpdateButton>
+                                )
+                            ))
+                        ) : (
+                            <p style={{marginLeft: "20px", marginTop: "0px"}}><b>No Upcoming Meetings</b></p>
+                        )}
                 </DropdownContents>
             </Dropdown>
 
@@ -544,16 +510,9 @@ const PrivAppointments = () => {
                     {HistoryDropdownOpen ? <UpArrow /> : <DownArrow />}
                 </DropdownTitle>
                 <DropdownContents show={HistoryDropdownOpen}>
-                    {loading ? (
-                        <div style={{ textAlign: "center", padding: "20px" }}>
-                            <span>
-                                <FaSpinner size={20} className="spin" />
-                            </span> 
-                        </div>
-                    ) : pastMeetings.length > 0 ? (
+                    {pastMeetings.length > 0 ? (
                         pastMeetings.map((meeting, index) => (
                             <HistoryButton
-                                key={index}
                                 onClick={() =>
                                     openPopup({
                                         title: "Past Meeting",
@@ -563,10 +522,12 @@ const PrivAppointments = () => {
                                     })
                                 }
                             >
-                                <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center"}}>
-                                    <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                                <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center",}}>
+                                    <span style={{display: "flex", justifyContent: "center", alignItems: "center", }}>
                                         <FaClock size={22} style={{ marginRight: "30px" }} />
-                                        {`Past Appointment with ${meeting.mine ? (meeting.requesterName) : (meeting.hostName)} on ${normalizeDate(meeting.date).toLocaleDateString("en-US", {
+                                        {`Past Appointment with ${meeting.mine ? (meeting.requesterName) : (meeting.hostName)} on ${normalizeDate(
+                                            meeting.date
+                                        ).toLocaleDateString("en-US", {
                                             year: "numeric",
                                             month: "long",
                                             day: "numeric",
@@ -587,17 +548,11 @@ const PrivAppointments = () => {
                     {pollDropdownOpen ? <UpArrow /> : <DownArrow />}
                 </DropdownTitle>
                 <DropdownContents show={pollDropdownOpen}>
-                    {loading ? (
-                        <div style={{ textAlign: "center", padding: "20px" }}>
-                            <span>
-                                <FaSpinner size={20} className="spin" />
-                            </span> 
-                        </div>
-                    ) : polls.length > 0 ? (
+                    {polls.length > 0 ? (
                         polls.map((poll, index) => (
-                            <UpdateButton key={index} as={Link} to={`/${poll.url}`} className="polls">
-                                <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center"}}>
-                                    <span style={{display: "flex", justifyContent:"center", alignItems:"center"}}>
+                            <UpdateButton as={Link} to={`/${poll.url}`} className="polls">
+                                <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center",}}>
+                                    <span style={{display: "flex", justifyContent: "center", alignItems: "center", }}>
                                         <FaVoteYea size={22} style={{ marginRight: "30px" }} />
                                         {`${poll.title}`}
                                     </span>
