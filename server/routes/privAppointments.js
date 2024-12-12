@@ -11,6 +11,11 @@ const nodemailer = require('nodemailer');
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 const frontendUrl = process.env.REACT_APP_FRONTEND_URL;
 
+const normalizeDate = (dateString) => {
+    const [year, month, day] = dateString.split(/[-T]/);
+    return new Date(Number(year), Number(month) - 1, Number(day));
+};
+
 const transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
@@ -458,12 +463,14 @@ router.put('/deny-request/:requestId', async (req, res) => {
 
 
 router.delete('/cancel-booking', async (req, res) => {
-    const { meetingId, requesterEmail } = req.body;
+    const { meetingId, requesterEmail, cancelDate } = req.body;
 
     try {
         const models = [Appointments, WeeklyRecurring, MonthlyRecurring];
         let foundMeeting = null;
         let meetingType = '';
+
+        const cDate = new Date(cancelDate);
 
         for (const model of models) {
             foundMeeting = await model.findById(meetingId);
@@ -480,11 +487,13 @@ router.delete('/cancel-booking', async (req, res) => {
         const initialLength = foundMeeting.bookings?.length || foundMeeting.bookSlot?.length;
         if (foundMeeting.bookings) {
             foundMeeting.bookings = foundMeeting.bookings.filter(
-                (booking) => booking.requesterEmail !== requesterEmail
+                (booking) => booking.requesterEmail !== requesterEmail || 
+                booking.date.toISOString().split('T')[0] !== cDate.toISOString().split('T')[0]
             );
         } else if (foundMeeting.bookSlot) {
             foundMeeting.bookSlot = foundMeeting.bookSlot.filter(
-                (slot) => slot.requesterEmail !== requesterEmail
+                (slot) => slot.requesterEmail !== requesterEmail ||
+                slot.date.toISOString().split('T')[0] !== cDate.toISOString().split('T')[0]
             );
         }
 
