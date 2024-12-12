@@ -69,6 +69,12 @@ router.post('/book-slot-single', async (req, res) => {
         with ${user.firstName} ${user.lastName}.    
         `;
 
+        let creatorBody = `
+        <h3>New Meeting Alert!</h3>
+        <p>A new meeting has been booked with you on ${myDate} from ${meeting.startTime} until ${meeting.endTime}
+        with ${requesterEmail}.</p>    
+        `;
+
         if (meeting.location) {
             bookingBody += `
             <p>The location of your meeting is ${meeting.location}.</p>`;
@@ -81,14 +87,28 @@ router.post('/book-slot-single', async (req, res) => {
         }
 
         bookingBody += `<p>If you have any questions or need support, feel free to contact us.</p>`;
+        creatorBody += `<p>If you have any questions or need support, feel free to contact us.</p>`;
         const mailOptions = {
             from: 'socsconnect@gmail.com', 
             to: requesterEmail,                    
             subject: 'Booking Confirmation',
             html: bookingBody
-        }
+        };
+
+        const mailOptions2 = {
+            from: 'socsconnect@gmail.com', 
+            to: user.email,                    
+            subject: 'New Meeting Confirmation',
+            html: creatorBody
+        };
 
         transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
+            }
+        });
+
+        transporter.sendMail(mailOptions2, (error, info) => {
             if (error) {
                 return res.status(500).json({ message: 'Meeting booked, but failed to send confirmation email.' });
             }
