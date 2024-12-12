@@ -114,10 +114,10 @@ const PrivAppointments = () => {
         }
     };
     
-    const cancelBooking = async (meetingId, requesterEmail) => {
+    const cancelBooking = async (meetingId, requesterEmail, cancelDate) => {
         try {
             const response = await axios.delete(`${backendUrl}/api/priv-appointments/cancel-booking`, {
-                data: { meetingId, requesterEmail },
+                data: { meetingId, requesterEmail, cancelDate },
             });
 
             if (response.status === 200) {
@@ -634,7 +634,8 @@ const PrivAppointments = () => {
                                         } else if (button.text === 'Cancel') {
                                         cancelBooking(
                                             popupData.requestDetails._id, 
-                                            popupData.requestDetails.requesterEmail 
+                                            popupData.requestDetails.requesterEmail,
+                                            popupData.requestDetails.date
                                         );
                                         closePopup();
                                     }
